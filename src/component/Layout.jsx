@@ -46,7 +46,7 @@ export default function Layout({ subheader }) {
       label: (
         <div className="flex gap-4 items-center">
           <img className="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
-          <p>Task</p>
+          <p>Interaction Point/Task</p>
         </div>
       ),
       command: () =>
@@ -76,15 +76,15 @@ export default function Layout({ subheader }) {
   }
 
   let moreitems = [
-    {
-      label: (
-        <div className="flex gap-4 items-center">
-          <img className="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" />
-          <p>Discussions</p>
-        </div>
-      ),
-      command: () => navigate("/discussions"),
-    },
+    // {
+    //   label: (
+    //     <div className="flex gap-4 items-center">
+    //       <img className="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" />
+    //       <p>Discussions</p>
+    //     </div>
+    //   ),
+    //   command: () => navigate("/discussions"),
+    // },
     {
       label: (
         <div className="flex gap-4 items-center">
@@ -113,29 +113,29 @@ export default function Layout({ subheader }) {
       command: () => navigate("/feeds"),
     },
   ];
-  if (role === "admin") {
-    moreitems.push({
-      label: (
-        <div className="flex gap-4 items-center">
-          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
-          <p>BG Verification</p>
-        </div>
-      ),
-      command: () => navigate("/bgVerify"),
-    });
-  }
+  // if (role === "admin") {
+  //   moreitems.push({
+  //     label: (
+  //       <div className="flex gap-4 items-center">
+  //         <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+  //         <p>BG Verification</p>
+  //       </div>
+  //     ),
+  //     command: () => navigate("/bgVerify"),
+  //   });
+  // }
 
-  if (role === "admin") {
-    moreitems.push({
-      label: (
-        <div className="flex gap-4 items-center">
-          <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
-          <p>DocuSign</p>
-        </div>
-      ),
-      command: () => handleRedirectDocuSign(),
-    });
-  }
+  // if (role === "admin") {
+  //   moreitems.push({
+  //     label: (
+  //       <div className="flex gap-4 items-center">
+  //         <img className="p-2 h-8" src={ReportIcon} alt="FeedIcon" />
+  //         <p>DocuSign</p>
+  //       </div>
+  //     ),
+  //     command: () => handleRedirectDocuSign(),
+  //   });
+  // }
 
   if (role === "admin") {
     moreitems.push({
@@ -352,7 +352,7 @@ export default function Layout({ subheader }) {
                     }
                     className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
-                    Interaction Points
+                    Interaction Points/Tasks
                   </span>
                 </li>
 

@@ -306,8 +306,8 @@ export const TaskDetails = () => {
               }}
             >
               {formAction === 'draft'
-                ? 'Interaction Point Drafted Successfully'
-                : 'Interaction Point Submitted Successfully'}
+                ? 'Interaction Point/Task Drafted Successfully'
+                : 'Interaction Point/Task Submitted Successfully'}
             </p>
           </div>
         </div>
@@ -332,7 +332,7 @@ export const TaskDetails = () => {
                   fontWeight: 600,
                 }}
               >
-                Successfully Interaction Point is started
+                Successfully Interaction Point/Task is started
               </p>
             </div>
           </div>
@@ -355,7 +355,7 @@ export const TaskDetails = () => {
       >
         <div className='flex justify-between px-5 pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-           {!breadcrumbsType? <p>Interaction Point Details</p>:
+           {!breadcrumbsType? <p>Interaction Point/Task Details</p>:
             <Breadcrumbs items={breadcrumbsArray} />}
             {params.id === '2' && !startTask && (
               <div
@@ -384,7 +384,7 @@ export const TaskDetails = () => {
             { (taskData.status === TaskAllStatus.newtask ||
                                   taskData.status === TaskAllStatus.pending)&& 
               <div className='flex gap-2 pb-1'>
-              <p className='!text-[15px]' fontWeight={700}>Interaction Point Name : </p>
+              <p className='!text-[15px]' fontWeight={700}>Interaction Point/Task Name : </p>
               <p className='text-[13px] pt-[3px]'>{taskData?.task_name}</p>
               </div>}
             <div className='relative flex gap-6 justify-between'>
@@ -417,7 +417,7 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Interaction Point Name
+                      Interaction Point/Task Name
                     </th>
                     <td
                       className='px-6 py-4 text-white'
@@ -496,7 +496,7 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Interaction Point assigned by
+                      Interaction Point/Task assigned by
                     </th>
                     <td
                       className='px-6 py-4 text-white'
@@ -552,14 +552,14 @@ export const TaskDetails = () => {
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
               >
-                <p className='!text-[16px]' fontWeight={600}>Interaction Point Name : </p>
+                <p className='!text-[16px]' fontWeight={600}>Interaction Point/Task Name : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_name}</p>
               </div>}
               <div
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: "20px" }}
               >
-                <p className='!text-[16px]' fontWeight={600}>Interaction Point Description : </p>
+                <p className='!text-[16px]' fontWeight={600}>Interaction Point/Task Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
               </div>
 
@@ -590,7 +590,7 @@ export const TaskDetails = () => {
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>
                     <Typography className='!text-[14px] !text-[#18283D]'>
-                    Interaction Point Solution
+                    Interaction Point/Task Solution
                     </Typography>
 
                     <Box
@@ -688,7 +688,7 @@ export const TaskDetails = () => {
                     <>
                       <div className='relative'>
                         <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                          Interaction Point Solution
+                          Interaction Point/Task Solution
                         </label>
                         <textarea
                           id='message'
@@ -924,7 +924,7 @@ export const TaskDetails = () => {
                           className='task-desc flex mt-5 px-5 py-6'
                           style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
                         >
-                          <p className='w-[30%]'>Interaction Point Solution : </p>
+                          <p className='w-[30%]'>Interaction Point/Task Solution : </p>
                           <p className='text-[14px]'>
                             {taskData?.task_solution}
                           </p>
@@ -1033,7 +1033,7 @@ export const TaskDetails = () => {
                   ) : null}                  
                   <div className='reference-link flex justify-between mb-2'>
                     <div className='reference-view'>
-                      <p className='py-4'>Reference View</p>
+                      <p className='py-4'>Reference</p>
                       <ul className='leading-10'>
                         {docs?.map((doc, index) => (
                           <li key={index}>
@@ -1128,7 +1128,7 @@ export const TaskDetails = () => {
                       btnType='button'
                       btnCls={`${startTask ? 'w-[14%]' : 'w-[12%]'}`}
                       onClick={handleTaskAction}
-                      btnName='Start Interaction Point'
+                      btnName='Start Interaction Point/Task'
                       btnCategory='primary'
                     />
                   )}

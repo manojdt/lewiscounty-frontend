@@ -2352,7 +2352,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
     {
       type: "text",
       name: "mentees_list",
-      label: "Add Mentees for this Interaction Point",
+      label: "Add Mentees for this Interaction Point/Task",
       width: "w-full",
       inputRules: {
         required: "This field is required",
@@ -2363,7 +2363,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       name: "reference_links",
       fieldtype: "text",
       label: "Reference",
-      placeholder: "Enter Reference Book with comma(,) seperators",
+      placeholder: "Enter Reference with comma(,) seperators",
       // inputRules: {
       //   required: "This field is required",
       // },
@@ -2386,8 +2386,8 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "input",
       name: "task_name",
       fieldtype: "text",
-      label: "Interaction Point Name",
-      placeholder: "Enter Interaction Points",
+      label: "Interaction Point/Task Name",
+      placeholder: "Enter Interaction Point/Task",
       inputRules: {
         required: "This field is required",
       },
@@ -2397,8 +2397,8 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "editor",
       name: "task_details",
       fieldtype: "text",
-      label: "Interaction Point Details",
-      placeholder: "List out Interaction Point Details",
+      label: "Interaction Point/Task Details",
+      placeholder: "List out Interaction Point/Task Details",
       inputRules: {
         required: "This field is required",
       },

@@ -632,7 +632,7 @@ export default function AssignTask() {
       <CancelPopup
         open={cancelPopup?.bool}
         handleClosePopup={handleClosePopup}
-        header='Cancel Interaction Point Reason'
+        header='Cancel Interaction Point/Task Reason'
         handleSubmit={(reason) => handleCancelSubmit(reason)}
       />
       <Backdrop
@@ -786,7 +786,7 @@ export default function AssignTask() {
                             alt='CreateTaskIcon'
                             className='pr-3 w-[25px]'
                           />
-                          Create Interaction Points for Mentees
+                          Create Interaction Point/Task for Mentees
                         </MenuItem>
                         <MenuItem
                           onClick={() => handleMenu('share')}
@@ -903,7 +903,7 @@ export default function AssignTask() {
                                     alt='PlusCircle'
                                     className='pr-3 w-[25px]'
                                   />
-                                  Assign Interaction Point to Mentees
+                                  Assign Interaction Point/Task to Mentees
                                 </MenuItem>
                               </>
                             )}

@@ -121,7 +121,7 @@ export default function SkillsSet({ programdetails,role }) {
   const taskTableColumn = [
     {
       field: "name",
-      headerName: "Interaction Point Name",
+      headerName: "Interaction Point/Task Name",
       flex: 1,
       id: 0,
       renderCell: (params) => {
@@ -254,7 +254,7 @@ export default function SkillsSet({ programdetails,role }) {
                     fontWeight: 600,
                   }}
                 >
-                  Successfully task is started
+                  Successfully Interaction Point/Task is started
                 </p>
               </div>
             </div>

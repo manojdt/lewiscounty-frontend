@@ -891,7 +891,7 @@ export const taskColumns = [
   },
   {
     field: "task_name",
-    headerName: "Interaction Point Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 1,
   },
@@ -903,7 +903,7 @@ export const taskColumns = [
   },
   {
     field: "task_description",
-    headerName: "Interaction Point Description",
+    headerName: "Interaction Point/Task Description",
     flex: 1,
     id: 1,
   },
@@ -942,7 +942,7 @@ export const taskColumns = [
   // },
   {
     field: "mentor_name",
-    headerName: "Interaction Points Sent by",
+    headerName: "Interaction Point/Task Sent by",
     flex: 1,
     id: 2,
   },
@@ -1004,7 +1004,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "task_name",
-    headerName: "Task Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 1,
   },
@@ -1016,7 +1016,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "task_description",
-    headerName: "Task description",
+    headerName: "Interaction Point/Task description",
     flex: 1,
     id: 2,
   },
@@ -1040,7 +1040,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "status",
-    headerName: "Interaction Points Status",
+    headerName: "Interaction Point/Task Status",
     flex: 1,
     id: 2,
     renderCell: (params) => {
@@ -1270,7 +1270,7 @@ export const discussionColumns = [
   },
   {
     field: "task",
-    headerName: "Interaction Points",
+    headerName: "Interaction Points/Tasks",
     width: 250,
     id: 1,
   },
@@ -3120,13 +3120,13 @@ export const mentorTaskListColumns = [
   },
   {
     field: "task_name",
-    headerName: "Interaction Point Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 0,
   },
   {
     field: "task_details",
-    headerName: "Interaction Point Description",
+    headerName: "Interaction Point/Task Description",
     flex: 1,
     id: 0,
   },
