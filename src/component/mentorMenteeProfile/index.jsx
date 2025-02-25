@@ -550,7 +550,7 @@ const MentorMenteeProfile = () => {
             })}
           </Grid>
 
-          {state?.rejection_reason && 
+          {state?.rejection_reason&&state?.status === "cancel" && 
           <div className="action-set action_cancelled mt-4">
             <div className="reason-title">{state.is_active?"Request Rejected Reason":"Request Cancelled Reason"}</div>
             <div className="reason-content">
