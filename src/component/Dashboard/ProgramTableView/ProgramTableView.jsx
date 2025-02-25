@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories } from "../../../services/programInfo";
 import { Button } from "../../../shared";
 import SearchIcon from "../../../assets/icons/SearchColor.svg";
+import { buttonStyle } from "../../../utils";
 export const ProgramTableView = ({ programView,title,tableIcon,viewpage, setProgramView,programData=[] }) => {
   // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -102,13 +103,17 @@ const { category, loading: apiLoading } = useSelector(
       renderCell: (params) => {
         return (
           <>
-            <div
-              className="cursor-pointer flex items-center h-full"
-              onClick={(e) => handleMoreClick(e, params.row)}
-            >
-              <img src={MoreIcon} alt="MoreIcon" />
+            <div className="flex justify-start">
+              {/* <img src={MoreIcon} alt="MoreIcon" /> */}
+              
+              <button
+                onClick={() => handleNavigation(params?.row)}
+                style={buttonStyle}
+              >
+                View
+              </button>
             </div>
-            <Menu
+            {/* <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
@@ -124,7 +129,7 @@ const { category, loading: apiLoading } = useSelector(
                 <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
                 View
               </MenuItem>
-            </Menu>
+            </Menu> */}
           </>
         );
       },

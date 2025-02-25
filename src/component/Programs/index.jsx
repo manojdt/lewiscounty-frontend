@@ -44,6 +44,7 @@ import { acceptMember, getCategory } from "../../services/category";
 import { useGetAllProgramsQuery } from "../../features/program/programApi.services";
 import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
 import CategoryFilter from "../../shared/Card/CategoryFilterPopup";
+import { buttonStyle } from "../../utils";
 
 const CustomPagination = ({
   totalItems = 200,
@@ -424,17 +425,6 @@ export default function Programs() {
         refetch();
       }
     }
-  };
-  const buttonStyle = {
-    background: "rgb(29, 91, 191)",
-    color: "rgb(255, 255, 255)",
-    padding: "2px 20px",
-    height: "32px",
-    margin: "9px 0px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "3px",
   };
 
   useEffect(() => {
