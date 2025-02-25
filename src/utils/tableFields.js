@@ -368,7 +368,7 @@ export const programListColumns = [
   },
   {
     field: 'start_date',
-    headerName: 'Start date',
+    headerName: 'Start Date',
     flex: 1,
     id: 4,
     renderCell: (params) => {
@@ -377,7 +377,7 @@ export const programListColumns = [
 },
   {
     field: 'end_date',
-    headerName: 'End date',
+    headerName: 'End Date',
     flex: 1,
     id: 4,
     renderCell: (params) => {
