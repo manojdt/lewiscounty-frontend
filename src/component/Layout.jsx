@@ -46,7 +46,7 @@ export default function Layout({ subheader }) {
       label: (
         <div className="flex gap-4 items-center">
           <img className="p-2 h-8" src={TaskIcon} alt="TaskIcon" />
-          <p>Task</p>
+          <p>Interaction Point/Task</p>
         </div>
       ),
       command: () =>
@@ -352,7 +352,7 @@ export default function Layout({ subheader }) {
                     }
                     className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
-                    Interaction Points
+                    Interaction Points/Tasks
                   </span>
                 </li>
 

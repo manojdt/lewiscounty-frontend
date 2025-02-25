@@ -49,7 +49,7 @@ const PreviewTaskDetails = () => {
                             style={{
                                 fontWeight: 600
                             }}
-                        >Interaction Point Submitted Successfully</p>
+                        >Interaction Point/Task Submitted Successfully</p>
                     </div>
 
                 </div>
@@ -87,10 +87,10 @@ const PreviewTaskDetails = () => {
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th style={{ border: '1px solid rgba(0, 174, 189, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Interaction Point Name
+                                        Interaction Point/Task Name
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                    Interaction Point Name
+                                    Interaction Point/Task Name
                                     </td>
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 ">
@@ -125,7 +125,7 @@ const PreviewTaskDetails = () => {
                                 </tr>
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th style={{ border: '1px solid rgba(29, 91, 191, 1)' }} scope="row" className="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        Interaction Point assigned by
+                                        Interaction Point/Task assigned by
                                     </th>
                                     <td className="px-6 py-4 text-white" style={{ background: 'rgba(29, 91, 191, 1)' }}>
                                         Mentor
@@ -153,7 +153,7 @@ const PreviewTaskDetails = () => {
                     </div>
 
                     <div className='task-desc flex mt-5 px-5 py-6' style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}>
-                        <p className='w-[30%]'>Interaction Point Description : </p>
+                        <p className='w-[30%]'>Interaction Point/Task Description : </p>
                         <p className='text-[14px]'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                             industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
                             and scrambled it to make a type specimen book.It has survived not only five centuries, but also the
@@ -163,7 +163,7 @@ const PreviewTaskDetails = () => {
 
                     <div className='pt-4 pb-2'>
                         <div className='task-details'>
-                            <p>Interaction Point</p>
+                            <p>Interaction Point/Task</p>
                             <div className='task-information px-7 py-8 text-[14px]' style={{ background: 'rgba(217, 228, 242, 1)', borderRadius: '3px' }}>
                                 Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer

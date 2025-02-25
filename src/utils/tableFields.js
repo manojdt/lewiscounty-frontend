@@ -123,7 +123,7 @@ export const discussionColumns = [
   },
   {
     field: "task",
-    headerName: "Interaction Points",
+    headerName: "Interaction Points/Tasks",
     flex: 1,
     id: 4,
   },

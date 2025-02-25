@@ -296,7 +296,7 @@ const MobileDrawer = ({ isOpen, onClose }) => {
                   />
                   
                   <MenuItem
-                    label="Interaction Points"
+                    label="Interaction Points/Tasks"
                     path={role === "mentee" ? "/mentee-tasks" : "/mentor-tasks"}
                     // icon={TaskIcon}
                     onClick={() => handleNavigation(role === "mentee" ? "/mentee-tasks" : "/mentor-tasks")}
