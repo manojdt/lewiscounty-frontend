@@ -34,7 +34,7 @@ export const getMembersList = createAsyncThunk(
         const getMembersInfo = await api.get(`members/member-list?${queryString}`);
         if (getMembersInfo.status === 200 && getMembersInfo.data) {
             return {
-                role: query.role_name,
+                role: query.role_name||"admin",
                 data: getMembersInfo.data
             };
         }
