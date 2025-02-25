@@ -73,7 +73,9 @@ export const requestPageBreadcrumbs = {
   mentorNewEditReport : 'new',
   mentorPendingEditReport : 'pending',
   mentorDraftEditReport : 'draft',
-  mentorDashboardProgram : "mentorDashboardProgram"
+  mentorDashboardProgram : "mentorDashboardProgram",
+  adminMemberChat : "adminMemberchat",
+  menteesProfileCounts : "menteesProfileCount",
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -1140,4 +1142,30 @@ export const request_mentor_dashboardprogram = (name, type, typeLabel) => {
   ];
 };
 
+//Admin Member Chat
 
+export const adminMemberChat = (name) => {
+  
+  return [
+    {
+      label: "Members",
+      path: `/members`,
+    },
+    {
+      label: `View Chat`,
+    },
+  ];
+}; 
+
+export const menteesProfileCounts = (name) => {
+  
+  return [
+    {
+      label: "Profile",
+      path: -1,
+    },
+    {
+      label: `Joined Mentees`,
+    },
+  ];
+}; 

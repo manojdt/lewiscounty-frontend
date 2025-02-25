@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +34,7 @@ import NoProgramImageIcon from "../../assets/icons/noProgramImageIcon.svg";
 import Balck_Heart_Icon from "../../assets/icons/gray-heart.svg";
 import Crown_Icon from "../../assets/icons/cronwn.svg";
 import moment from "moment";
-import NoDataIcon from "../../assets/icons/no-data-2.svg"
+import NoDataIcon from "../../assets/icons/no-data-2.svg";
 import { requestPageBreadcrumbs } from "../../component/Breadcrumbs/BreadcrumbsCommonData";
 
 export default function ProgramCard({
@@ -42,7 +47,7 @@ export default function ProgramCard({
   action = [],
   noTitle = false,
   loadProgram,
-  tableIcon
+  tableIcon,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -325,8 +330,16 @@ export default function ProgramCard({
           </div>
         )}
 
-        <div className={`py-3 px-3 ${programs?.length < 6 ? 'h-[1070px]' : ""}`}>
-          <div className={programs?.length > 0 ? `grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3`: "h-full" }>
+        <div
+          className={`py-3 px-3 ${programs?.length < 6 ? "h-[1070px]" : ""}`}
+        >
+          <div
+            className={
+              programs?.length > 0
+                ? `grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+                : "h-full"
+            }
+          >
             {programs && programs.length ? (
               programs.map((currentProgram, index) => {
                 let startDate = "";
@@ -364,16 +377,16 @@ export default function ProgramCard({
                     className={`curated-programs program-container flex gap-1 items-center py-5 px-2 sm:px-2 md:px-2 lg:px-5 xl:px-5`}
                     style={{
                       ...(currentProgram.status === "yettoapprove" &&
-                        !currentProgram?.mentor_id
+                      !currentProgram?.mentor_id
                         ? role === "admin" &&
                           userdetails?.data?.user_id !==
-                          currentProgram?.created_by
+                            currentProgram?.created_by
                           ? {}
                           : {
-                            opacity: "0.5",
-                            pointerEvents: "none",
-                            cursor: "not-allowed",
-                          }
+                              opacity: "0.5",
+                              pointerEvents: "none",
+                              cursor: "not-allowed",
+                            }
                         : {}),
                     }}
                   >
@@ -428,10 +441,12 @@ export default function ProgramCard({
                             currentProgram.program_edit &&
                             !programImageRestirct.includes(
                               currentProgram.status
-                            ) && (
+                            ) &&
+                            currentProgram.participated_mentees_count === 0 && ( // Added condition
                               <div
-                                className={`absolute top-2 left-3 cursor-pointer  ${hoverIndex === index ? "block" : "hidden"
-                                  }`}
+                                className={`absolute top-2 left-3 cursor-pointer  ${
+                                  hoverIndex === index ? "block" : "hidden"
+                                }`}
                                 style={{
                                   background: "#fff",
                                   borderRadius: "50%",
@@ -490,7 +505,9 @@ export default function ProgramCard({
                               !programEditRestirct.includes(
                                 currentProgram.status
                               ) &&
-                              hoverIndex === index && (
+                              hoverIndex === index &&
+                              currentProgram.participated_mentees_count ===
+                                0 && ( // Added condition
                                 <IconButton
                                   onClick={() => {
                                     if (
@@ -500,10 +517,11 @@ export default function ProgramCard({
                                       )
                                     ) {
                                       navigate(
-                                        `/update-program/${currentProgram.id}${"admin_assign_program" in
+                                        `/update-program/${currentProgram.id}${
+                                          "admin_assign_program" in
                                           currentProgram
-                                          ? `?program_create_type=admin_program`
-                                          : ""
+                                            ? `?program_create_type=admin_program`
+                                            : ""
                                         }`
                                       );
                                     }
@@ -583,7 +601,13 @@ export default function ProgramCard({
                           >
                             Instructor :{" "}
                             <Link
-                              to={`/mentor-details/${currentProgram?.created_by}?type=view&breadcrumbsType=${location.pathname==="/programs"?requestPageBreadcrumbs.ProgramsCard:requestPageBreadcrumbs.dashboardProgramsCard}`}
+                              to={`/mentor-details/${
+                                currentProgram?.created_by
+                              }?type=view&breadcrumbsType=${
+                                location.pathname === "/programs"
+                                  ? requestPageBreadcrumbs.ProgramsCard
+                                  : requestPageBreadcrumbs.dashboardProgramsCard
+                              }`}
                               style={{ color: "#1D5BBF" }}
                             >
                               {currentProgram?.mentor_name} (
@@ -594,9 +618,9 @@ export default function ProgramCard({
                         <div className="flex justify-center pt-2">
                           {(currentProgram.status === "yettoapprove" &&
                             !currentProgram?.mentor_id) ||
-                            currentProgram.status === "draft" ? (
+                          currentProgram.status === "draft" ? (
                             role === "admin" &&
-                              userdetails?.data?.user_id !==
+                            userdetails?.data?.user_id !==
                               currentProgram?.created_by ? (
                               <button
                                 className="text-white text-[12px] py-3 w-[140px]"
@@ -612,21 +636,22 @@ export default function ProgramCard({
                               </button>
                             ) : (
                               <button
-                                className={`text-white text-[12px] py-3 ${currentProgram.status === "draft"
+                                className={`text-white text-[12px] py-3 ${
+                                  currentProgram.status === "draft"
                                     ? "w-[110px]"
                                     : "w-[170px]"
-                                  }`}
+                                }`}
                                 onClick={() =>
                                   currentProgram.status === "draft"
                                     ? navigate(
-                                      `/update-program/${currentProgram.id}`
-                                    )
+                                        `/update-program/${currentProgram.id}`
+                                      )
                                     : undefined
                                 }
                                 style={{
                                   background:
                                     currentProgram.status === "yettoapprove" &&
-                                      !currentProgram?.mentor_id
+                                    !currentProgram?.mentor_id
                                       ? "#76818E"
                                       : "rgba(29, 91, 191, 1)",
                                   borderRadius: "5px",
@@ -673,11 +698,13 @@ export default function ProgramCard({
                           <div
                             className="text-[12px] px-2 py-2"
                             style={{
-                              background: `${ProgramStatusInCard[currentProgram.status]?.bg
-                                }`,
-                              color: `${ProgramStatusInCard[currentProgram.status]
+                              background: `${
+                                ProgramStatusInCard[currentProgram.status]?.bg
+                              }`,
+                              color: `${
+                                ProgramStatusInCard[currentProgram.status]
                                   ?.color
-                                }`,
+                              }`,
                               borderRadius: "3px",
                             }}
                           >
@@ -700,14 +727,15 @@ export default function ProgramCard({
                 );
               })
             ) : (
-              <div className="flex items-center justify-center h-full"
-              // style={{
-              //   position: "relative",
-              //   top: "50%",
-              //   left: "50%",
-              //   transform: "translate(-50%, -50%)",
+              <div
+                className="flex items-center justify-center h-full"
+                // style={{
+                //   position: "relative",
+                //   top: "50%",
+                //   left: "50%",
+                //   transform: "translate(-50%, -50%)",
 
-              // }}
+                // }}
               >
                 <img src={NoDataIcon} alt="noDataImage" />
               </div>

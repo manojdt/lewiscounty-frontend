@@ -98,6 +98,7 @@ export default function Certificate() {
       timer = setTimeout(() => func(...args), delay);
     };
   };
+  
   const handleSearch = debounce((value) => {
     let query = value.trim() !== "" ? `?search=${value}` : "";
   
@@ -114,7 +115,7 @@ export default function Certificate() {
               }`
             : `&page=${paginationModel?.page + 1}&limit=${
                 paginationModel?.pageSize
-              }&request_type=certificate`)
+              }&request_type=certificate&status=${actionTab}`)
       )
     );
   }, 300);

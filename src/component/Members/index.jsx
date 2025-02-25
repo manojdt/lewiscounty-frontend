@@ -34,7 +34,7 @@ import {
   memberMenteeDashBoard,
   requestPageBreadcrumbs,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { MemberMain } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { MemberMain,   } from "../Breadcrumbs/BreadcrumbsCommonData";
 import DeleteIcon from "../../assets/icons/Delete.svg"
 import OverDeleteIcon from "../../assets/images/delete_1x.png";
 const Members = () => {
@@ -323,7 +323,7 @@ const Members = () => {
                       : memberStatusColor.cancel.bgColor,
                     lineHeight: "30px",
                     borderRadius: "3px",
-                    width: params.row.member_active ? "110px" : "92px",
+                    width: params.row.member_active ? "110px" : "110px",
                     height: "34px",
                     color: params.row.member_active
                       ? memberStatusColor.accept?.color
@@ -376,7 +376,7 @@ const Members = () => {
 
                 <MenuItem
                   className="!text-[12px]"
-                  onClick={() => navigate("/discussions")}
+                  onClick={() => navigate(`/discussions?breadcrumbsType=${requestPageBreadcrumbs.adminMemberChat}`)}
                 >
                   <img
                     src={TickCircle}

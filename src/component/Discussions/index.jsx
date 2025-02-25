@@ -1,31 +1,39 @@
-import React, { useState } from 'react';
-import SearchIcon from '../../assets/icons/search.svg';
-import ViewIcon from '../../assets/images/view1x.png';
-import DataTable from '../../shared/DataGrid';
-import { discussionData } from '../../mock';
-import { discussionColumns } from '../../utils/tableFields';
-import { useNavigate } from 'react-router-dom';
-import DiscussionDetails from './DiscussionDetails';
+import React, { useEffect, useState } from "react";
+import SearchIcon from "../../assets/icons/search.svg";
+import ViewIcon from "../../assets/images/view1x.png";
+import DataTable from "../../shared/DataGrid";
+import { discussionData } from "../../mock";
+import { discussionColumns } from "../../utils/tableFields";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import DiscussionDetails from "./DiscussionDetails";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import {
+  adminMemberChat,
+  requestPageBreadcrumbs,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
 
 export default function Discussions() {
   const navigate = useNavigate();
-  const [actionTab, setActiveTab] = useState('new');
+  const [actionTab, setActiveTab] = useState("new");
+  const [searchParams] = useSearchParams();
+  const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const programRequestTab = [
     {
-      name: 'New',
-      key: 'new',
+      name: "New",
+      key: "new",
     },
     {
-      name: 'Active',
-      key: 'active',
+      name: "Active",
+      key: "active",
     },
     {
-      name: 'Completed',
-      key: 'completed',
+      name: "Completed",
+      key: "completed",
     },
     {
-      name: 'Archive',
-      key: 'archieve',
+      name: "Archive",
+      key: "archieve",
     },
   ];
 
@@ -35,18 +43,18 @@ export default function Discussions() {
 
   const discussionColumn = [
     {
-      field: 'action',
-      headerName: 'Action',
+      field: "action",
+      headerName: "Action",
       flex: 1,
       id: 0,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleClick(e, params.row)}
             >
-              <img src={ViewIcon} alt='MoreIcon' />
+              <img src={ViewIcon} alt="MoreIcon" />
             </div>
           </>
         );
@@ -54,27 +62,27 @@ export default function Discussions() {
     },
     ...discussionColumns,
     {
-      field: 'chat',
-      headerName: 'Chat',
+      field: "chat",
+      headerName: "Chat",
       flex: 1,
       id: 8,
       renderCell: (params) => {
         return (
           <>
             <div
-              className='cursor-pointer flex items-center h-full'
+              className="cursor-pointer flex items-center h-full"
               onClick={(e) => handleClick(e, params.row)}
             >
               <button
                 style={{
-                  background: 'rgba(29, 91, 191, 1)',
-                  color: '#fff',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '35px',
-                  width: '70px',
-                  borderRadius: '5px',
+                  background: "rgba(29, 91, 191, 1)",
+                  color: "#fff",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "35px",
+                  width: "70px",
+                  borderRadius: "5px",
                 }}
               >
                 Chat
@@ -85,25 +93,38 @@ export default function Discussions() {
       },
     },
   ];
-
+  const handleBreadcrumbs = (key) => {
+    const admin_member_chat = adminMemberChat();
+    if (requestPageBreadcrumbs.adminMemberChat) {
+      setBreadcrumbsArray(admin_member_chat);
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  });
   return (
-    <div className='px-2 mt-6 sm:px-2 md:px-6 lg:px-8 xl:px-8 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-10'>
-      <div className='mb-5'>Discussions</div>
-      <div className='program-request '>
-        <div className='col-span-4'>
+    <div className="px-2 mt-6 sm:px-2 md:px-6 lg:px-8 xl:px-8 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-10">
+      <div className="pb-2">
+        <Breadcrumbs items={breadcrumbsArray} />
+      </div>
+      <div className="mb-5">Discussions</div>
+      <div className="program-request ">
+        <div className="col-span-4">
           <div
             style={{
-              boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)',
-              borderRadius: '10px',
+              boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+              borderRadius: "10px",
             }}
           >
-            <div className='px-4 py-7 program-info sm:px-4 md:px-4 lg:px-6 xl:px-6'>
-              <div className='flex justify-between px-0 sm:px-0 md:px-0 lg:px-5 xl:px-5 mb-2 sm:mb-2 md:mb-2 lg:mb-5 xl:mb-5 items-start border-b-2 sm:items-start md:items-start lg:items-center xl:items-center'>
-                <ul className='tab-list'>
+            <div className="px-4 py-7 program-info sm:px-4 md:px-4 lg:px-6 xl:px-6">
+              <div className="flex justify-between px-0 sm:px-0 md:px-0 lg:px-5 xl:px-5 mb-2 sm:mb-2 md:mb-2 lg:mb-5 xl:mb-5 items-start border-b-2 sm:items-start md:items-start lg:items-center xl:items-center">
+                <ul className="tab-list">
                   {programRequestTab.map((discussion, index) => (
                     <li
                       className={`${
-                        actionTab === discussion.key ? 'active' : ''
+                        actionTab === discussion.key ? "active" : ""
                       } relative`}
                       key={index}
                       onClick={() => setActiveTab(discussion.key)}

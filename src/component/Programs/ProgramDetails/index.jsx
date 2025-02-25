@@ -586,7 +586,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               alignItems: "center",
               borderRadius: "3px",
             }}
-            onClick={() => navigate(`/mentee-details/${params.row?.id}`)}
+            onClick={() => navigate(`/mentee-details/${params.row?.id}?breadcrumbsType=${requestPageBreadcrumbs.menteesProfileCounts}`)}
           >
             {" "}
             View Profile{" "}
