@@ -48,14 +48,11 @@ export const Signup = () => {
 
   const handleClosePopup = () => {
     setShowBackdrop(false);
+    navigate("/login"); // Redirect to login page
   };
   const handleCreateAccount = (event) => {
     event.preventDefault();
-
-    // Simulate a successful account creation process
-    setTimeout(() => {
-      navigate("/login"); // Redirect to login page
-    }, 1000); // Add delay if needed
+    setShowBackdrop(true);
   };
   const onSubmit = async (data) => {
     const { first_name, last_name, email, password } = data;
