@@ -1161,11 +1161,11 @@ export const menteesProfileCounts = (name) => {
   
   return [
     {
-      label: "Profile",
+      label: "Joined Mentees",
       path: -1,
     },
     {
-      label: `Joined Mentees`,
+      label: `Profile`,
     },
   ];
 }; 
