@@ -237,7 +237,7 @@ const ViewReport = () => {
                 fontWeight: 600,
               }}
             >
-              Interaction Point Submitted Successfully
+              Interaction Point/Task Submitted Successfully
             </p>
           </div>
         </div>

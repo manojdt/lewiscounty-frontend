@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import { dateFormat, formatRenderCellDateValues } from "./utils";
+import { capitalizeFirstLetter, dateFormat, formatRenderCellDateValues } from "./utils";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { taskStatusColor, taskStatusText } from "./utils/constant";
 import moment from "moment";
@@ -891,7 +891,7 @@ export const taskColumns = [
   },
   {
     field: "task_name",
-    headerName: "Interaction Point Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 1,
   },
@@ -903,7 +903,7 @@ export const taskColumns = [
   },
   {
     field: "task_description",
-    headerName: "Interaction Point Description",
+    headerName: "Interaction Point/Task Description",
     flex: 1,
     id: 1,
   },
@@ -942,7 +942,7 @@ export const taskColumns = [
   // },
   {
     field: "mentor_name",
-    headerName: "Interaction Points Sent by",
+    headerName: "Interaction Point/Task Sent by",
     flex: 1,
     id: 2,
   },
@@ -1004,7 +1004,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "task_name",
-    headerName: "Task Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 1,
   },
@@ -1016,7 +1016,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "task_description",
-    headerName: "Task description",
+    headerName: "Interaction Point/Task description",
     flex: 1,
     id: 2,
   },
@@ -1040,7 +1040,7 @@ export const mentorTaskColumns = [
   },
   {
     field: "status",
-    headerName: "Interaction Points Status",
+    headerName: "Interaction Point/Task Status",
     flex: 1,
     id: 2,
     renderCell: (params) => {
@@ -1270,7 +1270,7 @@ export const discussionColumns = [
   },
   {
     field: "task",
-    headerName: "Interaction Points",
+    headerName: "Interaction Points/Tasks",
     width: 250,
     id: 1,
   },
@@ -2600,77 +2600,93 @@ export const membersData = membersList();
 
 export const allMembersColumns = [
   {
-    field: "name",
+    field: "full_name",
     headerName: "Name",
     flex: 1,
     id: 0,
-    for: ["mentor", "mentee"],
+    for: ["admin"],
   },
   {
     field: "category_name",
     headerName: "Category",
     flex: 1,
     id: 1,
-    for: ["mentor", "mentee"],
+    for: ["admin"],
   },
   {
     field: "designation",
     headerName: "Designation",
     flex: 1,
     id: 2,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
+  },
+  {
+    field: "average_rating",
+    headerName: "User Type",
+    flex: 1,
+    id: 5,
+      for: ["admin"],
+    renderCell: (params) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {" "}
+          {capitalizeFirstLetter(params?.row?.role)}
+  
+        </div>
+      );
+    },
   },
   {
     field: "skills",
     headerName: "Skills",
     flex: 1,
     id: 3,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
   },
   {
     field: "phone_number",
     headerName: "Phone Number",
     flex: 1,
     id: 4,
-    for: ["mentor", "mentee"],
+    for: ["admin"],
   },
   {
     field: "email",
     headerName: "Email",
     flex: 1,
     id: 5,
-    for: ["mentor", "mentee"],
+    for: ["admin"],
   },
-  {
-    field: "location",
-    headerName: "Location",
-    flex: 1,
-    id: 6,
-    for: ["mentor"],
-  },
-  {
-    field: "address",
-    headerName: "Location",
-    flex: 1,
-    id: 16,
-    for: ["mentee"],
-  },
-  {
-    field: "years_of_experience",
-    headerName: "Experience",
-    flex: 1,
-    id: 7,
-    align: "center",
-    for: ["mentor"],
-  },
-  {
-    field: "experience",
-    headerName: "Experience",
-    flex: 1,
-    id: 11,
-    align: "center",
-    for: ["mentee"],
-  },
+  // {
+  //   field: "location",
+  //   headerName: "Location",
+  //   flex: 1,
+  //   id: 6,
+  //     for: ["admin"],
+  // },
+  // {
+  //   field: "address",
+  //   headerName: "Location",
+  //   flex: 1,
+  //   id: 16,
+  //   for: ["mentee"],
+  // },
+  // {
+  //   field: "years_of_experience",
+  //   headerName: "Experience",
+  //   flex: 1,
+  //   id: 7,
+  //   align: "center",
+  //     for: ["admin"],
+  // },
+  // {
+  //   field: "experience",
+  //   headerName: "Experience",
+  //   flex: 1,
+  //   id: 11,
+  //   align: "center",
+  //   for: ["mentee"],
+  // },
   {
     field: "attended_program_count",
     headerName: "Attended Programs",
@@ -2678,27 +2694,27 @@ export const allMembersColumns = [
     id: 8,
     for: ["mentor", "mentee"],
   },
-  {
-    field: "current_program_count",
-    headerName: "Current Programs",
-    flex: 1,
-    id: 9,
-    for: ["mentor"],
-  },
-  {
-    field: "enrolled_program",
-    headerName: "Enrolled Programs",
-    flex: 1,
-    id: 12,
-    for: ["mentee"],
-  },
-  {
-    field: "certificate",
-    headerName: "Certificates",
-    flex: 1,
-    id: 13,
-    for: ["mentee"],
-  },
+  // {
+  //   field: "current_program_count",
+  //   headerName: "Current Programs",
+  //   flex: 1,
+  //   id: 9,
+  //     for: ["admin"],
+  // },
+  // {
+  //   field: "enrolled_program",
+  //   headerName: "Enrolled Programs",
+  //   flex: 1,
+  //   id: 12,
+  //   for: ["mentee"],
+  // },
+  // {
+  //   field: "certificate",
+  //   headerName: "Certificates",
+  //   flex: 1,
+  //   id: 13,
+  //   for: ["mentee"],
+  // },
   // {
   //   field: "designation",
   //   headerName: "Designation",
@@ -2712,35 +2728,9 @@ export const allMembersColumns = [
   //   headerName: "Auto Approval",
   //   flex: 1,
   //   id: 5,
-  //   for: ["mentor"],
+  //     for: ["admin"],
   // },
-  {
-    field: "average_rating",
-    headerName: "Ratings",
-    flex: 1,
-    id: 5,
-    for: ["mentor"],
-    renderCell: (params) => {
-      return (
-        <div className="flex gap-2 items-center">
-          {" "}
-          {params?.row?.average_rating > 0 && params?.row?.average_rating && (
-            <>
-              <img
-                src={StarIcon}
-                alt="StarIcon"
-                className="w-4 h-4"
-              />
-              <span className="text-blue-700 font-bold pt-[2px]">
-                {" "}
-                {params?.row?.average_rating}
-              </span>
-            </>
-          )}
-        </div>
-      );
-    },
-  },
+  
 ];
 export const assignMentorColumns = [
   {
@@ -2762,14 +2752,14 @@ export const assignMentorColumns = [
     headerName: "Designation",
     flex: 1,
     id: 2,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
   },
   {
     field: "skills",
     headerName: "Skills",
     flex: 1,
     id: 3,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
   },
   {
     field: "phone_number",
@@ -2848,14 +2838,14 @@ export const MentorChangeViewColumns = [
     headerName: "Sessions",
     flex: 1,
     id: 2,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
   },
   {
     field: "skills",
     headerName: "Course Level",
     flex: 1,
     id: 3,
-    for: ["mentee", "mentee"],
+     for: ["admin"],
   },
   {
     field: "phone_number",
@@ -3120,13 +3110,13 @@ export const mentorTaskListColumns = [
   },
   {
     field: "task_name",
-    headerName: "Interaction Point Name",
+    headerName: "Interaction Point/Task Name",
     flex: 1,
     id: 0,
   },
   {
     field: "task_details",
-    headerName: "Interaction Point Description",
+    headerName: "Interaction Point/Task Description",
     flex: 1,
     id: 0,
   },

@@ -89,7 +89,7 @@ const MentorTaskDetails = () => {
         cancel: false,
         type: "",
         activity: false,
-        title: "Cancel Interaction Point Reason",
+        title: "Cancel Interaction Point/Task Reason",
         pass: false
     })
     const [newType, setNewType] = React.useState("")
@@ -270,7 +270,7 @@ const MentorTaskDetails = () => {
     },
     {
       field: "status",
-      headerName: "Interaction Points Status",
+      headerName: "Interaction Point/Task Status",
       flex: 1,
       id: 0,
       renderCell: (params) => {
@@ -418,7 +418,7 @@ const MentorTaskDetails = () => {
                       onClick={() =>
                         handleOpenConfirmPopup(
                           "cancel",
-                          "Cancel Interaction Point Reason",
+                          "Cancel Interaction Point/Task Reason",
                           "newTab"
                         )
                       }
@@ -429,7 +429,7 @@ const MentorTaskDetails = () => {
                         alt="Cancel"
                         className="pr-3 w-[30px]"
                       />
-                      Cancel Interaction point
+                      Cancel Interaction Point/Task
                     </MenuItem>
                   )}
 
@@ -551,7 +551,7 @@ const MentorTaskDetails = () => {
     setConfirmPopup({
       ...confirmPopup,
       cancel: true,
-      title: "Cancel Interaction Point Reason",
+      title: "Cancel Interaction Point/Task Reason",
     });
   };
 
@@ -756,7 +756,7 @@ const MentorTaskDetails = () => {
             <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} mb={"30px"}>
                 <Stack direction={"row"} alignItems={"center"} spacing={"14px"}>
                     <Typography className=' text-blue-600 !text-[14px] cursor-pointer' fontWeight={500}
-                        onClick={() => navigate("/mentor-tasks?type=menteetask")}>Mentees Interaction Points</Typography>
+                        onClick={() => navigate("/mentor-tasks?type=menteetask")}>Mentees Interaction Points/Tasks</Typography>
                     <img src={BreadCrumbsArrow} alt="" />
                     <Typography className='!text-[#18283D] !text-[14px] cursor-pointer' fontWeight={500}>View {menteeTaskList?.program_name}</Typography>
                 </Stack>
@@ -765,7 +765,7 @@ const MentorTaskDetails = () => {
           <Button
             btnType="button"
             btnCls="w-[auto]"
-            btnName={"Edit Interaction Point"}
+            btnName={"Edit Interaction Point/Task"}
             btnCategory="primary"
             onClick={() => handleEditTask()}
           />
@@ -960,7 +960,7 @@ const MentorTaskDetails = () => {
                 className="!text-[#18283D] !text-[16px]"
                 sx={{ fontWeight: 500 }}
               >
-                {`Interaction Point Details: `}
+                {`Interaction Point/Task Details: `}
                 <span>{menteeTaskList?.task_details}</span>
               </Typography>
             </Stack>
@@ -1061,7 +1061,7 @@ const MentorTaskDetails = () => {
                   <Button
                     btnType="button"
                     btnCls="w-[225px] h-[45px]"
-                    btnName={"Edit Interaction Point"}
+                    btnName={"Edit Interaction Point/Task"}
                     btnCategory="primary"
                     onClick={() => handleEditTask()}
                   />
@@ -1369,18 +1369,18 @@ const MentorTaskDetails = () => {
                 "Successfully marked as Fail"}
               {selectedTab !== "pending" &&
                 confirmPopup?.type === "reassign" &&
-                "Successfully Task Reassigned"}
+                "Successfully Interaction Point/Task Reassigned"}
               {(selectedTab === "pending" || selectedTab === "new") &&
                 confirmPopup?.type === "cancel" &&
-                "All Mentee’s New task has been successfully cancelled"}
+                "All Mentee’s New Interaction Point/Task has been successfully cancelled"}
               {(selectedTab === "pending" ||
                 selectedTab === "new" ||
                 newType === "newTab") &&
                 confirmPopup?.type === "cancel_all" &&
-                "Task is cancelled successfully"}
+                "Interaction Point/Task is cancelled successfully"}
               {selectedTab === "pending" &&
                 confirmPopup?.type === "pass" &&
-                "All Mentee’s New task has been successfully passed"}
+                "All Mentee’s New Interaction Point/Task has been successfully passed"}
             </p>
           </div>
         </div>

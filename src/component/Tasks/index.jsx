@@ -241,7 +241,7 @@ export const Tasks = () => {
                 className='!text-[12px]'
               >
                 <img src={StartIcon} alt='StartIcon' className='pr-3 w-[30px]' />
-                Start Interaction Point
+                Start Interaction Point/Task
               </MenuItem>
               </>}
               {seletedItem.status===TaskAllStatus.waiting_for_approval &&
@@ -254,7 +254,7 @@ export const Tasks = () => {
                 className='!text-[12px]'
               >
                 <img src={EditIcon} alt='StartIcon' className='pr-3 w-[30px]' />
-               Edit Interaction Point
+               Edit Interaction Point/Task
               </MenuItem>
               </>}
               {/* <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
@@ -492,7 +492,7 @@ export const Tasks = () => {
                   fontWeight: 600,
                 }}
               >
-                Successfully Interaction Point is started
+                Successfully Interaction Point/Task is started
               </p>
             </div>
           </div>
@@ -506,7 +506,7 @@ export const Tasks = () => {
       >
         <div className='flex justify-between px-1 sm:px-1 md:px-2 lg:px-5 xl:px-5  pb-4 mb-8 items-center border-b-2'>
           <div className='flex gap-5 items-center text-[20px]'>
-            <p>Interaction Points</p>
+            <p>Interaction Points/Tasks</p>
           </div>
           <div className='flex gap-8 items-center'>
             <div className='relative'>

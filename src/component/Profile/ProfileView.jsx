@@ -16,7 +16,6 @@ import SearchIcon from "../../assets/icons/search.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { docuSign } from "../../services/activities";
 import MoreIcon from "../../assets/icons/moreIcon.svg";
-
 import {
   Backdrop,
   Checkbox,
@@ -78,6 +77,7 @@ import FormContextProvider from "./form-context-provider";
 import api from "../../services/api";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import { dateFormat } from "../../utils";
+import { activateUser, deactivateUser } from "../../services/members";
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -107,13 +107,22 @@ export default function ProfileView() {
     following: false,
     complete: false,
   });
+  const [actionColumnInfo, setActionColumnInfo] = useState({
+    cancelPopup: false,
+    menteecancel: false,
+  });
   const {
     userDetails,
     loading: userInfoLoading,
     followInfo,
     programNotesList,
   } = useSelector((state) => state.userList);
-  const pathe = state?.reqType==="dashborad"?"/dashboard": state?.reqType ? -1 : "/all-request";
+  const pathe =
+    state?.reqType === "dashborad"
+      ? "/dashboard"
+      : state?.reqType
+      ? -1
+      : "/all-request";
   const [noteData, setNoteData] = React.useState({
     text: "",
     error: "",
@@ -136,12 +145,19 @@ export default function ProfileView() {
   const type = searchParams.get("type");
   const from = searchParams.get("from");
   const fromType = searchParams.get("fromType");
+  const member_state = searchParams.get("member_status");
   const pageType = window.location.href.includes("mentor-details")
     ? "Mentor"
     : "Mentee";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const { requestData } = useSelector((state) => state.userList);
+  const {
+    register: registerDeactivate,
+    handleSubmit: handleSubmitDeactivate,
+    formState: { errors: errorsDeactivate },
+    reset: resetDeactivate
+  } = useForm();
   const {
     register,
     formState: { errors },
@@ -161,7 +177,7 @@ export default function ProfileView() {
       getProfileInfo({
         id: params.id,
         program_limit: 3,
-        list: fromType === "topmentor"||fromType === "mymentor",
+        list: fromType === "topmentor" || fromType === "mymentor",
       })
     );
     dispatch(getFollowList(params.id));
@@ -192,7 +208,28 @@ export default function ProfileView() {
       });
     }
   };
-
+  const handleCloseCancelReasonPopup = () => {
+    resetDeactivate();
+    setActionColumnInfo({ cancelPopup: false, menteecancel: false });
+  };
+  const handleDeactive = () => {
+    handleClose();
+    setActionColumnInfo({
+      cancelPopup: true,
+      menteecancel: true,
+    });
+  };
+  const handleActivate = () => {
+    handleClose();
+    dispatch(
+      activateUser({
+        user_id: params.id,
+      })
+    ).then(() => {
+      handleCloseCancelReasonPopup();
+      navigate(-1);
+    });
+  };
   const handleRedirectDocuSign = () => {
     dispatch(docuSign()).then((res) => {
       if (res?.meta?.requestStatus === "fulfilled") {
@@ -252,7 +289,7 @@ export default function ProfileView() {
       member_id: params.id,
       categories_id: confirmPopup?.selectedItem,
     };
-    dispatch(updateMemberRequest(payload))
+    dispatch(updateMemberRequest(payload));
   };
 
   // Confirm Accept Popup
@@ -299,7 +336,7 @@ export default function ProfileView() {
     new: "New",
     cancel: "Rejected",
     accept: "Approved",
-    inreview: "In-Review"
+    inreview: "In-Review",
   };
   const reqStatusColor = {
     approved: {
@@ -334,8 +371,8 @@ export default function ProfileView() {
       color: "rgba(255, 118, 0, 1)",
       // width: "300px",
       cursor: "not-allowed",
-      background: "rgba(255, 242, 231, 1)"
-    }
+      background: "rgba(255, 242, 231, 1)",
+    },
   };
 
   // color: "rgba(255, 118, 0, 1)",
@@ -410,9 +447,24 @@ export default function ProfileView() {
       }
     }
   };
+  const handleDeactivePopupSubmit = (data) => {
+    const { reason } = data;
+    if (reason !== "") {
+      registerDeactivate();
+      dispatch(
+        deactivateUser({
+          reason: reason,
+          deactivate_user: params.id,
+        })
+      ).then(() => {
+        handleCloseCancelReasonPopup();
+        navigate(-1);
+      });
+    }
+  };
   const handleCloseConfirmPopup = () => {
     setCancelPopup(false);
-    setReview(false)
+    setReview(false);
   };
   const handleCancelSubmit = (reas) => {
     if (role === "admin") {
@@ -461,7 +513,10 @@ export default function ProfileView() {
         resetMenteeRequest();
         dispatch(updateLocalRequest({ status: "" }));
         dispatch(
-          getProfileInfo({ id: params.id, list: fromType === "topmentor"||fromType === "mymentor" })
+          getProfileInfo({
+            id: params.id,
+            list: fromType === "topmentor" || fromType === "mymentor",
+          })
         );
         navigate(pathe);
       }, 3000);
@@ -647,9 +702,9 @@ export default function ProfileView() {
       case requestPageBreadcrumbs.dashboardtopmentor:
         setBreadcrumbsArray(dashBoardTop);
         break;
-        case requestPageBreadcrumbs.menteesProfileCounts:
-          setBreadcrumbsArray(menteesProfile);
-          break;
+      case requestPageBreadcrumbs.menteesProfileCounts:
+        setBreadcrumbsArray(menteesProfile);
+        break;
       case "discussion":
         break;
       default:
@@ -809,7 +864,8 @@ export default function ProfileView() {
               }}
             >
               Are you sure you want to{" "}
-              {followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"} {pageType}?
+              {followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"}{" "}
+              {pageType}?
             </p>
           </div>
           <div className="flex justify-center">
@@ -822,7 +878,9 @@ export default function ProfileView() {
               <Button
                 btnType="button"
                 btnCls="w-[110px]"
-                btnName={followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"}
+                btnName={
+                  followInfo.is_follow === "accepted" ? "Unfollow" : "Follow"
+                }
                 btnCategory="primary"
                 onClick={handleFollow}
               />
@@ -874,7 +932,9 @@ export default function ProfileView() {
             >
               {" "}
               Successfully{" "}
-              {followInfo.is_follow === "accepted" ? "followed " : "unfollowed "}{" "}
+              {followInfo.is_follow === "accepted"
+                ? "followed "
+                : "unfollowed "}{" "}
               {pageType.toLowerCase()}
             </p>
           </div>
@@ -1488,6 +1548,7 @@ export default function ProfileView() {
               <div className="flex gap-4 items-center">
                 {/* This is Approved and Rejected status shows when not came from program Join */}
                 {from !== "program_join" &&
+                  !member_state &&
                   !["new", "pending"].includes(userDetails?.approve_status) && (
                     <div
                       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
@@ -1530,14 +1591,14 @@ export default function ProfileView() {
                     </div>
                   )}
 
-                 {from !== "program_join" && type !== "view" && (
+                {from !== "program_join" && type !== "view" && (
                   <div
                     className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-200"
                     onClick={handleClick}
                   >
                     <img src={MoreIcon} alt="" />
                   </div>
-                 )}
+                )}
 
                 <Menu
                   anchorEl={anchorEl}
@@ -1547,7 +1608,9 @@ export default function ProfileView() {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  {["new", "pending", "inreview"].includes(userDetails?.approve_status) && (
+                  {["new", "pending", "inreview"].includes(
+                    userDetails?.approve_status
+                  ) && (
                     <MenuItem
                       className="!text-[12px]"
                       onClick={handleMemberAcceptRequest}
@@ -1558,21 +1621,60 @@ export default function ProfileView() {
                   {["new", "pending"].includes(userDetails?.approve_status) && (
                     <MenuItem
                       className="!text-[12px]"
-                      onClick={() =>{
-                        setReview(true)
-                        setCancelPopup(true)
-                      }
-                    }
+                      onClick={() => {
+                        setReview(true);
+                        setCancelPopup(true);
+                      }}
                     >
                       Review
                     </MenuItem>
                   )}
-                  {["new", "pending", "inreview"].includes(userDetails?.approve_status) && (
+                  {["new", "pending", "inreview"].includes(
+                    userDetails?.approve_status
+                  ) && (
                     <MenuItem
                       className="!text-[12px]"
                       onClick={() => setCancelPopup(true)}
                     >
                       Reject
+                    </MenuItem>
+                  )}
+                  {/*Adding the same option as the user table chate active and deactive options */}
+                  {member_state&&
+                  <MenuItem
+                    className="!text-[12px]"
+                    onClick={() =>
+                      navigate(
+                        `/discussions?breadcrumbsType=${requestPageBreadcrumbs.adminMemberChat}`
+                      )
+                    }
+                  >
+                    {/* <img
+                      src={TickCircle}
+                      alt="AcceptIcon"
+                      className="pr-3 w-[27px]"
+                    /> */}
+                    Chat
+                  </MenuItem>}
+
+                  {member_state === "Deactive" && (
+                    <MenuItem className="!text-[12px]" onClick={handleActivate}>
+                      {/* <img
+                        src={PowerIcon}
+                        alt="CancelIcon"
+                        className="pr-3 w-[27px]"
+                      /> */}
+                      Activate
+                    </MenuItem>
+                  )}
+                  {member_state === "Active" && (
+                    <MenuItem className="!text-[12px]" onClick={handleDeactive}>
+                      {/* <img
+                        src={CloseCircle}
+                        alt="CancelIcon"
+                        className="pr-3 w-[27px]"
+                      /> */}
+                      Deactivate
                     </MenuItem>
                   )}
                   <MenuItem
@@ -1729,7 +1831,8 @@ export default function ProfileView() {
           )}
         </div>
 
-        {((fromType === "topmentor" && role === "mentee")||(fromType === "mymentor" && role === "mentee")) &&
+        {((fromType === "topmentor" && role === "mentee") ||
+          (fromType === "mymentor" && role === "mentee")) &&
           userDetails?.upcoming_programs?.length > 0 && (
             <div className="bg-[#F9F9F9]">
               <div className="flex justify-between items-center border-b border-border-main px-5 py-3">
@@ -1756,16 +1859,71 @@ export default function ProfileView() {
           )}
         <CancelPopup
           open={cancelPopup}
-          header={review?"Review Reason":"Reject Reason"}
+          header={review ? "Review Reason" : "Reject Reason"}
           handleClosePopup={() => handleCloseConfirmPopup("cancel")}
           handleSubmit={(reason) => {
-            if(review){
-              handleReviewSubmit(reason)
-            }else{
+            if (review) {
+              handleReviewSubmit(reason);
+            } else {
               handleCancelSubmit(reason);
             }
           }}
         />
+        <MuiModal
+          modalSize="md"
+          modalOpen={actionColumnInfo.cancelPopup}
+          modalClose={handleCloseCancelReasonPopup}
+          noheader
+        >
+          <div className="p-5">
+            <div
+              className="flex flex-col gap-5 border rounded-lg"
+              style={{ borderColor: "rgba(29, 91, 191, 1)" }}
+            >
+              <div className="flex justify-between px-3 py-4 border-b">
+                <p className="text-base font-medium">Deactivate Reason</p>
+                <img
+                  className="cursor-pointer"
+                  onClick={handleCloseCancelReasonPopup}
+                  src={CancelIcon}
+                  alt="CancelIcon"
+                />
+              </div>
+              <form
+               onSubmit={handleSubmitDeactivate(handleDeactivePopupSubmit)} 
+                className="p-4"
+              >
+                <label className="block text-xs font-bold mb-2">Reason</label>
+                <textarea
+                  {...registerDeactivate("reason", {
+                    required: "This field is required",
+                  })}
+                  rows="4"
+                  className="block p-2.5 w-full text-sm border rounded-md focus:ring-2 focus:ring-blue-500"
+                  placeholder=""
+                ></textarea>
+                {errors["reason"] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors["reason"].message}
+                  </p>
+                )}
+                <div className="flex justify-center gap-4 mt-5">
+                  <Button
+                    btnName="Cancel"
+                    btnCategory="secondary"
+                    onClick={handleCloseCancelReasonPopup}
+                  />
+                  <button
+                    type="submit"
+                    className="py-2 px-6 text-white bg-gradient-to-r from-[#00AEBD] to-[#1D5BBF] rounded-md"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </MuiModal>
       </div>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

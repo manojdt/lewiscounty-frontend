@@ -288,7 +288,7 @@ const ViewTask = () => {
                             </span>
                         </Typography>
                         <Typography className='!text-[#18283D] !text-[14px]' sx={{ fontWeight: 500 }}>
-                        Interaction Point Details:
+                        Interaction Point/Task Details:
                             <span>
                                 {taskDetails?.task_description}
                             </span>
@@ -308,7 +308,7 @@ const ViewTask = () => {
                 {
                     ["completed", "pending", "completed"].includes(taskDetails?.status) &&
                     <div style={{ marginTop: "40px" }}>
-                        <Typography className='!text-[14px] !text-[#18283D]'>Interaction Point Solution</Typography>
+                        <Typography className='!text-[14px] !text-[#18283D]'>Interaction Point/Task Solution</Typography>
 
                         <Box className="bg-[#1D5BBF] px-[20px] py-[12px] rounded-[3px]" mt={1}>
                             <Typography className='!text-[14px] !text-[#fff]'>{taskDetails?.task_solution}</Typography>
@@ -468,7 +468,7 @@ const ViewTask = () => {
                         taskDetails?.status === "new" &&
                         <Stack direction={"row"} alignItems={"center"} spacing={"20px"}>
                             <Button
-                                btnName='Cancel Interaction Point'
+                                btnName='Cancel Interaction Point/Task'
                                 btnCategory='secondary'
                                 onClick={() => handleOpenPopup()}
                                 btnCls='w-[auto] !border !border-[#E0382D] rounded-[3px] !text-[#E0382D] h-[45px]'
@@ -507,7 +507,7 @@ const ViewTask = () => {
                     }
                 </Stack>
             </div>
-            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header={cancelPopup?.type === "reassign" ? "Re Assign Reason" : "Cancel Interaction Point Reason"}
+            <CancelPopup open={cancelPopup?.bool} handleClosePopup={handleClosePopup} header={cancelPopup?.type === "reassign" ? "Re Assign Reason" : "Cancel Interaction Point/Task Reason"}
                 handleSubmit={(reason) => handleCancelSubmit(reason)} />
 
             <Backdrop
@@ -523,7 +523,7 @@ const ViewTask = () => {
                             style={{
                                 fontWeight: 600
                             }}
-                        >{cancelPopup?.type === "reassign" ? "Successfully Task Reassigned" : "Mentee New task has been successfully cancelled"}</p>
+                        >{cancelPopup?.type === "reassign" ? "Successfully Interaction Point/Task Reassigned" : "Mentee New Interaction Point/Task has been successfully cancelled"}</p>
                     </div>
 
                 </div>
@@ -557,7 +557,7 @@ const ViewTask = () => {
 
             </Backdrop>
 
-            <CancelPopup header='Task fail Reason' open={resultCheck === "fail"} handleSubmit={(reason) => handleUpdateResult("fail", reason)}
+            <CancelPopup header='TaInteraction Point/Task fail Reason' open={resultCheck === "fail"} handleSubmit={(reason) => handleUpdateResult("fail", reason)}
                 handleClosePopup={() => setResultCheck("")} />
 
 

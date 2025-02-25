@@ -123,7 +123,7 @@ export const discussionColumns = [
   },
   {
     field: "task",
-    headerName: "Interaction Points",
+    headerName: "Interaction Points/Tasks",
     flex: 1,
     id: 4,
   },
@@ -348,15 +348,15 @@ export const programListColumns = [
       flex: 1,
       id: 1
   },
-  {
-      field: 'session_count',
-      headerName: 'Sessions',
-      flex: 1,
-      id: 2,
-      renderCell: (params) => {
-        return <div className="pl-4">{params?.row?.session_count}</div>
-      }
-  },
+  // {
+  //     field: 'session_count',
+  //     headerName: 'Sessions',
+  //     flex: 1,
+  //     id: 2,
+  //     renderCell: (params) => {
+  //       return <div className="pl-4">{params?.row?.session_count}</div>
+  //     }
+  // },
   {
       field: 'course_level',
       headerName: 'Course Level',
@@ -367,23 +367,41 @@ export const programListColumns = [
       }
   },
   {
-      field: 'to_request',
-      headerName: 'Start date & End Date',
-      flex: 1,
-      id: 4,
-      renderCell: (params) => {
-        return <div>{formatRenderCellDateValues(params?.row?.start_date)} & {formatRenderCellDateValues(params?.row?.end_date)}</div>
-    }
-  },
+    field: 'start_date',
+    headerName: 'Start Date',
+    flex: 1,
+    id: 4,
+    renderCell: (params) => {
+      return <div>{formatRenderCellDateValues(params?.row?.start_date)}</div>
+  }
+},
   {
-      field: 'duration',
-      headerName: 'Durations',
-      flex: 1,
-      id: 5,
-      renderCell: (params) => {
-        return <div className="pl-4">{params.row.duration} {params?.row?.duration>1?"Days":"Day"}</div>
-      }
+    field: 'end_date',
+    headerName: 'End Date',
+    flex: 1,
+    id: 4,
+    renderCell: (params) => {
+      return <div>{formatRenderCellDateValues(params?.row?.end_date)}</div>
+  }
   },
+  // {
+  //     field: 'to_request',
+  //     headerName: 'Start date & End Date',
+  //     flex: 1,
+  //     id: 4,
+  //     renderCell: (params) => {
+  //       return <div>{formatRenderCellDateValues(params?.row?.start_date)} & {formatRenderCellDateValues(params?.row?.end_date)}</div>
+  //   }
+  // },
+  // {
+  //     field: 'duration',
+  //     headerName: 'Durations',
+  //     flex: 1,
+  //     id: 5,
+  //     renderCell: (params) => {
+  //       return <div className="pl-4">{params.row.duration} {params?.row?.duration>1?"Days":"Day"}</div>
+  //     }
+  // },
   {
     field: 'status',
     headerName: 'Status',

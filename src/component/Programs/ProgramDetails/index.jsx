@@ -2210,7 +2210,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                       alt="PlusCircle"
                                       className="pr-3 w-[25px]"
                                     />
-                                    Assign Interaction Point to Mentees
+                                    Assign Interaction Point/Task to Mentees
                                   </MenuItem>
                                 )}
                             </>
@@ -2879,7 +2879,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   programdetails.mentee_join_status ===
                     programActionStatus.program_join_request_accepted) ||
                   programdetails?.created_by === userdetails?.data?.user_id) &&
-                !typeParams && (
+                (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}

@@ -34,9 +34,13 @@ import {
   memberMenteeDashBoard,
   requestPageBreadcrumbs,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { MemberMain,   } from "../Breadcrumbs/BreadcrumbsCommonData";
-import DeleteIcon from "../../assets/icons/Delete.svg"
+import { MemberMain } from "../Breadcrumbs/BreadcrumbsCommonData";
+import DeleteIcon from "../../assets/icons/Delete.svg";
 import OverDeleteIcon from "../../assets/images/delete_1x.png";
+import Bg_verificatin_icon from "../../assets/icons/bg-verification-icon.svg";
+import DocuSign_icon from "../../assets/icons/docu-sign-icon.svg";
+import { docuSign } from "../../services/activities";
+
 const Members = () => {
   const navigate = useNavigate();
   const {
@@ -54,10 +58,9 @@ const Members = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [search] = useSearchParams();
   const breadcrumbsType = search.get("breadcrumbsType") || "";  
-   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [seletedItem, setSelectedItem] = useState({});
-  // const [breadArray, setBreadArry] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDeleteModal,setDeleteModal] = useState(false);
   const [actionColumnInfo, setActionColumnInfo] = useState({
@@ -70,9 +73,10 @@ const Members = () => {
   });
   const [filterInfo, setFilterInfo] = useState({ search: "", status: "" });
   const dispatch = useDispatch();
-  const {  mentor, mentee, loading, error } = useSelector(
+  const { mentor, mentee,admin, loading, error } = useSelector(
     (state) => state.members
   );
+  console.log(mentor,mentee,admin)
   const [formattedMentor, setFormattedMentor] = React.useState([])
   const [formattedMentee, setFormattedMentee] = React.useState([])
   const [paginationModel, setPaginationModel] = React.useState({
@@ -94,9 +98,9 @@ const Members = () => {
 
   const handleDeactive = () => {
     handleClose();
-    const isOpenDeactivePopup =   ['mentor','mentee'].includes(actionTab);
+    const isOpenDeactivePopup = ['mentor','mentee'].includes(actionTab);
     setActionColumnInfo({
-      cancelPopup:isOpenDeactivePopup,
+      cancelPopup: isOpenDeactivePopup,
       menteecancel: actionTab === "mentee",
     });
   };
@@ -107,8 +111,7 @@ const Members = () => {
   };
 
   //Mentor/Mentee deactive ---> active
-
-  const handleActivate = () =>{
+  const handleActivate = () => {
     handleClose();
     dispatch(
       activateUser({
@@ -118,7 +121,7 @@ const Members = () => {
       handleCloseCancelReasonPopup();
       dispatch(
         getMembersList({
-          role_name: actionTab,
+          // role_name: actionTab,
           page: paginationModel?.page + 1,
           limit: paginationModel?.pageSize,
         })
@@ -140,7 +143,7 @@ const Members = () => {
         handleCloseCancelReasonPopup();
         dispatch(
           getMembersList({
-            role_name: actionTab,
+            // role_name: actionTab,
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
           })
@@ -159,7 +162,7 @@ const Members = () => {
       handleCloseCancelReasonPopup();
       dispatch(
         getMembersList({
-          role_name: actionTab,
+          // role_name: actionTab,
           page: paginationModel?.page + 1,
           limit: paginationModel?.pageSize,
         })
@@ -167,22 +170,14 @@ const Members = () => {
     });
   };
 
-  let membersTab = [
-    {
-      name: "Mentors",
-      key: "mentor",
-    },
-    {
-      name: "Mentees",
-      key: "mentee",
-    },
-  ];
-
-  const handleTab = (key) => {
-    setActionTab(key);
-    setPaginationModel({
-      page: 0,
-      pageSize: 10,
+  // DocuSign redirection
+  const handleRedirectDocuSign = () => {
+    handleClose();
+    dispatch(docuSign()).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        const url = res?.payload?.url ?? "#";
+        window.open(url, "_blank");
+      }
     });
   };
 
@@ -195,47 +190,18 @@ const Members = () => {
   };
 
   const handleSearch = (value) => {
-    // setFilterInfo({ ...filterInfo, search: value });
     setSearchTerm(value);
-    // if (value !== '') {
-    //   setPaginationModel({
-    //     page: 0,
-    //     pageSize: 10
-    //   });
-    // }
   };
+
   useEffect(() => {
     setFilterInfo({ ...filterInfo, search: debouncedSearchTerm });
   }, [debouncedSearchTerm]);
-  const handleAssignProgramOrTask = () => {
-    handleClose();
-    setAssignProgramInfo({ assignPopup: true, message: "" });
-  };
-
-  const handleAssignProgramClose = (type = "") => {
-    let payload = { assignPopup: false };
-
-    if (type === "taskassigned") {
-      payload = {
-        ...payload,
-        message: "Program Assigned to Mentor Successfully",
-      };
-      dispatch(
-        getMembersList({
-          role_name: actionTab,
-          page: paginationModel?.page,
-          limit: paginationModel?.pageSize,
-        })
-      );
-    }
-
-    setAssignProgramInfo({ ...assignProgramInfo, ...payload });
-  };
 
   // Mentor Auto Approval
   const handleChange = (row) => {
     console.log("Approval", row);
   };
+
   const mentroDeleteHandler = () => {
     if (seletedItem?.id) {
       dispatch(
@@ -247,7 +213,7 @@ const Members = () => {
         handleClose();
         dispatch(
           getMembersList({
-            role_name: actionTab,
+            // role_name: actionTab,
             page: paginationModel?.page + 1,
             limit: paginationModel?.pageSize,
           })
@@ -255,6 +221,7 @@ const Members = () => {
       });
     }
   };
+
   useEffect(() => {
     if (assignProgramInfo.message !== "") {
       setTimeout(() => {
@@ -266,16 +233,14 @@ const Members = () => {
   useEffect(() => {
     let tableData = [];
     if (actionTab === "mentor") {
-      tableData = mentor;
+      tableData = admin;
     }
 
     if (actionTab === "mentee") {
-      tableData = mentee;
+      tableData = admin;
     }
 
-    let columns = allMembersColumns.filter((col) =>
-      col.for.includes(actionTab)
-    );
+    let columns = allMembersColumns
 
     if (actionTab === "mentor") {
       columns = columns.map((column) => {
@@ -298,12 +263,14 @@ const Members = () => {
         return column;
       });
     }
-    const onViewClick = () =>{
+
+    const onViewClick = () => {
       handleClose();
-              const adminview = `&breadcrumbsType=${actionTab}`;
-              const memberStatus = seletedItem.member_active?'Active':'Deactive';
-              navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
+      const adminview = `&breadcrumbsType=${actionTab}`;
+      const memberStatus = seletedItem.member_active ? 'Active' : 'Deactive';
+      navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
     }
+
     const updatedColumns = [
       ...columns,
       {
@@ -345,8 +312,6 @@ const Members = () => {
         id: 4,
         align: "center",
         renderCell: (params) => {
-
-         
           return (
             <>
               <div
@@ -364,7 +329,7 @@ const Members = () => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem onClick={()=>onViewClick()} className="!text-[12px]">
+                <MenuItem onClick={() => onViewClick()} className="!text-[12px]">
                   <img
                     src={ViewIcon}
                     alt="ViewIcon"
@@ -376,7 +341,7 @@ const Members = () => {
 
                 <MenuItem
                   className="!text-[12px]"
-                  onClick={() => navigate(`/discussions?breadcrumbsType=${requestPageBreadcrumbs.adminMemberChat}`)}
+                  onClick={() => navigate("/discussions")}
                 >
                   <img
                     src={TickCircle}
@@ -406,6 +371,28 @@ const Members = () => {
                     Deactivate
                   </MenuItem>
                 )}
+                 <MenuItem
+                  onClick={() => navigate("/bgVerify")}
+                  className="!text-[12px]"
+                >
+                  <img
+                    src={Bg_verificatin_icon}
+                    alt="AcceptIcon"
+                    className="pr-3 w-[27px]"
+                  />
+                  BG verification
+                </MenuItem>
+                <MenuItem
+                  onClick={handleRedirectDocuSign}
+                  className="!text-[12px]"
+                >
+                  <img
+                    src={DocuSign_icon}
+                    alt="AcceptIcon"
+                    className="pr-3 w-[27px]"
+                  />
+                  DocuSign
+                </MenuItem>
                 <MenuItem
                   className="!text-[12px]"
                   onClick={() => {
@@ -420,29 +407,8 @@ const Members = () => {
                   />
                   Delete
                 </MenuItem>
-                {/* <MenuItem className="!text-[12px]">
-                  <img
-                    src={ShareIcon}
-                    alt="ShareIcon"
-                    className="pr-3 w-[27px]"
-                  />
-                  Share
-                </MenuItem> */}
 
-                {/* {seletedItem.member_active && (
-                  <MenuItem
-                    className="!text-[12px]"
-                    onClick={handleAssignProgramOrTask}
-                  >
-                    <img
-                      src={PlusCircle}
-                      alt="ShareIcon"
-                      className="pr-3 w-[27px]"
-                    />
-                    Assign{" "}
-                    {actionTab === "mentor" ? "Mentor Program" : "to Task"}
-                  </MenuItem>
-                )} */}
+               
               </Menu>
             </>
           );
@@ -452,10 +418,11 @@ const Members = () => {
     const formattedRowData = formatTableNullValues(tableData?.results)
     setAllData(tableData)
     setActiveTableDetails({ data: formattedRowData, column: updatedColumns });
-  }, [mentor, mentee, anchorEl]);
+  }, [mentor, mentee,admin, anchorEl]);
+
   useEffect(() => {
     let payload = {
-      role_name: actionTab,
+      // role_name: actionTab,
       page: paginationModel?.page + 1,
       limit: paginationModel?.pageSize,
     };
@@ -470,76 +437,44 @@ const Members = () => {
 
     dispatch(getMembersList(payload));
   }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);
+
   useEffect(() => {
     if (selectedRequestedTab) {
       setActionTab(selectedRequestedTab);
     }
   }, [selectedRequestedTab]);
-  // useEffect(() => {
-  //   if(actionTab){
-  //     setBreadArry(MemberMain(actionTab==="mentor"?"Mentors":"Mentees")) 
-  //   }
-  // }, [actionTab]);
-    const handleBreadcrumbs = (key) => {
-      const dashboardMemberMentor = memberMentorDashBoard();
-      const dashboardMemberMentee = memberMenteeDashBoard();
-    
-      switch (key) {
-        case requestPageBreadcrumbs.dashboardMemberMentor:
-          setBreadcrumbsArray(dashboardMemberMentor);
-          break;
-          case requestPageBreadcrumbs.dashboardMemberMentee:
-            setBreadcrumbsArray(dashboardMemberMentee);
-            break;
-        case "discussion":
-          break;
-        default:
-          break;
-      }
-    };
-    useEffect(() => {
-      if (breadcrumbsType) {
-        handleBreadcrumbs(breadcrumbsType);
-      }
-    }, [breadcrumbsType]);
+
+  const handleBreadcrumbs = (key) => {
+    const dashboardMemberMentor = memberMentorDashBoard();
+    const dashboardMemberMentee = memberMenteeDashBoard();
+  
+    switch (key) {
+      case requestPageBreadcrumbs.dashboardMemberMentor:
+        setBreadcrumbsArray(dashboardMemberMentor);
+        break;
+      case requestPageBreadcrumbs.dashboardMemberMentee:
+        setBreadcrumbsArray(dashboardMemberMentee);
+        break;
+      case "discussion":
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType]);
+
   return (
     <div className="program-request px:2 sm:px-2 md:px-4 lg:px-8 mt-10">
-      {/* <Breadcrumbs items={breadArray} /> */}
       <div className="pb-3">
         {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
       </div>
       <div className="pl-6 pb-8 font-medium text-[18px]">
-            <p>Users</p>
-          </div>
-      <div className="program-info px-4 sm:px-6 ">
-        {membersTab.length ? (
-          <div className="flex flex-col sm:flex-row justify-between mb-4 border-b-2 pb-2">
-            <ul className="tab-list flex overflow-x-auto hide-scrollbar">
-              {membersTab.map((discussion, index) => (
-                <li
-                  className={`${
-                    actionTab === discussion.key ? "active" : ""
-                  } relative text-sm sm:text-base cursor-pointer`}
-                  key={index}
-                  onClick={() => handleTab(discussion.key)}
-                >
-                  <div className="flex justify-center pb-1">
-                    {/* <div
-                      className={`total-proram-count ${
-                        actionTab === discussion.key ? "active" : ""
-                      } relative text-xs sm:text-sm`}
-                    >
-                      10
-                      <p className="notify-icon1"></p>
-                    </div> */}
-                  </div>
-                  <div>{discussion.name}</div>
-                  {actionTab === discussion.key && <span></span>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+        <p>Users</p>
       </div>
 
       {/* Search and Filters */}
@@ -641,6 +576,7 @@ const Members = () => {
           </div>
         </div>
       </MuiModal>
+
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => 1 }}
         open={isDeleteModal}
@@ -665,13 +601,13 @@ const Members = () => {
                 btnCls="w-[150px]"
                 btnName={"Cancel"}
                 btnCategory="secondary"
-                onClick={()=>setDeleteModal(false)}
+                onClick={() => setDeleteModal(false)}
               />
               <Button
                 btnType="button"
                 btnCls="w-[150px]"
                 btnName={"Delete"}
-                style={{   background: "rgba(229, 0, 39, 1)" }}
+                style={{ background: "rgba(229, 0, 39, 1)" }}
                 btnCategory="primary"
                 onClick={mentroDeleteHandler}
               />

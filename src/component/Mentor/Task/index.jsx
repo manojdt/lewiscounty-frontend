@@ -565,7 +565,7 @@ const MentorTask = () => {
                       field={params.id}
                       className="pr-3 w-[30px]"
                     />
-                    Edit Interaction Point
+                    Edit Interaction Point/Task
                   </MenuItem>
                 </>
               )}
@@ -734,7 +734,7 @@ const MentorTask = () => {
       {/* Header */}
       <div className="bg-white p-3 sm:p-2 md:p-2 lg:p-5 xl:p-5 rounded-lg shadow-sm border border-gray-300">
         <div className="flex flex-wrap items-center justify-between mb-4">
-          <h1 className="text-xl mb-2 sm:mb-2 md:mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-800">Mentees Interaction Points</h1>
+          <h1 className="text-xl mb-2 sm:mb-2 md:mb-2 lg:mb-0 xl:mb-0 font-semibold text-gray-800">Mentees Interaction Points/Tasks</h1>
           <div className="flex items-center space-x-3">
             <div className="relative">
               <input
@@ -751,7 +751,7 @@ const MentorTask = () => {
             <Button
               btnType="button"
               btnCls="w-[200px]"
-              btnName={"Create Interaction Point"}
+              btnName={"Create Interaction Point/Task"}
               btnCategory="primary"
               onClick={() => navigate("/assign-mentees?type=new")}
             />
