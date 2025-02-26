@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MuiModal from "../../shared/Modal";
-import { Button } from "../../shared";
-import EditIcon from "../../assets/icons/editIcon.svg"; // Assuming this is an SVG file
+import { Button as MuiButton } from "@mui/material";
+import EditIcon from "../../assets/icons/edit-ticket-icon.svg"; // Assuming this is an SVG file
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "./delete-modal";
 import DoubleAvatar from "../../assets/icons/double-avatar.svg";
@@ -10,6 +10,7 @@ import BellIcon from "../../assets/icons/bell-icon.svg";
 import GMeetModal from "./GMeetModal";
 import { dateFormat } from "../../utils";
 import { eventColors } from "../../utils/constant";
+import moment from "moment";
 
 const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -33,7 +34,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
     if (["all", "upcoming", "reschedule"].includes(actionActionBtn)) {
       setShowGoogleMeetModal(true);
     } else if (["completed", "cancelled", "draft"].includes(actionActionBtn)) {
-      navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`)
+      navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`);
     }
   };
 
@@ -42,7 +43,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
       modalOpen={open}
       modalClose={closeModal}
       title={event.title}
-     // rightIcon={EditIcon}
+      rightIcon={event?.status !== "cancelled" ? EditIcon : undefined}
       onClick={() =>
         navigate(`/edit-meeting?id=${event.id}&status=${actionActionBtn}`)
       }
@@ -54,9 +55,9 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
               <h2 className="text-2xl font-semibold">
                 {event?.title || "Title Name"}
               </h2>
-              <span className="text-slate-400">
-                {dateFormat(event?.start_date)} &nbsp; {event.start.slice(0, 5)}{" "}
-                - {event.end.slice(0, 5)}
+              <span className="text-slate-400 text-sm">
+                {dateFormat(event?.start_date)} &nbsp; {moment(event.start, "HH:mm").format("hh:mm A")}{" "}
+                - {moment(event.end, "HH:mm").format("hh:mm A")}
               </span>
             </div>
             <div>
@@ -78,7 +79,7 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
               </div>
               <div className="space-y-2">
                 <p>{event.attendees.length} Mentees</p>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-xs">
                   {event.attendees.length} Waiting
                 </p>
               </div>
@@ -107,8 +108,10 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
                 <img src={DoubleAvatar} alt="" width={25} height={25} />
               </div>
               <div className="space-y-2">
-                <p>{event.guests.length} Mentees</p>
-                <p className="text-slate-400">{event.guests.length} Waiting</p>
+                <p>{event?.guests?.length} Mentees</p>
+                <p className="text-slate-400 text-xs">
+                  {event?.guests?.length} Waiting
+                </p>
               </div>
             </div>
             {/* <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200'>
@@ -135,38 +138,23 @@ const EventModal = ({ open, closeModal, actionActionBtn, event = [] }) => {
 
         {/* Action buttons */}
         <div className="text-center space-x-4 mt-4">
-          <Button
-            btnName="Cancel"
-            onClick={closeModal}
-            btnCls="w-[120px]"
-            btnStyle={{
-              border: "1px solid rgba(29, 91, 191, 1)",
-              color: "rgba(29, 91, 191, 1)",
-            }}
-            btnCategory="secondary"
-          />
-          {(actionActionBtn === "all" ||
-            actionActionBtn === "upcoming" ||
-            actionActionBtn === "reschedule") && event.status!=="cancelled" && (
-            <Button
-              btnName="Delete"
-              btnCls="w-[120px]"
-              btnStyle={{
-                border: "1px solid rgba(220, 53, 69, 1)", // Red border
-                color: "rgba(220, 53, 69, 1)", // Red text color
-              }}
-              onClick={() => setDeleteModal(true)}
-              btnCategory="secondary"
-            />
-          )}
+          <MuiButton variant="outlined" onClick={closeModal} color="primary">
+            Cancel
+          </MuiButton>
+          {["all", "upcoming", "reschedule"].includes(actionActionBtn) &&
+            event.status !== "cancelled" && (
+              <MuiButton
+                variant="outlined"
+                color="error"
+                onClick={() => setDeleteModal(true)}
+              >
+                Delete
+              </MuiButton>
+            )}
 
-          <Button
-            btnType="submit"
-            onClick={onSubmit}
-            btnCls="w-[170px]"
-            btnName={actionButtonName}
-            btnCategory="primary"
-          />
+          <MuiButton type="submit" onClick={onSubmit}>
+            {actionButtonName}
+          </MuiButton>
         </div>
       </div>
 

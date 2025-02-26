@@ -1,22 +1,22 @@
-import dayjs from 'dayjs';
-import { useState, useEffect } from 'react';
+import dayjs from "dayjs";
+import { useState, useEffect } from "react";
 import {
   Link,
   useNavigate,
   useLocation,
   useSearchParams,
-} from 'react-router-dom';
-import BackArrowIcon from '../../assets/icons/back-arrow.svg';
-import Month from './month';
-import CalendarHeader from './calendarheader';
+} from "react-router-dom";
+import BackArrowIcon from "../../assets/icons/back-arrow.svg";
+import Month from "./month";
+import CalendarHeader from "./calendarheader";
 
-import Week from './week';
-import YearView from './YearView';
-import TodayView from './TodayView';
-import useAppointments from '../../hooks/useAppointments';
+import Week from "./week";
+import YearView from "./YearView";
+import TodayView from "./TodayView";
+import useAppointments from "../../hooks/useAppointments";
 
 const CalendarMain = ({
-  title = 'Calendar',
+  title = "Calendar",
   addSection = true,
   events,
   setDateRange,
@@ -25,34 +25,34 @@ const CalendarMain = ({
   const navigate = useNavigate();
 
   const CALENDAR_VIEWS = [
-    'Today',
-    // 'Week',
-    'Month',
-    'Year',
-    'day',
+    "Today",
+    "Day",
+    "Week",
+    "Month",
+    // 'Year',
   ];
-  const [currentCalendarView, setCurrentCalendarView] = useState('Month');
+  const [currentCalendarView, setCurrentCalendarView] = useState("Month");
 
   const [currentDate, setCurrentDate] = useState(dayjs());
 
   const handleCalendarChange = (mode) => {
-    let dateParameter = 'month';
+    let dateParameter = "month";
     switch (currentCalendarView) {
-      case 'Today':
-      case 'day':
-        dateParameter = 'day';
+      case "Today":
+      case "Day":
+        dateParameter = "day";
         break;
-      case 'Month':
-        dateParameter = 'month';
+      case "Month":
+        dateParameter = "month";
         break;
-      case 'Week':
-        dateParameter = 'week';
+      case "Week":
+        dateParameter = "week";
         break;
-      case 'Year':
-        dateParameter = 'year';
+      case "Year":
+        dateParameter = "year";
         break;
       default:
-        dateParameter = 'month';
+        dateParameter = "month";
         break;
     }
     if (mode === 1) {
@@ -66,6 +66,11 @@ const CalendarMain = ({
 
       setCurrentDate((prev) => prev.subtract(1, dateParameter));
     }
+    if (mode === 0) {
+      // handle today
+
+      setCurrentDate(dayjs());
+    }
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -73,50 +78,28 @@ const CalendarMain = ({
   const toggleModal = () => {
     setShowModal(!showModal);
     // setIsNew(true);
-    if (searchParams.has('date')) {
+    if (searchParams.has("date")) {
       if (selectedDate) {
-        searchParams.delete('date');
+        searchParams.delete("date");
       }
     }
-    if (searchParams.has('mode')) {
-      searchParams.delete('mode');
+    if (searchParams.has("mode")) {
+      searchParams.delete("mode");
     }
-    if (searchParams.has('appointmentId')) {
-      searchParams.delete('appointmentId');
+    if (searchParams.has("appointmentId")) {
+      searchParams.delete("appointmentId");
     }
     setSearchParams(searchParams);
   };
 
-  const submitAppointment = () => {
-    setShowModal(false);
-    setShowAlert(true);
-  };
-
-  const [showAlert, setShowAlert] = useState(false);
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
-
-  const {
-    appointmentsLoading,
-    internalEventsLoading,
-    externalEventsLoading,
-    internalEvents,
-    externalEvents,
-    eventList: savedEvents,
-    appointmentsList,
-    fetchEvents,
-    fetchAppointments,
-    deleteAppointment,
-  } = useAppointments();
+  const { fetchAppointments, deleteAppointment } = useAppointments();
 
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   // new changes for redirect from dashboard calendar to appointment calendar
-  const queryParams = new URLSearchParams(location.search);
-  const selectedDate = searchParams.get('date');
-  const mode = searchParams.get('mode');
-  const appointmentId = searchParams.get('appointmentId');
+  const selectedDate = searchParams.get("date");
+  const mode = searchParams.get("mode");
+  const appointmentId = searchParams.get("appointmentId");
 
   useEffect(() => {
     if (appointmentId) {
@@ -135,63 +118,22 @@ const CalendarMain = ({
     }
   }, [currentCalendarView, location]);
 
-  const Data = [
-    {
-      id: 167,
-      type: 'Test 1',
-      meeting_title: 'vinothmeeting_updated_ram',
-      start_time: '2024-08-27T10:26:00+05:30',
-      duration: '00:30:00',
-      description: 'test',
-      linked_encounter_notes: [],
-      google_calendar_event_id: null,
-      created_at: '2024-08-28T10:26:31.460768+05:30',
-      changed_at: '2024-08-28T14:09:25.369873+05:30',
-      staff: 7,
-      facility: 2,
-      program: 4,
-      activity: 5,
-      created_by: null,
-      changed_by: null,
-      clients: [],
-    },
-    {
-      id: 97,
-      type: 'Test 2',
-      meeting_title: 'test',
-      start_time: '2024-08-05T09:34:00+05:30',
-      duration: '00:00:30',
-      description: 'test',
-      linked_encounter_notes: [],
-      google_calendar_event_id: null,
-      created_at: '2024-08-11T21:04:18.566006+05:30',
-      changed_at: '2024-08-11T21:04:18.566026+05:30',
-      staff: 71,
-      facility: 2,
-      program: 12,
-      activity: 3,
-      created_by: null,
-      changed_by: null,
-      clients: [615],
-    },
-  ];
-
   const calculateDateRange = (view, date) => {
     let start, end;
 
     switch (view) {
-      case 'Month':
-        start = dayjs(date).startOf('month');
-        end = dayjs(date).endOf('month');
+      case "Month":
+        start = dayjs(date).startOf("month");
+        end = dayjs(date).endOf("month");
         break;
-      case 'Week':
-        start = dayjs(date).startOf('week');
-        end = dayjs(date).endOf('week');
+      case "Week":
+        start = dayjs(date).startOf("week");
+        end = dayjs(date).endOf("week");
         break;
-      case 'day':
-      case 'Today':
-        start = dayjs(date).startOf('day');
-        end = dayjs(date).endOf('day');
+      case "Day":
+      case "Today":
+        start = dayjs(date).startOf("day");
+        end = dayjs(date).endOf("day");
         break;
       default:
         start = dayjs(date);
@@ -213,18 +155,18 @@ const CalendarMain = ({
 
   const renderCalendar = () => {
     switch (currentCalendarView) {
-      case 'Today':
-        return (
-          <TodayView
-            currentDate={currentDate}
-            savedEvents={Data}
-            fetchEvents={fetchAppointments}
-            deleteAppointment={deleteAppointment}
-            newData={events}
-            actionActionBtn={actionActionBtn}
-          />
-        );
-      case 'Week':
+      // case "Today":
+      //   return (
+      //     <TodayView
+      //       currentDate={currentDate}
+      //       savedEvents={Data}
+      //       fetchEvents={fetchAppointments}
+      //       deleteAppointment={deleteAppointment}
+      //       newData={events}
+      //       actionActionBtn={actionActionBtn}
+      //     />
+      //   );
+      case "Week":
         return (
           <Week
             currentDate={currentDate}
@@ -235,7 +177,7 @@ const CalendarMain = ({
             newData={events}
           />
         );
-      case 'Month':
+      case "Month":
         return (
           <Month
             currentDate={currentDate}
@@ -246,7 +188,7 @@ const CalendarMain = ({
             actionActionBtn={actionActionBtn}
           />
         );
-      case 'Year':
+      case "Year":
         return (
           <YearView
             currentDate={currentDate}
@@ -258,7 +200,7 @@ const CalendarMain = ({
           />
         );
       // new changes for redirect from dashboard calendar to appointment calendar
-      case 'day':
+      case "Day":
         return (
           <TodayView
             currentDate={currentDate}
@@ -266,6 +208,7 @@ const CalendarMain = ({
             fetchEvents={fetchAppointments}
             deleteAppointment={deleteAppointment}
             newData={events}
+            actionActionBtn={actionActionBtn}
           />
         );
       //--------------------------------------------------------
@@ -275,22 +218,22 @@ const CalendarMain = ({
   };
 
   return (
-    <div className=''>
-      <div className={`space-y-5 m-5 ${showModal ? 'opacity-50' : ''}`}>
-        <div className='flex justify-between items-center w-full'>
-          <div className='text-gray-900 text-base font-semibold' id='calendarPage'>
+    <div className="">
+      <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
+        <div className="flex justify-between items-center w-full">
+          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">
             {title}
           </div>
           {addSection && (
-            <div className='flex item-center justify-center gap-3'>
+            <div className="flex item-center justify-center gap-3">
               <button
-                className='bg-[#43B09C] rounded text-xs text-white p-3'
+                className="bg-[#43B09C] rounded text-xs text-white p-3"
                 onClick={toggleModal}
               >
                 Add new appointment
               </button>
               <Link
-                className='p-3 bg-[#EAECEB]'
+                className="p-3 bg-[#EAECEB]"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate(-1);
@@ -298,36 +241,34 @@ const CalendarMain = ({
               >
                 <img
                   src={BackArrowIcon}
-                  alt='back arrow'
-                  className='h-[15px] w-[100%]'
+                  alt="back arrow"
+                  className="h-[15px] w-[100%]"
                 />
               </Link>
             </div>
           )}
         </div>
         <div
-          className='flex flex-col bg-white border-1 border-teal-400 rounded-md p-0 sm:p-0 md:p-5 lg:p-10 xl:p-10 space-y-3'
-          style={{ background: '#FAFBFC' }}
+          className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3"
+          style={{ background: "#FAFBFC" }}
         >
           <CalendarHeader
             //  viewList={CALENDAR_VIEWS}
-            viewList={CALENDAR_VIEWS.filter(
-              (ele) => ele != 'day' && ele !== 'Today'
-            )} // new changes for redirect from dashboard calendar to appointment calendar
+            viewList={CALENDAR_VIEWS.filter((ele) => ele !== "Today")} // new changes for redirect from dashboard calendar to appointment calendar
             currentCalendarView={currentCalendarView}
             handleCalendarView={(view) => {
               setCurrentCalendarView(view);
               // new changes for redirect from dashboard calendar to appointment calendar
-              if (searchParams.has('date')) {
+              if (searchParams.has("date")) {
                 if (selectedDate) {
-                  searchParams.delete('date');
+                  searchParams.delete("date");
                 }
               }
-              if (searchParams.has('mode')) {
-                searchParams.delete('mode');
+              if (searchParams.has("mode")) {
+                searchParams.delete("mode");
               }
-              if (searchParams.has('appointmentId')) {
-                searchParams.delete('appointmentId');
+              if (searchParams.has("appointmentId")) {
+                searchParams.delete("appointmentId");
               }
               setSearchParams(searchParams);
               //----------------------------------------------------------
@@ -337,6 +278,9 @@ const CalendarMain = ({
             }}
             onDecrement={() => {
               handleCalendarChange(-1);
+            }}
+            onToday={() => {
+              handleCalendarChange(0);
             }}
             currentDate={currentDate}
           />
