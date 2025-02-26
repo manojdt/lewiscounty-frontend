@@ -1265,7 +1265,7 @@ export default function CreatePrograms() {
               ))}
             </div>
             <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                 <div className="py-9">
                   <ProgramSteps
                     currentStepData={

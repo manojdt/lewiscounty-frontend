@@ -2269,27 +2269,7 @@ export const ProgramFields = [
 
 export const AssignMenteesFields = (bool = true, type, getValues) => {
   return [
-    // {
-    //   type: "dropdown",
-    //   name: "category_id",
-    //   label: "Category",
-    //   placeholder: "Select Category",
-    //   inputRules: {
-    //     required: "This field is required",
-    //   },
-    //   options: [
-    //     {
-    //       key: "yes",
-    //       value: "Category 1",
-    //     },
-    //     {
-    //       key: "no",
-    //       value: "Category 2",
-    //     },
-    //   ],
-    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    //   disabled: bool,
-    // },
+   
     {
       // type: type === "new" ? "dropdown" : "input",
       type: "input",
@@ -2300,49 +2280,38 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         required: "This field is required",
       },
-      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+      width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       // disabled: bool,
+      autoComplete: "off", // Disable browser autocomplete
       options: [],
     },
     {
       type: "input",
       name: "task_id",
       fieldtype: "text",
-      label: "Task Name",
+      label: " Interaction Point/Task Name",
       placeholder: "Enter Task Name",
       inputRules: {
         // required: "This field is required",
       },
-      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+      width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       disabled: false,
       options: [],
     },
     {
-      type: "input",
+      type: "editor",
       name: "task_description",
       fieldtype: "text",
-      label: "Task Description",
+      label: " Interaction Point/Task Description",
       placeholder: "Enter Task Description",
       inputRules: {
         // required: "This field is required",
       },
-      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+      width: "w-full",
       disabled: false,
       options: [],
     },
-    // {
-    //   type: "input",
-    //   name: "mentor",
-    //   fieldtype: "text",
-    //   label: "Mentor Name",
-    //   placeholder: "Enter Mentor Name",
-    //   inputRules: {
-    //     // required: "This field is required",
-    //   },
-    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    //   disabled: true,
-    //   options: [],
-    // },
+   
     {
       type: "dropdown",
       name: "goal_id",
@@ -2376,18 +2345,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
-    // {
-    //   type: "input",
-    //   name: "duration",
-    //   label: "Program Duration",
-    //   fieldtype: "text",
-    //   placeholder: "Program Duration",
-    //   inputRules: {
-    //     required: "This field is required",
-    //   },
-    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
-    //   disabled: true,
-    // },
+   
     {
       type: "text",
       name: "mentees_list",
@@ -2409,38 +2367,84 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       // },
       width: "w-full",
     },
-    {
-      type: "input",
-      name: "task_name",
-      fieldtype: "text",
-      label: "Interaction Point/Task Name",
-      placeholder: "Enter Interaction Point/Task",
-      inputRules: {
-        required: "This field is required",
-      },
-      width: "w-full",
-    },
-    {
-      type: "editor",
-      name: "task_details",
-      fieldtype: "text",
-      label: "Interaction Point/Task Details",
-      placeholder: "List out Interaction Point/Task Details",
-      inputRules: {
-        required: "This field is required",
-      },
-      width: "w-full",
-    },
-    {
-      type: "date",
-      name: "due_date",
-      label: "Due Date",
-      placeholder: "Due Date",
-      inputRules: {
-        required: "This field is required",
-      },
-      width: "w-full",
-    },
+     // {
+    //   type: "dropdown",
+    //   name: "category_id",
+    //   label: "Category",
+    //   placeholder: "Select Category",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   options: [
+    //     {
+    //       key: "yes",
+    //       value: "Category 1",
+    //     },
+    //     {
+    //       key: "no",
+    //       value: "Category 2",
+    //     },
+    //   ],
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: bool,
+    // },
+     // {
+    //   type: "input",
+    //   name: "mentor",
+    //   fieldtype: "text",
+    //   label: "Mentor Name",
+    //   placeholder: "Enter Mentor Name",
+    //   inputRules: {
+    //     // required: "This field is required",
+    //   },
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: true,
+    //   options: [],
+    // },
+     // {
+    //   type: "input",
+    //   name: "duration",
+    //   label: "Program Duration",
+    //   fieldtype: "text",
+    //   placeholder: "Program Duration",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+    //   disabled: true,
+    // },
+    // {
+    //   type: "input",
+    //   name: "task_name",
+    //   fieldtype: "text",
+    //   label: "Interaction Point/Task Name",
+    //   placeholder: "Enter Interaction Point/Task",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   width: "w-full",
+    // },
+    // {
+    //   type: "editor",
+    //   name: "task_details",
+    //   fieldtype: "text",
+    //   label: "Interaction Point/Task Details",
+    //   placeholder: "List out Interaction Point/Task Details",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   width: "w-full",
+    // },
+    // {
+    //   type: "date",
+    //   name: "due_date",
+    //   label: "Due Date",
+    //   placeholder: "Due Date",
+    //   inputRules: {
+    //     required: "This field is required",
+    //   },
+    //   width: "w-full",
+    // },
   ];
 };
 

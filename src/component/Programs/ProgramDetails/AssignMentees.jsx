@@ -45,7 +45,7 @@ import dayjs from "dayjs";
 import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
 import { formatTableNullValues, FormLabelRequired } from "../../../utils";
-import { SelectBox } from "../../../shared/SelectBox"
+import { SelectBox } from "../../../shared/SelectBox";
 
 export default function AssignMentees() {
   const {
@@ -316,7 +316,7 @@ export default function AssignMentees() {
   }, [allFields?.program_id, allFields?.program_id_val, currentProgramDetail]);
 
   useEffect(() => {
-    if (type === "new" && allFields?.program_id) {
+    if (type === "new" && allFields?.program_id && !isNaN(allFields?.program_id)) {
       const programOption = menteeFields?.filter(
         (e) => e?.name === "program_id"
       )?.[0]?.options;
@@ -578,27 +578,26 @@ export default function AssignMentees() {
                               onClick={() => {
                                 if (field.name === "program_id") {
                                   const value = getValues(field.name);
-                                  
+
                                   // Set searchTerm immediately (even if it's empty)
                                   setSearchTerm(value || " ");
                                 }
                               }}
-                              
                               onChange={(e) => {
                                 const value = e.target.value;
                                 setValue(field.name, value); // Update form state
-
-                                // Only trigger the API call for "program_id" field
-                                if (
-                                  field.name === "program_id" &&
-                                  value.length > 2
-                                ) {
-                                  setSearchTerm(value); // Update state for API call
-                                } else if (value === "") {
-                                  setSearchTerm(""); // Clear search term if input is empty
-                                  setSearchResults([]); // Clear search results when input is empty
+                              
+                                // Allow text search but avoid affecting program_id API
+                                if (field.name === "program_id") {
+                                  setSearchTerm(value); // Always update search term for dropdown filtering
+                              
+                                  // Reset API request if input is empty
+                                  if (value === "") {
+                                    setSearchResults([]);
+                                  }
                                 }
                               }}
+                              
                             />
 
                             {errors[field.name] && (
@@ -612,27 +611,35 @@ export default function AssignMentees() {
                               searchTerm.trim() !== "" && (
                                 <>
                                   {searchResults.length > 0 ? (
-                                   <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
-                                   {searchResults.map((program) => {
-                                     const isActive = program.program_name.toLowerCase() === searchTerm.toLowerCase();
-                                 
-                                     return (
-                                       <li
-                                         key={program.id}
-                                         className={`p-2 hover:bg-background-primary-light hover:text-font-primary-main cursor-pointer 
-                                           ${isActive ? "bg-background-primary-light text-font-primary-main" : ""}`}
-                                         onClick={() => {
-                                           setValue(field.name, program.program_name); // Set selected value
-                                           setSearchResults([]); // Hide dropdown after selection
-                                           setSearchTerm(""); // Clear search term after selection
-                                         }}
-                                       >
-                                         {program.program_name}
-                                       </li>
-                                     );
-                                   })}
-                                 </ul>
-                                 
+                                    <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
+                                      {searchResults.map((program) => {
+                                        const isActive =
+                                          program.program_name.toLowerCase() ===
+                                          searchTerm.toLowerCase();
+
+                                        return (
+                                          <li
+                                            key={program.id}
+                                            className={`p-2 hover:bg-background-primary-light hover:text-font-primary-main cursor-pointer 
+                                           ${
+                                             isActive
+                                               ? "bg-background-primary-light text-font-primary-main"
+                                               : ""
+                                           }`}
+                                            onClick={() => {
+                                              setValue(
+                                                field.name,
+                                                program.program_name
+                                              ); // Set selected value
+                                              setSearchResults([]); // Hide dropdown after selection
+                                              setSearchTerm(""); // Clear search term after selection
+                                            }}
+                                          >
+                                            {program.program_name}
+                                          </li>
+                                        );
+                                      })}
+                                    </ul>
                                   ) : (
                                     <div className="absolute bg-white border border-gray-300 w-full p-2 text-gray-500">
                                       No data found

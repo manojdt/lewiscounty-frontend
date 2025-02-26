@@ -27,20 +27,20 @@ export default function ProgramMetrix() {
                     datasets: [
                         {
                             label: 'Number of Programs',
-                            backgroundColor: 'rgba(29, 91, 191, 1)',
-                            borderColor: 'rgba(29, 91, 191, 1)',
+                            backgroundColor: '#c1dfff',
+                            borderColor: '#c1dfff',
                             data: data.total_programs,  // Data for total programs
                         },
                         {
                             label: 'Active Programs',
-                            backgroundColor: 'rgba(0, 174, 189, 1)',
-                            borderColor: 'rgba(0, 174, 189, 1)',
+                            backgroundColor: '#75a0d9',
+                            borderColor: '#75a0d9',
                             data: data.activate_program,  // Data for active programs
                         },
                         {
                             label: 'Completed Programs',
-                            backgroundColor: '#16b681',
-                            borderColor: '#16b681',
+                            backgroundColor: '#005dc6',
+                            borderColor: '#005dc6',
                             data: data.completed_programs,  // Data for joined members
                         }
                     ]

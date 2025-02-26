@@ -445,7 +445,7 @@ export default function Programs() {
           <>
             <div className="flex justify-start">
               {/* <img src={MoreIcon} alt="MoreIcon" /> */}
-              
+
               <button
                 onClick={() => handleNavigation(params.row)}
                 style={buttonStyle}
@@ -488,17 +488,29 @@ export default function Programs() {
 
     // If no filterType, set default based on role
     if (role === "mentee") return "planned";
-    if (role === "mentor" || role === "admin") return "yettojoin";
+    if (role === "mentor") return "yettojoin";
+    if (role === "admin") {
+      searchParams.delete("type");
+    }
 
     // Fallback case
     return "";
   };
   const getQueryString = () => {
     let query = {};
-    if (!filterType) {
-      query.type = getDefaultType();
-    } else if (filterType !== "") {
-      query.type = filterType;
+    if (role === "admin") {
+      if (filterType && filterType !== "") {
+        query.type = filterType;
+      }
+      // If filterType is null or empty, don't add it to query
+    }
+    // For non-admin users: keep existing logic
+    else {
+      if (!filterType) {
+        query.type = getDefaultType();
+      } else if (filterType !== "") {
+        query.type = filterType;
+      }
     }
     if (categoryFilter && categoryFilter !== "") {
       query = { ...query, category_id: categoryFilter };
@@ -808,7 +820,7 @@ export default function Programs() {
                 />
                 <img
                   src={programView === "grid" ? ListViewIcon : GridViewIcon}
-                  className="cursor-pointer"
+                  className="cursor-pointer w-[18px] pt-[2px]"
                   alt="viewicon"
                   onClick={handleViewChange}
                 />

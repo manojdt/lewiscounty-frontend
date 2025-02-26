@@ -159,7 +159,7 @@ export default function MemberRequest() {
               <MenuItem
                 onClick={(e) => {
                   handleClose();
-                  navigate(`/mentor-details/${seletedItem.id}`, {
+                  navigate(`/mentor-details/${seletedItem.id}?breadcrumbsType=`, {
                     state: {
                       reqType: "dashborad",
                     },
