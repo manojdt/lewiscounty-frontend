@@ -15,7 +15,7 @@ import { Avatar } from "@mui/material";
 import SearchIcon from "../../assets/images/search1x.png";
 import no_data_image from "../../assets/icons/no-data-2.svg";
 
-const StyledSearchInput = styled(GridToolbarQuickFilter)(({ theme }) => ({
+export const StyledSearchInput = styled(GridToolbarQuickFilter)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(0.5, 2),
   "& .MuiSvgIcon-root": {

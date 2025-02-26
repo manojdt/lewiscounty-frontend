@@ -1,9 +1,10 @@
-import dayjs from 'dayjs';
-import React, { useState } from 'react';
-import TodayView from './TodayView';
-import { formatTime } from '../../utils';
-import EventModal from './EventModal';
-import MultiEventModal from './MultiEventModal';
+import dayjs from "dayjs";
+import React, { useState } from "react";
+import TodayView from "./TodayView";
+import EventModal from "./EventModal";
+import MultiEventModal from "./MultiEventModal";
+import moment from "moment";
+import { useTheme } from "@mui/material";
 
 export default function Day({
   day,
@@ -19,6 +20,11 @@ export default function Day({
   actionActionBtn,
   currentYear,
 }) {
+  const {
+    palette: {
+      primary: { main },
+    },
+  } = useTheme();
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
@@ -26,70 +32,128 @@ export default function Day({
   };
 
   function getCurrentDayClass() {
-    return day.format('DD-MM-YY') === dayjs().format('MM-DD-YYYY')
-      ? 'bg-[#2F9384] text-white rounded-full w-6 h-6 flex items-center justify-center'
-      : '';
+    return day.format("DD-MM-YY") === dayjs().format("DD-MM-YY")
+      ? `bg-[${main}] text-white rounded-full w-5 h-5 mt-2 mr-2`
+      : "pt-2 pr-2";
   }
 
-  const eventsForDay = savedEvents.filter((event) =>
-    new Date(day).toDateString() === new Date(event.start).toDateString()
-  );
+  const eventsForDay = savedEvents.filter((event) => {
+    return (
+      new Date(day).toDateString() === new Date(event.start).toDateString()
+    );
+  });
 
-  const renderData = newData.filter((event) =>
-    new Date(day).toDateString() === new Date(event.date).toDateString()
-  );
+  const renderData = newData.filter((event) => {
+    return new Date(day).toDateString() === new Date(event.date).toDateString();
+  });
+
+  // const displayedEvents = eventsForDay.slice(0, isWeek ? 10 : 2);
+
+  const openEvent = () => {
+    setShowModal(true);
+  };
 
   const isCurrentMonth = (seconds) => {
     const date = new Date(seconds);
-    return date.getFullYear() === currentYear && date.getMonth() === currentMonth;
+    return (
+      date.getFullYear() === currentYear && date.getMonth() === currentMonth
+    );
   };
 
-  if (!isCurrentMonth(day)) {
-    return null;
-  }
-
   return (
-    <div className={`
-      relative
-      md:border-[1px] border-gray-200
-      ${rowIdx === 0 ? 'md:h-36' : 'min-h-[80px] md:h-36'}
-      ${!isMonth ? 'h-screen' : ''}
-      ${rowIdx !== 0 ? 'border-t md:border-t-1' : ''}
-    `}>
-      <div className="flex items-center p-2">
-        <div className={getCurrentDayClass()}>
-          {day.format('DD')}
-        </div>
+    <>
+      <div
+        className={`border border-gray-200 flex flex-col ${
+          rowIdx === 0 || isMonth ? "min-h-36" : isWeek ? "" : "h-screen"
+        } `}
+      >
+        {rowIdx === 0 ? (
+          <div
+            className="flex items-center justify-center min-h-36 text-sm "
+            style={{ color: "rgba(24, 40, 61, 1)", fontWeight: 600 }}
+          >
+            {day}
+          </div>
+        ) : (
+          <div
+            className={`${
+              isWeek ? "border-b-[1px] py-2" : ""
+            } flex justify-end`}
+          >
+            <div
+              className={`text-center text-sm ${getCurrentDayClass()}`}
+              data-attr={day}
+              data-col={colIdx}
+              style={{ display: `${!isCurrentMonth(day) ? "none" : "block"}` }}
+            >
+              {colIdx === 0 ? "-" : day.format("DD")}
+            </div>
+          </div>
+        )}
+        {!isWeek ? (
+          <>
+            {rowIdx !== 0 && renderData.length ? (
+              <div
+                className="mt-2 cursor-pointer text-sm mb-4 mx-2 relative calendar-event-conatiner"
+                style={{
+                  boxShadow: "4px 4px 15px 2px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "3px",
+                  background: "#fff",
+                }}
+                onClick={() => {
+                  openEvent(renderData);
+                }}
+              >
+                {renderData.length > 1 && (
+                  <span
+                    className="absolute right-[4px] top-[-7px] notification-count bg-yellow-400 rounded-full text-white text-center h-[23px] w-[23px]"
+                  >
+                    {renderData.length}
+                  </span>
+                )}
+
+                <div
+                  className="line-clamp-1 bg-background-primary-main text-white p-[5px] rounded-sm"
+                  title={renderData[0]?.title}
+                >
+                  {renderData[0]?.title}{" "}
+                </div>
+                <div className="meeting-details px-2 pt-2 pb-3">
+                  <div className="mb-2 meeting-scheduler">
+                    Instructor : {renderData[0]?.created_by}
+                  </div>
+                  <div
+                    className="text-[10px] meeting-time"
+                    style={{ color: "rgba(40, 41, 59, 1)" }}
+                  >
+                    Time:{" "}
+                    {moment(renderData[0]?.start, "HH:mm").format("hh:mm A")} -
+                    {moment(renderData[0]?.end, "HH:mm").format("hh:mm A")}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {rowIdx > 0 && (
+              <TodayView
+                currentDate={new Date(day)}
+                key={rowIdx}
+                rowIdx={rowIdx}
+                colIdx={colIdx}
+                isWeek={true}
+                actionActionBtn={actionActionBtn}
+                savedEvents={eventsForDay}
+                fetchEvents={fetchEvents}
+                deleteAppointment={deleteAppointment}
+                newData={newData}
+                renderData={renderData}
+              />
+            )}
+          </>
+        )}
       </div>
-
-      {renderData.length > 0 && (
-        <div
-          className="mx-1 sm:mx-1 md:mx-1 lg:mx-2 xl:mx-2 mb-2 cursor-pointer bg-white rounded relative"
-          style={{
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
-          }}
-          onClick={() => setShowModal(true)}
-        >
-          {renderData.length > 1 && (
-            <span className="absolute -right-1 -top-1 h-5 w-5 flex items-center justify-center bg-yellow-400 rounded-full text-white text-xs z-10">
-              {renderData.length}
-            </span>
-          )}
-
-          <div className="bg-blue-600 text-white p-2 text-sm rounded-t">
-            {renderData[0]?.title}
-          </div>
-          
-          <div className="p-1 sm:p-1 md:p-1 lg:p-2 xl:p-2">
-            <div className="text-xs truncate mb-1">
-              Mentor: John Doe
-            </div>
-            <div className="text-xs text-gray-600">
-              Time: {formatTime(renderData[0].start)} - {formatTime(renderData[0].end)}
-            </div>
-          </div>
-        </div>
-      )}
 
       {showModal && renderData.length > 1 && (
         <MultiEventModal
@@ -108,6 +172,6 @@ export default function Day({
           event={renderData[0]}
         />
       )}
-    </div>
+    </>
   );
 }
