@@ -7,13 +7,14 @@ export default function ListCard({
   handleViewall,
   items = [],
   onItemClick,
+  programCount
 }) {
   const handleClickItem = (key) => {
     onItemClick && onItemClick(key);
   };
   return (
     <div
-      className="pb-3"
+      className=""
       style={{
         boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
         borderRadius: "10px",
@@ -36,6 +37,7 @@ export default function ListCard({
         )}
       </div>
       <ul className="flex flex-col gap-1 p-4 md:p-0 mt-4 font-medium">
+      <li className="">{programCount}</li>
         {items.map((menu, index) => (
           <li className="" key={index}>
             <>
@@ -56,6 +58,7 @@ export default function ListCard({
             </>
           </li>
         ))}
+       
       </ul>
     </div>
   );

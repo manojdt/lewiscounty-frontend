@@ -19,6 +19,7 @@ import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
+import FilterIcon from "../../assets/icons/filterIcon.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { activateUser, deactivateUser, deleteUser, getMembersList } from "../../services/members";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -27,7 +28,7 @@ import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
-import { formatTableNullValues, useDebounce } from "../../utils";
+import { capitalizeFirstLetter, formatTableNullValues, useDebounce } from "../../utils";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import {
   memberMentorDashBoard,
@@ -71,7 +72,7 @@ const Members = () => {
     assignPopup: false,
     message: "",
   });
-  const [filterInfo, setFilterInfo] = useState({ search: "", status: "" });
+  const [filterInfo, setFilterInfo] = useState({ search: "", status: "",role:'' });
   const dispatch = useDispatch();
   const { mentor, mentee,admin, loading, error } = useSelector(
     (state) => state.members
@@ -83,6 +84,16 @@ const Members = () => {
     page: 0,
     pageSize: 10,
   });
+  const [filterPopup, setFilterPopup] = useState({
+    show: false,
+    selectedItem: "", // Change from array to string
+    options: [
+      { id: "mentor", name: "Mentor" },
+      { id: "mentee", name: "Mentee" }
+    ]
+  });
+  
+
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedRequestedTab = searchParams.get("tabType");
   const open = Boolean(anchorEl);
@@ -109,7 +120,56 @@ const Members = () => {
     reset();
     setActionColumnInfo({ cancelPopup: false, menteecancel: false });
   };
+// Handle filter icon click
+const handleFilterIconClick = (e) => {
+  // e.stopPropagation();
+  setFilterPopup({
+    ...filterPopup,
+    show: true,
+    selectedItem: filterInfo.role || ""
+  });
+};
 
+// Handle option selection (now only stores one value)
+const handleSelectOption = (id) => {
+  // If same item is clicked again, deselect it
+  if (filterPopup.selectedItem === id) {
+    setFilterPopup({
+      ...filterPopup,
+      selectedItem: ""
+    });
+  } else {
+    // Otherwise, select the new item
+    setFilterPopup({
+      ...filterPopup,
+      selectedItem: id
+    });
+  }
+};
+
+// Handle filter submission for single selection
+const handleFilterSubmit = () => {
+  // Update filterInfo with selected role
+  const newFilterInfo = { ...filterInfo };
+  
+  if (filterPopup.selectedItem) {
+    newFilterInfo.role = filterPopup.selectedItem;
+  } else {
+    delete newFilterInfo.role;
+  }
+  
+  setFilterInfo(newFilterInfo);
+  setPaginationModel({
+    page: 0,
+    pageSize: 10,
+  });
+  
+  // Close the popup
+  setFilterPopup({
+    ...filterPopup,
+    show: false
+  });
+};
   //Mentor/Mentee deactive ---> active
   const handleActivate = () => {
     handleClose();
@@ -274,6 +334,37 @@ const Members = () => {
     const updatedColumns = [
       ...columns,
       {
+        field: "average_rating",
+        headerName: "User Type",
+        flex: 1,
+        id: 5,
+          for: ["admin"],
+          sortable: false, // Remove default sorting
+          renderHeader: (params) => (
+            <div className="flex items-center gap-1">
+              <span>{params.colDef.headerName}</span>
+              <img 
+                src={FilterIcon} 
+                alt="Filter" 
+                className="w-4 h-4 cursor-pointer pt-1" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Call your filter function here
+                  handleFilterIconClick(e)
+                }}
+              />
+            </div>
+          ),
+          renderCell: (params) => {
+            return (
+              <div className="flex gap-2 items-center">
+                {" "}
+                {capitalizeFirstLetter(params?.row?.role)}
+              </div>
+            );
+          },
+      },
+      {
         field: "status",
         headerName: "Activity",
         flex: 1,
@@ -434,7 +525,9 @@ const Members = () => {
     if (filterInfo.search !== "") {
       payload = { ...payload, search: filterInfo.search };
     }
-
+    if (filterInfo.role) {
+      payload = { ...payload, role: filterInfo.role };
+    }
     dispatch(getMembersList(payload));
   }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);
 
@@ -473,13 +566,15 @@ const Members = () => {
       <div className="pb-3">
         {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
       </div>
-      <div className="pl-6 pb-8 font-medium text-[18px]">
-        <p>Users</p>
-      </div>
+    
 
       {/* Search and Filters */}
+      <div className="flex justify-between">
+      <div className="pl-6 flex items-center font-medium text-[18px]">
+        <p>Users</p>
+      </div>
       <div className="title flex flex-row sm:flex-row justify-end py-3 px-4 items-center gap-4 mr-4">
-        <div className="relative w-3/6 sm:w-3/6 md:w-[35%] lg:w-[35%] xl:w-[25%] ">
+        <div className="relative w-3/4 sm:w-3/6 md:w-[35%] lg:w-[35%] xl:w-[25%] flex-1">
           <input
             type="text"
             id="search-navbar"
@@ -502,6 +597,7 @@ const Members = () => {
             <option value="inactive">Deactive</option>
           </select>
         </div>
+      </div>
       </div>
 
       {/* Data Table */}
@@ -576,7 +672,73 @@ const Members = () => {
           </div>
         </div>
       </MuiModal>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={filterPopup.show}
+      >
+        <div className="py-3 px-4 bg-white" style={{ borderRadius: "3px" }}>
+          <div
+            style={{
+              border: "1px solid rgba(29, 91, 191, 1)",
+              borderRadius: "3px",
+            }}
+            className="py-5 px-5"
+          >
+            <div className="flex justify-between mb-4">
+              <h3 className="text-base text-black font-medium">User Type  {filterPopup.column}</h3>
+              <img
+                className="cursor-pointer"
+                onClick={() => setFilterPopup({ ...filterPopup, show: false })}
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
 
+            <div className="text-black">
+              <ul
+                className="py-3 leading-10"
+                style={{
+                  margin: "10px 0px 20px 0",
+                }}
+              >
+                {filterPopup.options.map((option, index) => (
+                  <li key={index} className="flex gap-7">
+                    <input
+                      type="checkbox"
+                      className="w-[20px]"
+                      checked={filterPopup.selectedItem === option.id}
+                      onChange={() => handleSelectOption(option.id)}
+                      value={option.id}
+                    />
+                    <span className="text-[16px]">{option.name}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="Cancel"
+                  btnCategory="secondary"
+                  onClick={() =>
+                    setFilterPopup({
+                      ...filterPopup,
+                      show: false,
+                      selectedItem: filterInfo.role || [],
+                    })
+                  }
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[100px]"
+                  btnStyle={{ background: "rgba(29, 91, 191, 1)" }}
+                  onClick={handleFilterSubmit}
+                  btnName={"Ok"}
+                  btnCategory="primary"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => 1 }}
         open={isDeleteModal}

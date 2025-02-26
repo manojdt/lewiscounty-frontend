@@ -133,7 +133,16 @@ export default function Admin() {
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
     if (Object.keys(totalCount).length) {
-      const programMenu = [...programMenus("dashboard")]
+      const programMenu = [...[ {
+        name: "Programs",
+        count: 0,
+        page: "/programs",
+        for: ["admin"],
+        mentorStatus: "all",
+        menteeStatus: "allprogram",
+        adminStatus: "all",
+        status: "all",
+      },],...programMenus("dashboard")]
         .filter((men) => men.for.includes(role))
         .map((menu) => {
           if (menu.status === "all") {
@@ -147,6 +156,7 @@ export default function Admin() {
 
           return menu;
         });
+        console.log(programMenu,"programMenu")
       setProgramMenusList(programMenu);
     }
   }, [userpragrams]);
@@ -268,7 +278,7 @@ export default function Admin() {
       <div className="grid grid-cols-8 gap-4 max-md:block">
         <div className="col-span-2">
           <div
-            className="pb-3 w-full  bg-white rounded-lg"
+            className="w-full  bg-white rounded-lg"
             style={{
               boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
               background: "rgba(255, 255, 255, 1)",
@@ -299,13 +309,20 @@ export default function Admin() {
               </span>
             </div> */}
 
-            <ul className="flex flex-col gap-2 p-4 md:p-0 mt-4 font-medium">
-              {programMenusList.map((menu, index) => {
-                if (role === "admin" && index > 1) return null;
+            <ul className="flex flex-col gap-2 p-4 md:p-0 font-medium">
+            <ListCard
+              title="Overview"
+              // viewall
+              // handleViewall={handleViewAllMembers}
+              onItemClick={onItemClick}
+              items={membersCount}
+              programCount={programMenusList.map((menu, index) => {
+                if (role === "admin" && index > 0) return null;
                 return (
-                  <li className="" key={index}>
+                
                     <div
-                      className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content 
+                     key={index}
+                      className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content
                                     ${searchParams.get("type") ===
                           menu.status ||
                           (searchParams.get("is_bookmark") ===
@@ -331,11 +348,12 @@ export default function Admin() {
                       <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
                       <span className="text-base max-lg:text-[12px]">{menu.count}</span>
                     </div>
-                  </li>
                 );
               })}
+            />
+              
             </ul>
-            <div className="flex justify-center mt-2 mb-2">
+            {/* <div className="flex justify-center mt-2 mb-2">
               <button
                 className="text-white flex justify-center items-center gap-3 px-4 py-3 text-[12px]"
                 style={{
@@ -348,17 +366,11 @@ export default function Admin() {
                 <span>View All</span>
                 <img src={RightArrow} alt={"RightArrow"} />
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="mt-4">
-            <ListCard
-              title="Users"
-              // viewall
-              // handleViewall={handleViewAllMembers}
-              onItemClick={onItemClick}
-              items={membersCount}
-            />
+           
           </div>
           {topPrograms&&topPrograms?.length>0&&
           <div className="mt-4">

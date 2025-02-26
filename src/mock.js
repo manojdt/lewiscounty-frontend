@@ -2621,22 +2621,6 @@ export const allMembersColumns = [
      for: ["admin"],
   },
   {
-    field: "average_rating",
-    headerName: "User Type",
-    flex: 1,
-    id: 5,
-      for: ["admin"],
-    renderCell: (params) => {
-      return (
-        <div className="flex gap-2 items-center">
-          {" "}
-          {capitalizeFirstLetter(params?.row?.role)}
-  
-        </div>
-      );
-    },
-  },
-  {
     field: "skills",
     headerName: "Skills",
     flex: 1,
