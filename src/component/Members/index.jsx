@@ -342,7 +342,7 @@ const handleFilterSubmit = () => {
           sortable: false, // Remove default sorting
           renderHeader: (params) => (
             <div className="flex items-center gap-1">
-              <span>{params.colDef.headerName}</span>
+              <span className="font-semibold">{params.colDef.headerName}</span>
               <img 
                 src={FilterIcon} 
                 alt="Filter" 
