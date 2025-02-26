@@ -76,6 +76,7 @@ export default function AssignMentees() {
   } = useSelector((state) => state.userPrograms);
   const [searchTerm, setSearchTerm] = useState(""); // For program_id
   const [searchResults, setSearchResults] = useState([]); // For program_id
+  const [selectedProgram, setSelectedProgram] = useState("")
 
   const { data, isLoading } = useGetProgramNameQuery(searchTerm, {
     skip: !searchTerm, // Only call API if searchTerm is not empty
@@ -138,7 +139,7 @@ export default function AssignMentees() {
       start_date: new Date(data.start_date).toISOString(),
       end_date: new Date(data.end_date).toISOString(),
       mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
-      due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss"),
+      // due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss"),
     };
     if (type === "edit" && from_type !== "program") {
       apiData = {
@@ -316,7 +317,7 @@ export default function AssignMentees() {
   }, [allFields?.program_id, allFields?.program_id_val, currentProgramDetail]);
 
   useEffect(() => {
-    if (type === "new" && allFields?.program_id && !isNaN(allFields?.program_id)) {
+    if (type === "new" && allFields?.program_id) {
       const programOption = menteeFields?.filter(
         (e) => e?.name === "program_id"
       )?.[0]?.options;
@@ -390,13 +391,15 @@ export default function AssignMentees() {
     if (!category.length) {
       dispatch(getAllCategories());
     }
+    const progId = state?.data?.program_id ?? selectedProgram?.id
     if (type !== "new") {
       const editPay = state?.data?.task_id
         ? `&type=edit_task&task_id=${state?.data?.task_id}`
         : "";
-      dispatch(getProgramTaskMentees(state?.data?.program_id + editPay));
+      dispatch(getProgramTaskMentees(progId + editPay));
     }
-  }, [category, type, state?.data?.program_id, dispatch]);
+  }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]
+);
 
   const handleAddPopupData = (value) => {
     if (value.length) {
@@ -540,6 +543,7 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
+          {console.log("searchresults ==>", searchResults)}
           <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -564,6 +568,7 @@ export default function AssignMentees() {
                           <>
                             <input
                               {...register(field.name, field.inputRules)}
+                              value={searchResults.filter((i)=>i?.id === getValues(field.name))?.[0]?.program_name}
                               type={field.fieldtype}
                               className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                               placeholder={field.placeholder}
@@ -585,7 +590,7 @@ export default function AssignMentees() {
                               }}
                               onChange={(e) => {
                                 const value = e.target.value;
-                                setValue(field.name, value); // Update form state
+                                // setValue(field.name, value); // Update form state
                               
                                 // Allow text search but avoid affecting program_id API
                                 if (field.name === "program_id") {
@@ -608,14 +613,18 @@ export default function AssignMentees() {
 
                             {/* Only show dropdown for program_id */}
                             {field.name === "program_id" &&
-                              searchTerm.trim() !== "" && (
+                              searchTerm !== "" &&
+                               (
+
                                 <>
                                   {searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
                                       {searchResults.map((program) => {
-                                        const isActive =
-                                          program.program_name.toLowerCase() ===
-                                          searchTerm.toLowerCase();
+                                        console.log(program);
+                                        
+                                        const isActive = getValues(field.name) === program?.id
+                                          // program.program_name.toLowerCase() ===
+                                          // searchTerm.toLowerCase();
 
                                         return (
                                           <li
@@ -629,9 +638,10 @@ export default function AssignMentees() {
                                             onClick={() => {
                                               setValue(
                                                 field.name,
-                                                program.program_name
+                                                program.id
                                               ); // Set selected value
-                                              setSearchResults([]); // Hide dropdown after selection
+                                              setSelectedProgram(program)
+                                              // setSearchResults([]); // Hide dropdown after selection
                                               setSearchTerm(""); // Clear search term after selection
                                             }}
                                           >

@@ -1170,3 +1170,17 @@ export const menteesProfileCounts = (name) => {
     },
   ];
 }; 
+
+//dashboard recent members
+export const dashboard_recent_members = () => {
+  
+  return [
+    {
+      label: "Dashboard",
+      path: -1,
+    },
+    {
+      label: `Member Requests`,
+    },
+  ];
+}; 
