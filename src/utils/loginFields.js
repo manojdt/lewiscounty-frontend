@@ -34,7 +34,7 @@ export const SignupFields = [
   },
   {
     type: "input",
-    name: "email",
+    name: "regemail",
     fieldtype: "email",
     label: "Email",
     placeholder: "Enter your email",
@@ -49,7 +49,7 @@ export const SignupFields = [
   },
   {
     type: "input",
-    name: "password",
+    name: "regpassword",
     fieldtype: "password",
     label: "Password",
     placeholder: "Enter your password",
