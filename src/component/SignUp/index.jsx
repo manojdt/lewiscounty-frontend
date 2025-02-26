@@ -91,7 +91,7 @@ export const Signup = () => {
             setShowBackdrop(true);
           }
         } catch (error) {
-          toast.error("error", error);
+          toast.error(error?.data?.error);
         }
       }
     }
