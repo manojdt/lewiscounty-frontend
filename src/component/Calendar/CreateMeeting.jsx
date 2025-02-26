@@ -53,7 +53,7 @@ export default function CreateMeeting() {
   const { data: getEvent, isLoading: calendarLoading } =
     useGetCalendarEventQuery(
       { id, ...(status === "draft" && { status }) },
-      { skip: !id }
+      { skip: !id, refetchOnMountOrArgChange: true }
     );
 
   const [

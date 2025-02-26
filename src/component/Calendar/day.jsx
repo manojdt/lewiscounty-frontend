@@ -37,14 +37,16 @@ export default function Day({
       : "pt-2 pr-2";
   }
 
+  // Fixed: Use day as a dayjs object consistently for date comparisons
   const eventsForDay = savedEvents.filter((event) => {
-    return (
-      new Date(day).toDateString() === new Date(event.start).toDateString()
-    );
+    const eventDate = dayjs(new Date(event.start));
+    return eventDate.format('YYYY-MM-DD') === dayjs(day).format('YYYY-MM-DD');
   });
 
+  // Fixed: Filter renderData more precisely
   const renderData = newData.filter((event) => {
-    return new Date(day).toDateString() === new Date(event.date).toDateString();
+    const eventDate = dayjs(new Date(event.date));
+    return eventDate.format('YYYY-MM-DD') === dayjs(day).format('YYYY-MM-DD');
   });
 
   // const displayedEvents = eventsForDay.slice(0, isWeek ? 10 : 2);
@@ -53,8 +55,9 @@ export default function Day({
     setShowModal(true);
   };
 
-  const isCurrentMonth = (seconds) => {
-    const date = new Date(seconds);
+  const isCurrentMonth = (day) => {
+    // Make sure we're dealing with a consistent date object format
+    const date = dayjs(day).toDate();
     return (
       date.getFullYear() === currentYear && date.getMonth() === currentMonth
     );
@@ -138,7 +141,7 @@ export default function Day({
           <>
             {rowIdx > 0 && (
               <TodayView
-                currentDate={new Date(day)}
+                currentDate={dayjs(day).toDate()} // Ensure we pass a proper date object
                 key={rowIdx}
                 rowIdx={rowIdx}
                 colIdx={colIdx}
