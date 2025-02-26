@@ -90,7 +90,7 @@ const toast = useToast()
       : data?.filter((ticket, index) => ticket.status === requestTab);
     const [formattedFilteredData, setFormattedFilteredData] = React.useState([])
 
-    React.useMemo(()=>{
+    useEffect(()=>{
       if(filteredData){
         const formattedRowData = formatTableNullValues(filteredData)
         setFormattedFilteredData(formattedRowData)
