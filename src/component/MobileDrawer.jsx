@@ -115,13 +115,13 @@ const MobileDrawer = ({ isOpen, onClose }) => {
       },
     ];
 
-    if (role !== "mentee") {
-      items.unshift({
-        label: "Reports",
-        path: "/reports",
-        icon: ReportIcon,
-      });
-    }
+    // if (role !== "mentee") {
+    //   items.unshift({
+    //     label: "Reports",
+    //     path: "/reports",
+    //     icon: ReportIcon,
+    //   });
+    // }
 
     if (role === "admin") {
       items.push(
@@ -303,10 +303,10 @@ const MobileDrawer = ({ isOpen, onClose }) => {
                   />
                   
                   <MenuItem
-                    label="Goals"
-                    path="/goals"
+                    label="Reports"
+                    path="/reports"
                     // icon={GoalIcon}
-                    onClick={() => handleNavigation("/goals")}
+                    onClick={() => handleNavigation("/reports")}
                   />
                   
                   <MenuItem

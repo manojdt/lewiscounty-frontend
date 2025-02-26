@@ -1,7 +1,7 @@
 export const handleNotificationNavigation = (data, navigate, role, dispatch, userActivitiyVisited, handleClose = null) => {
     // Mark notification as visited
-    dispatch(userActivitiyVisited(data.id));
-    // console.log(data,"notifications")
+    // dispatch(userActivitiyVisited(data.id));
+    console.log(data,"notifications")
     const actionType = data?.notification_type;
     
     switch (actionType) {

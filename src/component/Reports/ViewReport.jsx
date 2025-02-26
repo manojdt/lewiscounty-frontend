@@ -646,6 +646,22 @@ const ViewReport = () => {
                 </span>
               )}
               {role !== "admin" && (
+                <>
+               {( reportDetails?.status === "rejected" ||
+                reportDetails?.status === "cancelled")&&role==="mentor"&&
+                 <Box pr={2}>
+                 <button
+                   className="py-3 px-16 text-white text-[14px] flex items-center"
+                   style={{
+                     ...StatusbuttonStyles.base,
+                     ...StatusbuttonStyles.danger,
+                     cursor: "not-allowed",
+                   }}
+                   onClick={() => undefined}
+                 >
+                   Reviewed
+                 </button>
+               </Box>}
                 <Button
                   btnType="button"
                   btnCls="w-[120px]"
@@ -655,6 +671,7 @@ const ViewReport = () => {
                   btnName="Close"
                   btnCategory="secondary"
                 />
+                </>
               )}
             </div>
             {role === "admin" && reportDetails?.status === "new" ? (

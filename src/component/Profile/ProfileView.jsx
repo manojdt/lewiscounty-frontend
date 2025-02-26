@@ -1790,7 +1790,7 @@ export default function ProfileView() {
                             alignItems={"center"}
                             justifyContent={"space-between"}
                           >
-                            <p className="text-[16px] font-semibold">
+                            <p className="text-[16px] overflow-hidden text-ellipsis flex-1 font-semibold" title={e?.notes}>
                               {e?.notes}
                             </p>
                             <p className="text-[14px] font-normal">
