@@ -751,7 +751,7 @@ const MentorTask = () => {
             <Button
               btnType="button"
               btnCls="w-[200px]"
-              btnName={"Create Interaction Point/Task"}
+              btnName={"Create Task"}
               btnCategory="primary"
               onClick={() => navigate("/assign-mentees?type=new")}
             />

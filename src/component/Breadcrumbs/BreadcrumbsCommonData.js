@@ -76,6 +76,7 @@ export const requestPageBreadcrumbs = {
   mentorDashboardProgram : "mentorDashboardProgram",
   adminMemberChat : "adminMemberchat",
   menteesProfileCounts : "menteesProfileCount",
+  dashboardRecentMembers : "dashboardRecentMembers",
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
