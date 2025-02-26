@@ -577,8 +577,8 @@ export default function AssignMentees() {
                               aria-invalid={!!errors[field.name]}
                               onClick={()=>{
                                 if (
-                                  field.name === "program_id" &&
-                                  getValues(field.name).length > 2
+                                   field.name === "program_id" &&
+                                   getValues(field.name)?.length > 2 &&
                                 ){
                                   setSearchTerm(getValues(field.name)); // Update state for API call
                                 }
