@@ -328,8 +328,8 @@ export default function AssignMentees() {
         ...getValues(),
         mentor: filteredData?.mentor_name,
         duration: filteredData?.duration + " Days",
-        start_date: new Date(filteredData?.start_date),
-        end_date: new Date(filteredData?.end_date),
+        // start_date: new Date(filteredData?.start_date),
+        // end_date: new Date(filteredData?.end_date),
       });
       dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
@@ -372,8 +372,8 @@ export default function AssignMentees() {
         program_id_val: state?.data?.program_id,
         goal_id: state?.data?.goal,
         mentor: state?.data?.mentor_name,
-        start_date: new Date(state?.data?.program_startdate),
-        end_date: new Date(state?.data?.program_enddate),
+        // start_date: new Date(state?.data?.program_startdate),
+        // end_date: new Date(state?.data?.program_enddate),
         duration: `${state?.data?.program_duration} days`,
         mentees_list: state?.data?.list_mentees ?? [],
         due_date: new Date(state?.data?.due_date),
@@ -734,6 +734,7 @@ export default function AssignMentees() {
                           </div>
                         ) : field.type === "date" ? (
                           <>
+                          {console.log("state?.data?.start_dateff", state?.data?.start_date, selectedProgram?.start_date)}
                             <div
                               className="relative input-bg"
                               onClick={(e) => {
@@ -770,17 +771,23 @@ export default function AssignMentees() {
                                 //     : {}
                                 // }
 
-                                minDate={new Date()}
-                                maxDate={(() => {
-                                  if (field.name !== "due_date")
-                                    return undefined;
-                                  const endDate = getValues("end_date");
-                                  if (!endDate) return undefined;
-                                  const date = new Date(endDate);
-                                  return isNaN(date.getTime())
-                                    ? undefined
-                                    : date;
-                                })()}
+                                minDate={
+                                  field?.name === "end_date" ? new Date(getValues("start_date")) : 
+                                  state?.data?.start_date ? new Date(state?.data?.start_date) : new Date(selectedProgram?.start_date)
+                                }
+                                maxDate={
+                                //   (() => {
+                                //   if (field.name !== "due_date")
+                                //     return undefined;
+                                //   const endDate = getValues("end_date");
+                                //   if (!endDate) return undefined;
+                                //   const date = new Date(endDate);
+                                //   return isNaN(date.getTime())
+                                //     ? undefined
+                                //     : date;
+                                // })()
+                                state?.data?.end_date ? new Date(state?.data?.end_date) : new Date(selectedProgram?.end_date)
+                              }
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
                                 dateFormat="mm-dd-yy"
