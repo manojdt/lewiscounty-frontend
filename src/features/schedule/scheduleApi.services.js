@@ -35,15 +35,17 @@ export const calendarApi = rtkQueryApiServices.injectEndpoints({
     }),
 
     updateCalendarEvent: builder.mutation({
-      query: ({ apiData, eventSelect, id, status }) => {
-        const params = new URLSearchParams({ id });
-        if (status !== "draft") {
-          params.append("option", eventSelect);
+      query: ({ apiData, eventSelect }) => {
+        const isDraft = "status" in apiData && apiData?.status === "draft";
+        let params = { id: apiData?.id };
+        if (!isDraft) {
+          params = { ...params, option: eventSelect };
         }
         return {
-          url: `/calendar_meeting/meeting?${params.toString()}`,
-          method: status === "draft" ? "POST" : "PUT",
+          url: `/calendar_meeting/meeting`,
+          method: isDraft === "draft" ? "POST" : "PUT",
           body: apiData,
+          params,
         };
       },
       invalidatesTags: [CALENDAR],

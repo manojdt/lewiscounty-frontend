@@ -2930,9 +2930,9 @@ export const CreateMeetingFields = [
   {
     type: "popup-input",
     name: "attendees",
-    label: "Add Volunteer",
+    label: "Add Mentee",
     fieldtype: "text",
-    placeholder: "Select Volunteer",
+    placeholder: "Select Mentee",
     inputRules: {
       required: "This field is required",
     },
