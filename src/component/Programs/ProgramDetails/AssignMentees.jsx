@@ -87,11 +87,6 @@ export default function AssignMentees() {
     }
   }, [data]);
 
-
-  useEffect(() => {
-    console.log("API Call Status:", { isLoading, data, error });
-  }, [data, isLoading, error]);
-
   const [formattedProgramMenteeList, setFormattedProgramMenteeList] =
     React.useState([]);
   React.useMemo(() => {
