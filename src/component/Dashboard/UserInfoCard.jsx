@@ -54,8 +54,8 @@ export default function UserInfoCard() {
 
     return (
         <div className="">
-            <div className="pb-3 w-full  bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
-                <div className={`flex flex-col items-center pb-10 pt-14 ${userInfo?.data?.userinfo?.approve_status === "accept" && 'border-b-2'} ${role==="admin"&&'border-b-2'} relative`}>
+            <div className="w-full  bg-white rounded-lg" style={{ boxShadow: '4px 4px 25px 0px rgba(0, 0, 0, 0.05)', background: 'rgba(255, 255, 255, 1)' }}>
+                <div className={`flex flex-col items-center pb-10 pt-14 ${userInfo?.data?.userinfo?.approve_status === "accept" && 'border-b-2'}  relative`}>
                     {
                         !loading &&
                         <img className={`w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer ${hoverIndex ? 'opacity-20' : ''}`}
