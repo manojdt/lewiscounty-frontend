@@ -51,21 +51,21 @@ export const Signup = () => {
     navigate("/login"); // Redirect to login page
   };
   const onSubmit = async (data) => {
-    const { first_name, last_name, email, password } = data;
+    const { first_name, last_name, regemail, regpassword } = data;
     if (
       first_name !== "" &&
       last_name !== "" &&
-      email !== "" &&
-      password !== ""
+      regemail !== "" &&
+      regpassword !== ""
     ) {
-      if (/\s/.test(password)) {
-        setError("password", {
+      if (/\s/.test(regpassword)) {
+        setError("regpassword", {
           type: "manual",
           message: "Password must not contain spaces",
         });
         return; // Stop further execution if the password contains spaces
       }
-      const updatedData = { ...data, email: email.toLowerCase() };
+      const updatedData = { ...data, email: regemail.toLowerCase(), password: regpassword };
       if (
         !verifyPasswordRule[PasswordRulesSet.character] ||
         !verifyPasswordRule[PasswordRulesSet.upperlowercase] ||
@@ -73,7 +73,7 @@ export const Signup = () => {
         !verifyPasswordRule[PasswordRulesSet.email] ||
         !verifyPasswordRule[PasswordRulesSet.common]
       ) {
-        setError("password", {
+        setError("regpassword", {
           type: "manual",
           message: "All Conditions must be satisfied",
         });
@@ -329,9 +329,10 @@ export const Signup = () => {
                       // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                       aria-invalid={errors[field.name] ? "true" : "false"}
                       tabIndex={index + 1}
-                      // name={
-                      //   field?.name === "email"?"regemail":field?.name === "password"?"regpassword":field?.name
-                      // }
+                      name={
+                        field?.name
+                        //  === "email"?"regemail":field?.name === "password"?"regpassword":field?.name
+                      }
                     />
                     {field.fieldtype === "password" && (
                       <button
@@ -356,8 +357,8 @@ export const Signup = () => {
                     )}
                   </div>
                   {field.fieldtype === "password" &&
-                    getValues("password") !== undefined &&
-                    getValues("password") !== "" && (
+                    getValues("regpassword") !== undefined &&
+                    getValues("regpassword") !== "" && (
                       <div className="pb-3 leading-6">
                         <p className="text-[14px] pb-1">
                           Create a password That:
