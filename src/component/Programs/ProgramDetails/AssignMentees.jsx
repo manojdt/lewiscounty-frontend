@@ -576,11 +576,11 @@ export default function AssignMentees() {
                               autoComplete={field?.autoComplete}
                               aria-invalid={!!errors[field.name]}
                               onClick={() => {
-                                if (
-                                  field.name === "program_id" &&
-                                  getValues(field.name)?.length > 2  
-                                ) {
-                                  setSearchTerm(getValues(field.name));
+                                if (field.name === "program_id") {
+                                  const value = getValues(field.name);
+                                  
+                                  // Set searchTerm immediately (even if it's empty)
+                                  setSearchTerm(value || " ");
                                 }
                               }}
                               
@@ -612,24 +612,27 @@ export default function AssignMentees() {
                               searchTerm.trim() !== "" && (
                                 <>
                                   {searchResults.length > 0 ? (
-                                    <ul className="absolute bg-white border border-gray-300 w-full z-10">
-                                      {searchResults.map((program) => (
-                                        <li
-                                          key={program.id}
-                                          className="p-2 hover:bg-background-primary-light hover:text-font-primary-main cursor-pointer"
-                                          onClick={() => {
-                                            setValue(
-                                              field.name,
-                                              program.program_name
-                                            ); // Set selected value
-                                            setSearchResults([]); // Hide dropdown after selection
-                                            setSearchTerm(""); // Clear search term after selection
-                                          }}
-                                        >
-                                          {program.program_name}
-                                        </li>
-                                      ))}
-                                    </ul>
+                                   <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
+                                   {searchResults.map((program) => {
+                                     const isActive = program.program_name.toLowerCase() === searchTerm.toLowerCase();
+                                 
+                                     return (
+                                       <li
+                                         key={program.id}
+                                         className={`p-2 hover:bg-background-primary-light hover:text-font-primary-main cursor-pointer 
+                                           ${isActive ? "bg-background-primary-light text-font-primary-main" : ""}`}
+                                         onClick={() => {
+                                           setValue(field.name, program.program_name); // Set selected value
+                                           setSearchResults([]); // Hide dropdown after selection
+                                           setSearchTerm(""); // Clear search term after selection
+                                         }}
+                                       >
+                                         {program.program_name}
+                                       </li>
+                                     );
+                                   })}
+                                 </ul>
+                                 
                                   ) : (
                                     <div className="absolute bg-white border border-gray-300 w-full p-2 text-gray-500">
                                       No data found
