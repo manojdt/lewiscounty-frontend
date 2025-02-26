@@ -1,6 +1,5 @@
 import moment from "moment";
 import { dateFormat } from ".";
-import { getCurrentWeekAndDay } from "./constant";
 
 export const formatPhoneNumber = (value) => {
   // Remove all non-numeric characters
@@ -31,13 +30,15 @@ export const formatZipCode = (value) => {
   return value;
 };
 
-// export const handleChange = (e) => {
-//   const value = e.target.value;
-//   const formattedValue = formatPhoneNumber(value);
-//   setPhone(formattedValue);
-// };
-
-const { currentDayName } = getCurrentWeekAndDay();
+const daysOfWeek = [
+  { key: "SU", value: "S" },
+  { key: "MO", value: "M" },
+  { key: "TU", value: "T" },
+  { key: "WE", value: "W" },
+  { key: "TH", value: "T" },
+  { key: "FR", value: "F" },
+  { key: "SA", value: "S" },
+];
 
 export const PersonalInformationFields = [
   {
@@ -2826,39 +2827,79 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "col-span-6",
+    width: "w-full",
   },
   {
-    type: "dropdown",
+    type: "radio",
     name: "date_category",
-    label: "Date",
-    placeholder: "Select Date",
-    inputRules: {
-      required: "This field is required",
-    },
+    label: "Choose the Option",
+    placeholder: "",
     options: [
       {
         key: "do_not_repeat",
-        value: "Does Not repeat",
+        value: "Does not repeat",
       },
       {
         key: "daily",
         value: "Daily",
       },
       {
-        key: "every_week",
-        value: "Every weekday(Monday to Friday)",
+        key: "weekly_byday",
+        value: "Weekly",
       },
       {
-        key: "weekly",
-        value: `Weekly On ${currentDayName}`,
-      },
-      {
-        key: "custom",
-        value: "Custom",
+        key: "month_week",
+        value: "Monthly",
       },
     ],
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    inputRules: {
+      required: "This field is required",
+    },
+    size: true,
+    width: "w-[49%]",
+  },
+  {
+    type: "checkbox",
+    name: "byday",
+    label: "Select",
+    placeholder: "",
+    options: daysOfWeek,
+    inputRules: {
+      // required: "This field is required",
+    },
+    width: "w-[49%]",
+  },
+  {
+    type: "select",
+    name: "day_numbers",
+    label: "Select",
+    placeholder: "Select Week",
+    inputRules: {
+      required: "This field is required",
+    },
+    options: Array.from({ length: 31 }, (_, i) => i + 1).map((count) => count),
+    width: "w-[49%]",
+  },
+
+  {
+    type: "date",
+    name: "start_date",
+    label: "Start Date",
+    placeholder: "Select Start Date",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: "w-[24%]",
+  },
+  {
+    type: "date",
+    name: "end_date",
+    label: "End Date",
+    placeholder: "Select End Date",
+    inputRules: {
+      required: "This field is required",
+    },
+    width: "w-[24%]",
   },
   {
     type: "time",
@@ -2869,7 +2910,7 @@ export const CreateMeetingFields = [
     inputRules: {
       required: "This field is required",
     },
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    width: "w-[24%]",
   },
   {
     type: "time",
@@ -2879,85 +2920,34 @@ export const CreateMeetingFields = [
     placeholder: "End Time",
     inputRules: {
       required: "This field is required",
+      validate: {
+        validEndTime: (endTime, formValues) => {
+          if (!endTime || !formValues.start) return true;
+
+          // Convert times to 24h format for comparison
+          const start = moment(formValues.start, "HH:mm");
+          const end = moment(endTime, "HH:mm");
+
+          if (end.isBefore(start)) {
+            return "End time must be after start time";
+          }
+          return true;
+        },
+      },
     },
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-  },
-  {
-    type: "dropdown",
-    name: "notification_time",
-    label: "Add Notification",
-    placeholder: "Select Date",
-    inputRules: {
-      required: "This field is required",
-    },
-    options: [
-      {
-        key: "5",
-        value: "5",
-      },
-      {
-        key: "10",
-        value: "10",
-      },
-      {
-        key: "15",
-        value: "15",
-      },
-      {
-        key: "20",
-        value: "20",
-      },
-      {
-        key: "25",
-        value: "25",
-      },
-      {
-        key: "30",
-        value: "30",
-      },
-    ],
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
+    width: "w-[24%]",
   },
 
   {
-    type: "dropdown",
-    name: "notification_type",
-    label: "",
-    placeholder: "Minutes",
-    inputRules: {
-      required: "This field is required",
-    },
-    options: [
-      {
-        key: "minutes",
-        value: "Minutes",
-      },
-      {
-        key: "hours",
-        value: "Hours",
-      },
-    ],
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-  },
-  {
-    type: "input",
-    name: "guests",
-    fieldtype: "text",
-    label: "Add Guest(Optional)",
-    placeholder: "Enter Guests",
-    inputRules: {},
-    width: "col-span-6 sm:col-span-6 md:col-span-3 lg:col-span-2 xl:col-span-2",
-  },
-  {
     type: "popup-input",
     name: "attendees",
-    label: "Add Mentees",
+    label: "Add Volunteer",
     fieldtype: "text",
-    placeholder: "Select Mentees",
+    placeholder: "Select Volunteer",
     inputRules: {
       required: "This field is required",
     },
-    width: "col-span-6",
+    width: "w-full",
     icon: "add",
   },
   {
@@ -2982,7 +2972,16 @@ export const CreateMeetingFields = [
         value: "This Event And Following Events",
       },
     ],
-    width: "col-span-6",
+    width: "w-full",
+  },
+  {
+    type: "input",
+    name: "guests",
+    fieldtype: "text",
+    label: "Add Guest(Optional)",
+    placeholder: "Enter Guests",
+    inputRules: {},
+    width: "w-full",
   },
 ];
 
