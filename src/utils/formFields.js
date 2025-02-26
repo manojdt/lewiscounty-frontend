@@ -3478,7 +3478,7 @@ export const menteeTicketCreationField = [
     label: "Ticket Subject",
     placeholder: "Ticket Subject",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     size: true,
     width: "col-span-1",
@@ -3501,7 +3501,7 @@ export const menteeTicketCreationField = [
     label: "Description",
     placeholder: "Enter Description",
     inputRules: {
-      // required: 'Description is required',
+      required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],

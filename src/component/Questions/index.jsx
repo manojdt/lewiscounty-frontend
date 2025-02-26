@@ -215,23 +215,27 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
 
     return [];
   };
-  useEffect(() => {
-    // if (userInfo?.data?.document_upload === true && ((!actionInfo.modal && !searchParams.get("program_id")) || userInfo?.data?.role === 'mentor')) {
-    //     navigate('/logout')
-    // }
+  // useEffect(() => {
+  //   // if (userInfo?.data?.document_upload === true && ((!actionInfo.modal && !searchParams.get("program_id")) || userInfo?.data?.role === 'mentor')) {
+  //   //     navigate('/logout')
+  //   // }
 
-    if (
-      userInfo?.data?.role === 'mentee' &&
-      userInfo?.data?.document_upload &&
-      searchParams.get('program_id') &&
-      searchParams.get('program_id') !== null
-    ) {
-      setTimeout(() => {
-        setActionInfo({ modal: false, loading: false });
-        navigate(`/program-details/${searchParams.get('program_id')}`);
-      }, 1000);
-    }
-  }, [userInfo]);
+  //   if (
+  //     userInfo?.data?.role === 'mentee' &&
+  //     userInfo?.data?.document_upload &&
+  //     searchParams.get('program_id') &&
+  //     searchParams.get('program_id') !== null
+  //   ) {
+  //     console.log( userInfo?.data?.role === 'mentee',
+  //       userInfo?.data?.document_upload,
+  //       searchParams.get('program_id'),
+  //       searchParams.get('program_id'))
+  //     setTimeout(() => {
+  //       setActionInfo({ modal: false, loading: false });
+  //       navigate(`/program-details/${searchParams.get('program_id')}`);
+  //     }, 1000);
+  //   }
+  // }, [userInfo]);
   useEffect(() => {
     if (actionInfo.modal) {
       let userRole = userInfo?.data?.role;

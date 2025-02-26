@@ -540,6 +540,11 @@ const TicketCreation = () => {
                           />
                         )}
                       />
+                      {errors[field.name] && (
+                        <p style={{ color: 'red', fontSize: '12px' }}>
+                          {errors[field.name]?.message}
+                        </p>
+                      )}
                     </div>
                   );
 

@@ -344,7 +344,7 @@ const ProfileTab = ({ setEditMode }) => {
             style={{
               maxHeight: showAll
                 ? `${contentRef.current.scrollHeight}px`
-                : "380px",
+                : userRole===user.mentee?"325px":"380px",
               overflow: "hidden",
               transition: "max-height 0.5s ease",
             }}
