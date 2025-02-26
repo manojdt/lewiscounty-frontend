@@ -137,8 +137,8 @@ const StepComponenRender = ({
       if (response.status === 200 || response.status === 201) {
         toast.success(response?.data?.message)
        await docUpload(allValues)
-        handleLogout()
-        reset();
+       // handleLogout()
+       // reset();
       }
     } catch (error) {
       console.error('Error submitting data:', error);
