@@ -578,9 +578,9 @@ export default function AssignMentees() {
                               onClick={() => {
                                 if (
                                   field.name === "program_id" &&
-                                  getValues(field.name)?.length > 2  // ✅ Removed the extra comma
+                                  getValues(field.name)?.length > 2  
                                 ) {
-                                  setSearchTerm(getValues(field.name)); // Update state for API call
+                                  setSearchTerm(getValues(field.name));
                                 }
                               }}
                               
