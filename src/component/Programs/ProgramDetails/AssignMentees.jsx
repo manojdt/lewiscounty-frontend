@@ -575,14 +575,15 @@ export default function AssignMentees() {
                               disabled={field.disabled}
                               autoComplete={field?.autoComplete}
                               aria-invalid={!!errors[field.name]}
-                              onClick={()=>{
+                              onClick={() => {
                                 if (
-                                   field.name === "program_id" &&
-                                   getValues(field.name)?.length > 2 &&
-                                ){
-                                  setSearchTerm(getValues(field.name)); // Update state for API call
+                                  field.name === "program_id" &&
+                                  getValues(field.name)?.length > 2  
+                                ) {
+                                  setSearchTerm(getValues(field.name));
                                 }
                               }}
+                              
                               onChange={(e) => {
                                 const value = e.target.value;
                                 setValue(field.name, value); // Update form state
