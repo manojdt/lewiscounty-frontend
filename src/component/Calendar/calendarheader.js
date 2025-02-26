@@ -13,6 +13,7 @@ const CalendarHeader = ({
   onToday,
   currentDate,
 }) => {
+  const customDateFormat="MM-DD-YYYY"
   const {
     palette: {
       primary: { main },
@@ -40,27 +41,27 @@ const CalendarHeader = ({
       const todayDate = dayjs();
 
       if (
-        dayjs(todayDate).format("YYYY-MM-DD") ===
-        dayjs(currentDate).format("YYYY-MM-DD")
+        dayjs(todayDate).format(customDateFormat) ===
+        dayjs(currentDate).format(customDateFormat)
       ) {
         return "Today";
       }
 
       if (
-        dayjs(todayDate).subtract(1, "day").format("YYYY-MM-DD") ===
-        dayjs(currentDate).format("YYYY-MM-DD")
+        dayjs(todayDate).subtract(1, "day").format(customDateFormat) ===
+        dayjs(currentDate).format(customDateFormat)
       ) {
         return "Yesterday";
       }
 
       if (
-        dayjs(todayDate).add(1, "day").format("YYYY-MM-DD") ===
-        dayjs(currentDate).format("YYYY-MM-DD")
+        dayjs(todayDate).add(1, "day").format(customDateFormat) ===
+        dayjs(currentDate).format(customDateFormat)
       ) {
         return "Tomorrow";
       }
 
-      return dayjs(currentDate).format("YYYY-MM-DD");
+      return dayjs(currentDate).format(customDateFormat);
     }
   };
 

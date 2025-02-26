@@ -40,19 +40,21 @@ export default function TodayView({
     </>
   );
 }
-
+// Updated TimeBlock component with fixed time column positioning
 function TimeBlock({
   isWeek,
   colIdx,
   time,
+  currentDate,
   savedEvents,
   fetchEvents,
   deleteAppointment,
   actionActionBtn,
   newData,
+  renderData,
 }) {
-  const startTime = time.format("h:mm A"); // Format the start time
-  const endTime = time.add(1, "hour").format("h:mm A"); // Add 1 hour to get the end time
+  const startTime = time.format("h:mm A");
+  const endTime = time.add(1, "hour").format("h:mm A");
 
   function getCurrentTimeClass() {
     return time.format("H") === dayjs().format("H")
@@ -60,64 +62,59 @@ function TimeBlock({
       : "pt-2";
   }
 
-
-  const eventsForHour = savedEvents.filter((event) => {
-    const eventTime = dayjs(event?.start?.dateTime);
-    return eventTime.hour() === time.hour() && eventTime.date() === time.date();
-  });
-
-  const eventsForHour1 = newData.filter((event) => {
-    const eventTime = dayjs(new Date(event.date).toDateString());
-    return eventTime.hour() === time.hour() && eventTime.date() === time.date();
+  // Filter for events in this time slot and day
+  const eventsForHour = newData.filter((event) => {
+    // Parse the start time from the event (assuming format is "HH:mm")
+    const [hours, minutes] = event.start.split(':').map(Number);
+    
+    // Create a dayjs object from the event date
+    const eventDate = dayjs(new Date(event.date));
+    
+    // Create a dayjs object from the column date (currentDate)
+    const columnDate = dayjs(currentDate);
+    
+    // First check if the event is on the same day as this column
+    const isSameDay = eventDate.format('YYYY-MM-DD') === columnDate.format('YYYY-MM-DD');
+    
+    // Then check if the event's hour matches this time block
+    const matchesTimeSlot = hours === time.hour();
+    
+    // Only return true if both conditions are met
+    return isSameDay && matchesTimeSlot;
   });
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleEventClick = (item) => {
     setSelectedEvent(item);
     setShowModal(true);
   };
 
-  let showTimeBlock = true;
-  let showEvent = true;
-
-  if (isWeek && colIdx > 0) {
-    showTimeBlock = false;
-  }
-
-  const [showModal, setShowModal] = useState(false);
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+
+  // IMPORTANT: Determine if we should show the time column based on column index
+  // In week view, only show time in the leftmost column (colIdx === 0)
+  const showTimeColumn = !isWeek || (isWeek && colIdx === 0);
+  
   return (
-    <div
-      className={`flex-1 grid grid-cols-9 gap-2 ${
-        isWeek ? "border-b-[1px] h-16" : "border"
-      }  border-gray-200`}
-    >
-      {showTimeBlock && (
-        <div
-          className={`${
-            showTimeBlock && isWeek ? "col-span-9" : "col-span-1"
-          } ${
-            isWeek ? "" : "border-r-2"
-          }  border-gray-200 flex justify-center items-center`}
-        >
-          <p
-            className={`text-center text-sm ${getCurrentTimeClass()} w-full h-full flex justify-center items-center`}
-          >
-            <span className="m-auto">{startTime}</span>
-          </p>
-        </div>
-      )}
-      {showEvent && (
-        <div
-          className={`${
-            showEvent && isWeek ? "col-span-9" : "col-span-8 text-center"
-          }`}
-        >
-          {eventsForHour1.map((event, index) => {
+    <div className={`border-b border-gray-200 ${isWeek ? "h-16" : ""}`}>
+      {/* Use a flex container with no gap between time and events */}
+      <div className="flex h-full">
+        {/* Time column - only show in first column */}
+        {showTimeColumn && (
+          <div className="w-20 border-r border-gray-200 flex justify-center items-center">
+            <p className={`text-center text-sm ${getCurrentTimeClass()} w-full h-full flex justify-center items-center`}>
+              <span className="m-auto">{startTime}</span>
+            </p>
+          </div>
+        )}
+        
+        {/* Events area - takes remaining width with no gap */}
+        <div className="flex-1 flex items-center justify-center">
+          {eventsForHour.map((event, index) => {
             // Display only one event for week and rest in modal
             if (isWeek && index > 0) {
               return null;
@@ -126,7 +123,7 @@ function TimeBlock({
             return (
               <div
                 key={index + 1}
-                className={`cursor-pointer m-auto ${isWeek ? "" : "w-3/4"}`}
+                className="cursor-pointer mx-auto w-11/12"
                 onClick={() => handleEventClick(event)}
               >
                 <div
@@ -147,20 +144,12 @@ function TimeBlock({
                       {event.title}
                     </div>
                   </div>
-                  <div
-                    className={`meeting-details ${
-                      isWeek ? "" : "flex justify-around gap-x-2"
-                    } px-2 pt-2 pb-3`}
-                  >
-                    <div
-                      className={`mb-2 ${
-                        isWeek ? "meeting-scheduler" : ""
-                      } text-xs`}
-                    >
+                  <div className="meeting-details px-2 pt-2 pb-3">
+                    <div className="mb-2 text-xs">
                       Instructor : {event?.created_by}
                     </div>
                     <div
-                      className={`text-[12px] meeting-time`}
+                      className="text-[12px] meeting-time"
                       style={{ color: "rgba(40, 41, 59, 1)" }}
                     >
                       Time: {moment(event.start, "HH:mm").format("hh:mm A")} -
@@ -172,9 +161,10 @@ function TimeBlock({
             );
           })}
 
+          {/* "More" indicator */}
           {isWeek && eventsForHour.length > 1 && (
             <div
-              className="flex items-center justify-center mt-2 text-sm text-[#FE634E] cursor-pointer"
+              className="flex items-center justify-center mt-2 text-sm text-background-primary-main cursor-pointer"
               onClick={() => {
                 setShowModal(true);
               }}
@@ -183,7 +173,8 @@ function TimeBlock({
             </div>
           )}
         </div>
-      )}
+      </div>
+      
       {showModal && (
         <EventModal
           open={showModal}
