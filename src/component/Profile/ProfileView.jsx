@@ -68,6 +68,7 @@ import {
   topMentorPage,
   topmentorDashBoard,
   menteesProfileCounts,
+  dashboard_recent_members,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { allProfileSections } from "./tabs/ProfileTab";
@@ -668,6 +669,7 @@ export default function ProfileView() {
     const programDetails = programDetailsProfile();
     const dashBoardTop = topmentorDashBoard();
     const menteesProfile = menteesProfileCounts();
+    const dashboardRecent = dashboard_recent_members();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
@@ -704,6 +706,9 @@ export default function ProfileView() {
         break;
       case requestPageBreadcrumbs.menteesProfileCounts:
         setBreadcrumbsArray(menteesProfile);
+        break;
+        case requestPageBreadcrumbs.dashboardRecentMembers:
+        setBreadcrumbsArray(dashboard_recent_members);
         break;
       case "discussion":
         break;
