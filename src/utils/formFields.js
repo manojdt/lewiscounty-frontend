@@ -2344,6 +2344,19 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
     //   options: [],
     // },
     {
+      type: "dropdown",
+      name: "goal_id",
+      fieldtype: "text",
+      label: "Goals",
+      placeholder: "Select Goals",
+      // inputRules: {
+      //   required: "This field is required",
+      // },
+      width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+      // disabled: bool,
+      options: [],
+    },
+    {
       type: "date",
       name: "start_date",
       label: "Task Start Date and Time",
@@ -2397,19 +2410,6 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       width: "w-full",
     },
     {
-      type: "dropdown",
-      name: "goal_id",
-      fieldtype: "text",
-      label: "Goals",
-      placeholder: "Select Goals",
-      // inputRules: {
-      //   required: "This field is required",
-      // },
-      width: "w-full",
-      // disabled: bool,
-      options: [],
-    },
-    {
       type: "input",
       name: "task_name",
       fieldtype: "text",
@@ -2439,17 +2439,6 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       inputRules: {
         required: "This field is required",
       },
-      width: "w-full",
-    },
-    {
-      type: "input",
-      name: "reference_links",
-      fieldtype: "text",
-      label: "Reference",
-      placeholder: "Enter Reference Book with comma(,) seperators",
-      // inputRules: {
-      //   required: "This field is required",
-      // },
       width: "w-full",
     },
   ];

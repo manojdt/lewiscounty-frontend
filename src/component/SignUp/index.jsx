@@ -50,10 +50,6 @@ export const Signup = () => {
     setShowBackdrop(false);
     navigate("/login"); // Redirect to login page
   };
-  const handleCreateAccount = (event) => {
-    event.preventDefault();
-    setShowBackdrop(true);
-  };
   const onSubmit = async (data) => {
     const { first_name, last_name, email, password } = data;
     if (
@@ -333,9 +329,9 @@ export const Signup = () => {
                       // onBlur={(e) => handleField(field.fieldtype, e.target.value)}
                       aria-invalid={errors[field.name] ? "true" : "false"}
                       tabIndex={index + 1}
-                      name={
-                        field?.name === "email"?"regemail":field?.name === "password"?"regpassword":field?.name
-                      }
+                      // name={
+                      //   field?.name === "email"?"regemail":field?.name === "password"?"regpassword":field?.name
+                      // }
                     />
                     {field.fieldtype === "password" && (
                       <button
@@ -445,7 +441,6 @@ export const Signup = () => {
                   background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
                 }}
                 tabIndex={SignupFields.length + 2}
-                onClick={handleCreateAccount}
               >
                 Create Account
               </button>
