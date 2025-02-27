@@ -76,7 +76,7 @@ export default function AssignMentees() {
   } = useSelector((state) => state.userPrograms);
   const [searchTerm, setSearchTerm] = useState(""); // For program_id
   const [searchResults, setSearchResults] = useState([]); // For program_id
-  const [selectedProgram, setSelectedProgram] = useState("")
+  const [selectedProgram, setSelectedProgram] = useState("");
 
   const { data, isLoading } = useGetProgramNameQuery(searchTerm, {
     skip: !searchTerm, // Only call API if searchTerm is not empty
@@ -293,8 +293,6 @@ export default function AssignMentees() {
     }
   }, [allFields?.category_id]);
 
-  // console.log("allFields", allFields);
-
   useEffect(() => {
     if (
       (allFields?.program_id || allFields?.program_id_val) &&
@@ -331,7 +329,11 @@ export default function AssignMentees() {
         // start_date: new Date(filteredData?.start_date),
         // end_date: new Date(filteredData?.end_date),
       });
-      dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
+      dispatch(
+        getProgramTaskMentees(
+          selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
+        )
+      ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           const constructedData = res?.payload?.map((e) => {
             return {
@@ -391,15 +393,14 @@ export default function AssignMentees() {
     if (!category.length) {
       dispatch(getAllCategories());
     }
-    const progId = state?.data?.program_id ?? selectedProgram?.id
+    const progId = state?.data?.program_id ?? selectedProgram?.id;
     if (type !== "new") {
       const editPay = state?.data?.task_id
         ? `&type=edit_task&task_id=${state?.data?.task_id}`
         : "";
       dispatch(getProgramTaskMentees(progId + editPay));
     }
-  }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]
-);
+  }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]);
 
   const handleAddPopupData = (value) => {
     if (value.length) {
@@ -543,7 +544,6 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
-          {console.log("searchresults ==>", searchResults)}
           <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -568,7 +568,13 @@ export default function AssignMentees() {
                           <>
                             <input
                               {...register(field.name, field.inputRules)}
-                              value={searchResults.filter((i)=>i?.id === getValues(field.name))?.[0]?.program_name}
+                              // value={
+                              //   field.name === "program_id"
+                              //     ? searchResults.filter(
+                              //         (i) => i?.id === getValues(field.name)
+                              //       )?.[0]?.program_name
+                              //     : getValues(field.name)
+                              // }
                               type={field.fieldtype}
                               className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                               placeholder={field.placeholder}
@@ -584,6 +590,12 @@ export default function AssignMentees() {
                                 if (field.name === "program_id") {
                                   const value = getValues(field.name);
 
+                                  // setValue(
+                                  //   field.name,
+                                  //   searchResults.filter(
+                                  //     (i) => i?.id === getValues(field.name)
+                                  //   )?.[0]?.id
+                                  // );
                                   // Set searchTerm immediately (even if it's empty)
                                   setSearchTerm(value || " ");
                                 }
@@ -591,18 +603,17 @@ export default function AssignMentees() {
                               onChange={(e) => {
                                 const value = e.target.value;
                                 // setValue(field.name, value); // Update form state
-                              
+
                                 // Allow text search but avoid affecting program_id API
                                 if (field.name === "program_id") {
                                   setSearchTerm(value); // Always update search term for dropdown filtering
-                              
+
                                   // Reset API request if input is empty
                                   if (value === "") {
                                     setSearchResults([]);
                                   }
                                 }
                               }}
-                              
                             />
 
                             {errors[field.name] && (
@@ -613,18 +624,19 @@ export default function AssignMentees() {
 
                             {/* Only show dropdown for program_id */}
                             {field.name === "program_id" &&
-                              searchTerm !== "" &&
-                               (
-
+                              searchTerm !== "" && (
                                 <>
-                                  {searchResults.length > 0 ? (
+                                  {isLoading ? ( // Show loading text while fetching data
+                                    <div className="absolute bg-white border border-gray-300 w-full p-2 text-gray-500">
+                                      Loading...
+                                    </div>
+                                  ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
                                       {searchResults.map((program) => {
-                                        console.log(program);
-                                        
-                                        const isActive = getValues(field.name) === program?.id
-                                          // program.program_name.toLowerCase() ===
-                                          // searchTerm.toLowerCase();
+                                        const isActive =
+                                          getValues(field.name) === program?.id;
+                                        // program.program_name.toLowerCase() ===
+                                        // searchTerm.toLowerCase();
 
                                         return (
                                           <li
@@ -638,9 +650,9 @@ export default function AssignMentees() {
                                             onClick={() => {
                                               setValue(
                                                 field.name,
-                                                program.id
+                                                program.program_name
                                               ); // Set selected value
-                                              setSelectedProgram(program)
+                                              setSelectedProgram(program);
                                               // setSearchResults([]); // Hide dropdown after selection
                                               setSearchTerm(""); // Clear search term after selection
                                             }}
@@ -734,7 +746,6 @@ export default function AssignMentees() {
                           </div>
                         ) : field.type === "date" ? (
                           <>
-                          {console.log("state?.data?.start_dateff", state?.data?.start_date, selectedProgram?.start_date)}
                             <div
                               className="relative input-bg"
                               onClick={(e) => {
@@ -772,22 +783,28 @@ export default function AssignMentees() {
                                 // }
 
                                 minDate={
-                                  field?.name === "end_date" ? new Date(getValues("start_date")) : 
-                                  state?.data?.start_date ? new Date(state?.data?.start_date) : new Date(selectedProgram?.start_date)
+                                  field?.name === "start_date"
+                                    ? new Date()
+                                    : field?.name === "end_date" &&
+                                      getValues("start_date")
+                                    ? new Date(getValues("start_date"))
+                                    : new Date()
                                 }
                                 maxDate={
-                                //   (() => {
-                                //   if (field.name !== "due_date")
-                                //     return undefined;
-                                //   const endDate = getValues("end_date");
-                                //   if (!endDate) return undefined;
-                                //   const date = new Date(endDate);
-                                //   return isNaN(date.getTime())
-                                //     ? undefined
-                                //     : date;
-                                // })()
-                                state?.data?.end_date ? new Date(state?.data?.end_date) : new Date(selectedProgram?.end_date)
-                              }
+                                  //   (() => {
+                                  //   if (field.name !== "due_date")
+                                  //     return undefined;
+                                  //   const endDate = getValues("end_date");
+                                  //   if (!endDate) return undefined;
+                                  //   const date = new Date(endDate);
+                                  //   return isNaN(date.getTime())
+                                  //     ? undefined
+                                  //     : date;
+                                  // })()
+                                  state?.data?.end_date
+                                    ? new Date(state?.data?.end_date)
+                                    : new Date(selectedProgram?.end_date)
+                                }
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
                                 dateFormat="mm-dd-yy"
