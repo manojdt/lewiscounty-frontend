@@ -127,7 +127,7 @@ export default function CreateGoal({
   }, []);
 
   const dateField = register('start_date', {
-    required: 'This field is required',
+    // required: 'This field is required',
   });
   return (
     <div>
@@ -182,7 +182,7 @@ export default function CreateGoal({
                   <div className='relative'>
                     <input
                       {...register('goal_name', {
-                        required: 'This field is required',
+                        // required: 'This field is required',
                       })}
                       type='text'
                       className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
