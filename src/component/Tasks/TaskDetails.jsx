@@ -784,11 +784,11 @@ export const TaskDetails = () => {
                             />
                           </label>
                         </div>
-                        {(imageError.error || errors['file']) && (
+                        {/* {(imageError.error || errors['file']) && (
                           <p className='error' role='alert'>
                             {errors['file']?.message}
                           </p>
-                        )}
+                        )} */}
                       </div>
 
                       {

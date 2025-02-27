@@ -278,10 +278,10 @@ export default function AllRequest() {
       name: "Mentees Requests",
       value: "mentees",
     },
-    {
-      name: "My Requests",
-      value: "admin",
-    },
+    // {
+    //   name: "My Requests",
+    //   value: "admin",
+    // },
   ];
 
   const goalsRequestTab = [
