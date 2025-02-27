@@ -381,16 +381,20 @@ export const TaskDetails = () => {
 
         {!loading && Object.keys(taskData).length && (
           <div className='px-4'>
-            { (taskData.status === TaskAllStatus.newtask ||
-                                  taskData.status === TaskAllStatus.pending)&& 
+            <div className='flex justify-end gap-5 pb-2'>
               <div className='flex gap-2 pb-1'>
-              <p className='!text-[15px]' fontWeight={700}>Interaction Point/Task Name : </p>
-              <p className='text-[13px] pt-[3px]'>{taskData?.task_name}</p>
-              </div>}
+              <p className='!text-[15px]' fontWeight={700}>Assigned by : </p>
+              <p className='text-[13px] pt-[3px] text-blue-600 underline'>{taskData?.mentor_name}</p>
+              </div>
+              <div className='flex gap-2 pb-1'>
+              <p className='!text-[15px]' fontWeight={700}>Assigned date : </p>
+              <p className='text-[13px] pt-[3px]'> {taskData?.created_at? moment(taskData?.created_at).format("MM/DD/YYYY") : "-"}</p>
+              </div>
+              </div>
             <div className='relative flex gap-6 justify-between'>
               <table className='w-[50%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'>
                 <tbody style={{ border: '1px solid rgba(0, 174, 189, 1)' }}>
-                  <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
+                  {/* <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
                     <th
                       scope='row'
                       style={{
@@ -406,6 +410,25 @@ export const TaskDetails = () => {
                       style={{ background: 'rgba(0, 174, 189, 1)' }}
                     >
                       {taskData?.created_at? moment(taskData?.created_at).format("MM-DD-YYYY") : "-"}
+                    </td>
+                  </tr> */}
+                    <tr className='bg-white border-b dark:bg-gray-800 '>
+                    <th
+                      style={{
+                        border: '1px solid rgba(0, 174, 189, 1)',
+                        background: '#fff',
+                        width:100
+                      }}
+                   
+                      className='px-6 py-4 font-medium whitespace-nowrap '
+                    >
+                      Program Name
+                    </th>
+                    <td
+                      className='px-8 py-4 text-white'
+                      style={{ background: 'rgba(0, 174, 189, 1)' }}
+                    >
+                      {taskData?.program_name}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
@@ -426,25 +449,26 @@ export const TaskDetails = () => {
                       {taskData?.task_name}
                     </td>
                   </tr>
-                  <tr className='bg-white border-b dark:bg-gray-800 '>
+                  <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
                     <th
                       style={{
                         border: '1px solid rgba(0, 174, 189, 1)',
                         background: '#fff',
                       }}
                       scope='row'
-                      className='px-6 py-4 font-medium whitespace-nowrap '
+                      className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Program Name
+                      Interaction Point/Task Description 
                     </th>
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(0, 174, 189, 1)' }}
                     >
-                      {taskData?.program_name}
+                      {taskData?.task_description}
                     </td>
                   </tr>
-                  <tr className='bg-white border-b  dark:bg-gray-800'>
+                
+                  {/* <tr className='bg-white border-b  dark:bg-gray-800'>
                     <th
                       style={{
                         border: '1px solid rgba(0, 174, 189, 1)',
@@ -459,10 +483,9 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(0, 174, 189, 1)' }}
                     >
-                      {/* {taskData['due_date']?.split('T')[0]} */}
                       {taskData?.due_date? moment(taskData?.due_date).format("MM-DD-YYYY") : "-"}
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
 
@@ -474,17 +497,17 @@ export const TaskDetails = () => {
                       style={{
                         border: '1px solid rgba(29, 91, 191, 1)',
                         background: '#fff',
+                        width:100
                       }}
                       className='px-6 py-4 font-medium whitespace-nowrap '
                     >
-                      Completed Date
+                     Goal
                     </th>
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {/* {taskData?.submited_date?.split('T')[0] || '-'} */}
-                      {taskData?.submited_date? moment(taskData?.submited_date).format("MM-DD-YYYY") : "-"}
+                      {taskData?.goal_name}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
@@ -496,13 +519,14 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium  whitespace-nowrap '
                     >
-                      Interaction Point/Task assigned by
+                     Start date and time 
                     </th>
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {taskData?.mentor_name}
+                      {/* {taskData?.start_date} */}
+                      {taskData?.start_date? moment(taskData?.start_date).format("MM-DD-YYYY | hh:mm A") : "-"}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 '>
@@ -514,13 +538,13 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium whitespace-nowrap '
                     >
-                      Program Duration
+                      End date and time
                     </th>
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {taskData.program_duration} Days
+                      {taskData?.end_date? moment(taskData?.end_date).format("MM-DD-YYYY | hh:mm A") : "-"}
                     </td>
                   </tr>
                   <tr className='bg-white border-b  dark:bg-gray-800'>
@@ -532,13 +556,13 @@ export const TaskDetails = () => {
                       scope='row'
                       className='px-6 py-4 font-medium whitespace-nowrap '
                     >
-                      Status
+                      Reference
                     </th>
                     <td
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {TaskStatus[taskData?.status] || ''}
+                        {taskData?.reference_link}
                     </td>
                   </tr>
                 </tbody>
@@ -546,7 +570,7 @@ export const TaskDetails = () => {
             </div>
 
             <form onSubmit={handleSubmit((data) => onSubmit(data, formAction))}>
-              { taskData.status !== TaskAllStatus.newtask &&
+              {/* { taskData.status !== TaskAllStatus.newtask &&
                                   taskData.status !== TaskAllStatus.pending&& 
               <div
                 className='task-desc flex mt-5 px-5 py-6'
@@ -554,14 +578,14 @@ export const TaskDetails = () => {
               >
                 <p className='!text-[16px]' fontWeight={600}>Interaction Point/Task Name : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_name}</p>
-              </div>}
-              <div
+              </div>} */}
+              {/* <div
                 className='task-desc flex mt-5 px-5 py-6'
                 style={{ border: '1px solid rgba(29, 91, 191, 0.5)', marginBottom: "20px" }}
               >
                 <p className='!text-[16px]' fontWeight={600}>Interaction Point/Task Description : </p>
                 <p className='text-[14px]'>&nbsp;&nbsp;{taskData?.task_description}</p>
-              </div>
+              </div> */}
 
               {(taskData?.reject_task_reason?.length > 0 && taskData?.status === "reassigned") && <div className="action-set action_cancelled mb-4 mt-4">
                 <div className="reason-title">{"Re Assign Interction Point Reason"}</div>
@@ -590,7 +614,7 @@ export const TaskDetails = () => {
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>
                     <Typography className='!text-[14px] !text-[#18283D]'>
-                    Interaction Point/Task Solution
+                    Solution
                     </Typography>
 
                     <Box
@@ -687,7 +711,7 @@ export const TaskDetails = () => {
                     <>
                       <div className='relative'>
                         <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
-                          Interaction Point/Task Solution
+                           Solution
                         </label>
                         <textarea
                           id='message'
@@ -723,6 +747,9 @@ export const TaskDetails = () => {
                       </div>
 
                       <div className='relative mt-12'>
+                      <label className='block tracking-wide text-gray-700 text-xs font-bold mb-2'>
+                           Upload documents
+                        </label>
                         <div className='flex items-center justify-center w-full'>
                           <label
                             htmlFor='dropzone-file'
@@ -923,7 +950,7 @@ export const TaskDetails = () => {
                           className='task-desc flex mt-5 px-5 py-6'
                           style={{ border: '1px solid rgba(29, 91, 191, 0.5)' }}
                         >
-                          <p className='w-[30%]'>Interaction Point/Task Solution : </p>
+                          <p className='w-[30%]'>Solution : </p>
                           <p className='text-[14px]'>
                             {taskData?.task_solution}
                           </p>
@@ -1030,7 +1057,7 @@ export const TaskDetails = () => {
                       </div>
                     </>
                   ) : null}                  
-                  <div className='reference-link flex justify-between mb-2'>
+                  {/* <div className='reference-link flex justify-between mb-2'>
                     <div className='reference-view'>
                       <p className='py-4'>Reference</p>
                       <ul className='leading-10'>
@@ -1041,7 +1068,18 @@ export const TaskDetails = () => {
                         ))}
                       </ul>
                     </div>
-                  </div>
+                  </div> 
+                  
+                  <div className="flex flex-col space-y-2">
+  {docs?.map((doc, index) => (
+    <div key={index} className="flex">
+      <span className="mr-2">{index + 1}.</span>
+      <span>{doc}</span>
+    </div>
+  ))}
+</div>
+                  
+                  */}
                 </div>
               )}
               {taskData?.fail_reason&&taskData.result !== 'Pass'&&
@@ -1080,7 +1118,7 @@ export const TaskDetails = () => {
                     </div>
                   </Stack>
                 )}
-              <div className='close-btn flex justify-center gap-7 pb-5'>
+              <div className='close-btn flex justify-center gap-7 pb-5 pt-3'>
                 <Button
                   btnName='Cancel'
                   btnCls='w-[12%]'
