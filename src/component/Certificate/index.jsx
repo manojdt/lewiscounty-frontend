@@ -430,7 +430,7 @@ export default function Certificate() {
                   {requestBtns.map((actionBtn, index) => (
                     <button
                       key={index}
-                      className="px-5 py-4 text-[14px]"
+                      className="px-4 py-3 text-[14px]"
                       style={{
                         background:
                           requestTab === actionBtn.key
@@ -442,7 +442,7 @@ export default function Certificate() {
                             : "none",
                         color: requestTab === actionBtn.key ? "#fff" : "#000",
                         borderRadius: "3px",
-                        width: "180px",
+                        width: "200px",
                       }}
                       onClick={() => handleTab(actionBtn.key)}
                     >

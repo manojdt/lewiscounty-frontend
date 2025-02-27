@@ -307,7 +307,7 @@ export default function ProgramCard({
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  {action.map((act, i) => (
+                  {action?.map((act, i) => (
                     <MenuItem
                       key={i}
                       onClick={() => navigate(act.url)}
@@ -340,7 +340,7 @@ export default function ProgramCard({
             }
           >
             {programs && programs.length ? (
-              programs.map((currentProgram, index) => {
+              programs?.map((currentProgram, index) => {
                 let startDate = "";
                 if (currentProgram.start_date !== "") {
                   startDate = new Date(currentProgram.start_date)
@@ -1007,7 +1007,7 @@ export default function ProgramCard({
                   margin: "15px 0px 30px 0",
                 }}
               >
-                {categoryPopup.categoryList.map((category, index) => (
+                {categoryPopup?.categoryList?.map((category, index) => (
                   <li key={index} className="flex gap-7">
                     <input
                       type="checkbox"
