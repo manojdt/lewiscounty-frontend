@@ -2878,7 +2878,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 ((role === "mentee" &&
                   programdetails.mentee_join_status ===
                     programActionStatus.program_join_request_accepted) ||
-                  programdetails?.created_by === userdetails?.data?.user_id) &&
+                  programdetails?.created_by === userdetails?.data?.user_id) && !programdetails?.mentee_program_exit &&
                 (
                   <Box>
                     <Accordian
@@ -2947,6 +2947,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
               {(programdetails.status === programActionStatus.inprogress ||
                 programdetails.status === programActionStatus.paused) &&
+                !programdetails?.mentee_program_exit &&
                 programdetails.task.length > 0 && (
                   <CustomAccordian
                     title={"Program Task"}

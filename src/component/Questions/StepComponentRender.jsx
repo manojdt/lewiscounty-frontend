@@ -27,7 +27,8 @@ const StepComponenRender = ({
   stepName,
   handleSkip,
   totalSteps,
-  apiData
+  apiData,
+  refetch
 }) => {
   const navigate = useNavigate();
   const calendarRef = useRef([]);
@@ -137,6 +138,7 @@ const StepComponenRender = ({
       if (response.status === 200 || response.status === 201) {
         toast.success(response?.data?.message)
        await docUpload(allValues)
+       refetch()
        // handleLogout()
        // reset();
       }
