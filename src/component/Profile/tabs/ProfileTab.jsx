@@ -178,7 +178,9 @@ const ProfileTab = ({ setEditMode }) => {
         return section.component.type === GoalsAndExpectatonsSection;
       }
       // For mentee, only keep MenteeExpectionAndGoalsSection
+      if (userRole === "mentee") {
       return section.component.type === MenteeExpectionAndGoalsSection;
+      }
     }
     // Keep all other sections that match the role
     return roleBasedSections[userRole]?.includes(section.title);
