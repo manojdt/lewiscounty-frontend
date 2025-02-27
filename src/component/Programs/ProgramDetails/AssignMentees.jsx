@@ -133,7 +133,6 @@ export default function AssignMentees() {
     );
 
   const onSubmit = (data) => {
-
     let apiData = {
       ...data,
       program_id:
@@ -295,7 +294,6 @@ export default function AssignMentees() {
       );
     }
   }, [allFields?.category_id]);
-
 
   useEffect(() => {
     if (
@@ -639,7 +637,6 @@ export default function AssignMentees() {
                                   ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
                                       {searchResults.map((program) => {
-
                                         const isActive =
                                           getValues(field.name) === program?.id;
                                         // program.program_name.toLowerCase() ===
@@ -655,7 +652,6 @@ export default function AssignMentees() {
                                                : ""
                                            }`}
                                             onClick={() => {
-
                                               setValue(
                                                 field.name,
                                                 program.program_name
