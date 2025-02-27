@@ -2818,7 +2818,7 @@ export const CreateMeetingFields = [
     label: "Add Title",
     placeholder: "Enter Title",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
   },
@@ -2846,7 +2846,7 @@ export const CreateMeetingFields = [
       },
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
     width: "w-[49%]",
@@ -2868,7 +2868,7 @@ export const CreateMeetingFields = [
     label: "Select",
     placeholder: "Select Week",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: Array.from({ length: 31 }, (_, i) => i + 1).map((count) => count),
     width: "w-[49%]",
@@ -2880,7 +2880,7 @@ export const CreateMeetingFields = [
     label: "Start Date",
     placeholder: "Select Start Date",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2890,7 +2890,7 @@ export const CreateMeetingFields = [
     label: "End Date",
     placeholder: "Select End Date",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2901,7 +2901,7 @@ export const CreateMeetingFields = [
     label: "Start Time",
     placeholder: "Start Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2912,7 +2912,7 @@ export const CreateMeetingFields = [
     label: "End Time",
     placeholder: "End Time",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
       validate: {
         validEndTime: (endTime, formValues) => {
           if (!endTime || !formValues.start) return true;
@@ -2938,7 +2938,7 @@ export const CreateMeetingFields = [
     fieldtype: "text",
     placeholder: "Select Mentee",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     icon: "add",
@@ -2949,7 +2949,7 @@ export const CreateMeetingFields = [
     label: "Event",
     placeholder: "Select the Event",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [
       {
@@ -2996,7 +2996,7 @@ export const CreateCertificateFields = [
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
@@ -3192,7 +3192,7 @@ export const categoryCreateEditFields = [
     label: "Category Name",
     placeholder: "Enter Category Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -3203,7 +3203,7 @@ export const categoryCreateEditFields = [
     label: "Description",
     placeholder: "Enter Description",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -3482,7 +3482,7 @@ export const menteeTicketCreationField = [
     label: "Ticket Subject",
     placeholder: "Ticket Subject",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
     width: "col-span-1",
@@ -3494,7 +3494,7 @@ export const menteeTicketCreationField = [
     label: "Documents Upload",
     placeholder: "",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: false,
     width: "col-span-1",
@@ -3505,7 +3505,7 @@ export const menteeTicketCreationField = [
     label: "Description",
     placeholder: "Enter Description",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
