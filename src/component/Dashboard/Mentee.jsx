@@ -268,7 +268,7 @@ export const Mentee = () => {
             <UserInfoCard />
               {topPrograms&&topPrograms?.length>0&&
                       <div className="mt-4">
-                        <TopProgramsCard topProgramsList={topPrograms}/>
+                        <TopProgramsCard topProgramsList={topPrograms} role={role}/>
                       </div>}
             <div
               className="recent-request mt-4"
