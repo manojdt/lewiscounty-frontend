@@ -211,13 +211,13 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentor', 'mentee','admin']
     },
-    {
-        field: 'program_location',
-        headerName: 'Location',
-        flex: 1,
-        id: 1,
-        for: ['mentee']
-    },
+    // {
+    //     field: 'program_location',
+    //     headerName: 'Location',
+    //     flex: 1,
+    //     id: 1,
+    //     for: ['mentee']
+    // },
     {
         field: 'start_date',
         headerName: 'Start Date',

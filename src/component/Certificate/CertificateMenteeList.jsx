@@ -475,7 +475,7 @@ export default function CertificateMenteeList() {
               </button>
             </div>
           ) : null}
-          {role !== "admin" && state?.status !== "wating_for_response" && (
+          {role !== "admin" && state?.status !== "Wating_for_response" && (
             <Button
               btnName="Close"
               btnCategory="secondary"

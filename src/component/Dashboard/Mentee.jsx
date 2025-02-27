@@ -44,7 +44,6 @@ export const Mentee = () => {
   const [topMentotList, setTopMentorList] = useState([]);
   const [openCategory, setOpenCategory] = React.useState(false);
   const userpragrams = useSelector((state) => state.userPrograms);
-  console.log(userpragrams)
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const token = localStorage.getItem("access_token");
@@ -126,7 +125,7 @@ export const Mentee = () => {
     }
   };
   useEffect(() => {
-    if (role !== "" && userInfo?.data?.is_registered) {
+    if (role !== "" && userInfo?.data?.is_registered&&searchParams.get("type")) {
       getPrograms();
     }
   }, [searchParams, role]);

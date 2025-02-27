@@ -189,7 +189,10 @@ export const Mentor = () => {
   }, [dispatch]); // Added dispatch to dependencies for better practice
 
   useEffect(() => {
-    getPrograms();
+    if(searchParams.get("type")){
+
+      getPrograms();
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -209,7 +212,7 @@ export const Mentor = () => {
   }, []);
 
   useEffect(() => {
-    if (userpragrams.status === programStatus.bookmarked) {
+    if (userpragrams.status === programStatus.bookmarked&&searchParams.get("type")) {
       getPrograms();
     }
   }, [userpragrams.status]);
