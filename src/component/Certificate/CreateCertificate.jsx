@@ -16,7 +16,7 @@ import { Button } from '../../shared';
 import { MenteeAssignColumns } from '../../mock';
 import { getAllCategories } from '../../services/programInfo';
 
-import { certificateStatus, pipeUrls, programActionStatus, reportsStatus } from '../../utils/constant';
+import { certificateStatus, pipeUrls, programActionStatus, reportsStatus, user } from '../../utils/constant';
 import { createReport, getCompletedProgramsByCategoryId, getProgramsByCategoryId, getReportProgramDetails, updateReportLocalState } from '../../services/reportsInfo';
 import ToastNotification from '../../shared/Toast';
 import { dateTimeFormat } from '../../utils';
@@ -38,7 +38,8 @@ export default function CreateCertificate() {
     const [menteeAllList, setAllMenteeList] = useState([])
     const [notification, setNotification] = useState({ program: false })
     const [actionType, setActionType] = useState('')
-
+    const userInfo = useSelector((state) => state.userInfo);
+    const role = userInfo.data.role || "";
     const [loading, setLoading] = useState(false)
 
     const {
@@ -248,7 +249,7 @@ export default function CreateCertificate() {
                     <nav className="flex px-7 pt-6 pb-5 mx-2 border-b-2 justify-between" aria-label="Breadcrumb">
                         <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                             <li className="inline-flex items-center">
-                                <h2>Create New Certificate</h2>
+                                <h2>{role===user.admin ?"Create Certificate":"Request Certificate"}</h2>
                             </li>
                         </ol>
                         <img className='cursor-pointer' onClick={() => {
