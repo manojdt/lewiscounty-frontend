@@ -1545,7 +1545,7 @@ export const ProgramInformationFields = [
     placeholder: "Select Category",
     inputRules: {
       // valueAsNumber: true,
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [
       {
@@ -1578,7 +1578,7 @@ export const ProgramInformationFields = [
     label: "Program Start Date",
     placeholder: "Select Program Start Date",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
@@ -1589,7 +1589,7 @@ export const ProgramInformationFields = [
     label: "Program End Date",
     placeholder: "Select Program End Date",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
@@ -1649,7 +1649,7 @@ export const ProgramInformationFields = [
     placeholder: "Select Number of Subject",
     inputRules: {
       valueAsNumber: true,
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => ({
       key: count,
@@ -1694,7 +1694,7 @@ export const ProgramInformationFields = [
         label: "Start Date",
         placeholder: "Select Start Date",
         inputRules: {
-          // required: "Start Date is required",
+          required: "Start Date is required",
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["admin"],
@@ -1705,7 +1705,7 @@ export const ProgramInformationFields = [
         label: "End Date",
         placeholder: "Select End Date",
         inputRules: {
-          // required: "End Date is required",
+          required: "End Date is required",
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         for: ["admin"],
@@ -1732,7 +1732,7 @@ export const ProgramInformationFields = [
         placeholder: "Select Mentor",
         fieldtype: "text",
         inputRules: {
-          // required: "This field is required",
+          required: "This field is required",
         },
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
         icon: "add",
@@ -1760,7 +1760,7 @@ export const ProgramInformationFields = [
     label: "Program Name",
     placeholder: "Enter Program Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
@@ -1828,7 +1828,7 @@ export const ProgramInformationFields = [
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
@@ -1839,7 +1839,7 @@ export const ProgramInformationFields = [
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["mentor"],
@@ -1949,7 +1949,7 @@ export const ProgramInformationFields = [
     label: "Program Mode",
     placeholder: "Select",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [
       {
@@ -2278,7 +2278,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: "Program Name",
       placeholder: "Enter Program Name",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       // disabled: bool,
@@ -2292,7 +2292,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: " Interaction Point/Task Name",
       placeholder: "Enter Task Name",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       disabled: false,
@@ -2331,7 +2331,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: "Task Start Date and Time",
       placeholder: "Select Program Start Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
@@ -2341,7 +2341,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: "Task End Date and Time",
       placeholder: "Select Program End Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
@@ -2352,7 +2352,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: "Add Mentees for this Interaction Point/Task",
       width: "w-full",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
     },
 
@@ -2455,7 +2455,7 @@ export const ReportFields = (bool = false) => [
     label: "Category",
     placeholder: "Select Category",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [],
     width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
@@ -2467,7 +2467,7 @@ export const ReportFields = (bool = false) => [
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [],
     width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
@@ -2503,7 +2503,7 @@ export const ReportFields = (bool = false) => [
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
@@ -2514,7 +2514,7 @@ export const ReportFields = (bool = false) => [
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
@@ -2538,7 +2538,7 @@ export const ReportFields = (bool = false) => [
     label: "Report Name",
     placeholder: "Report Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
   },

@@ -329,9 +329,9 @@ const editType=searchParams.get("type")
 
   const getDateValidation = (fieldName, index = null) => {
     return {
-      // required: `${
-      //   fieldName === "end_date" ? "End Date" : "Start Date"
-      // } is required`,
+      required: `${
+        fieldName === "end_date" ? "End Date" : "Start Date"
+      } is required`,
       validate: {
         isValid: (value) => !value || moment(value).isValid() || "Invalid date",
         dateOrder: (value) => {
@@ -550,7 +550,7 @@ const editType=searchParams.get("type")
                         }}
                         error={!!errors[field.name]}
                         autoComplete={field?.autoComplete}
-                        // helperText={errors[field.name]?.message}
+                        helperText={errors[field.name]?.message}
                         onWheel={(e) => e.target.blur()}
                       />
                     )}
