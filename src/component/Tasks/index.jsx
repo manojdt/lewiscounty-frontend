@@ -244,7 +244,7 @@ export const Tasks = () => {
                 Start Interaction Point/Task
               </MenuItem>
               </>}
-              {seletedItem.status===TaskAllStatus.waiting_for_approval &&
+              {/* {seletedItem.status===TaskAllStatus.waiting_for_approval &&
               <>
               <MenuItem
                 onClick={() =>
@@ -256,7 +256,7 @@ export const Tasks = () => {
                 <img src={EditIcon} alt='StartIcon' className='pr-3 w-[30px]' />
                Edit Interaction Point/Task
               </MenuItem>
-              </>}
+              </>} */}
               {/* <MenuItem onClick={() => { setAnchorEl(null); setRequestTask(true) }} className='!text-[12px]'>
                             <img src={RequestIcon} alt="RequestIcon" className='pr-3 w-[27px]' />
                             Request Task
