@@ -132,8 +132,6 @@ export default function AssignMentees() {
     );
 
   const onSubmit = (data) => {
-    console.log(data);
-
     let apiData = {
       ...data,
       program_id:
@@ -657,8 +655,6 @@ export default function AssignMentees() {
                                                : ""
                                            }`}
                                             onClick={() => {
-                                              console.log(program);
-
                                               setValue(
                                                 field.name,
                                                 program.program_name
@@ -757,11 +753,6 @@ export default function AssignMentees() {
                           </div>
                         ) : field.type === "date" ? (
                           <>
-                            {console.log(
-                              "state?.data?.start_dateff",
-                              state?.data?.start_date,
-                              selectedProgram?.start_date
-                            )}
                             <div
                               className="relative input-bg"
                               onClick={(e) => {
