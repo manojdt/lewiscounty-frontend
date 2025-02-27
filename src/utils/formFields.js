@@ -2292,7 +2292,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: " Interaction Point/Task Name",
       placeholder: "Enter Task Name",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       disabled: false,
@@ -2305,7 +2305,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: " Interaction Point/Task Description",
       placeholder: "Enter Task Description",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full",
       disabled: false,
@@ -2329,9 +2329,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "start_date",
       label: "Task Start Date and Time",
-      placeholder: "Select Program Start Date and Time",
+      placeholder: "Select Task Start Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
@@ -2339,9 +2339,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "end_date",
       label: "Task End Date and Time",
-      placeholder: "Select Program End Date and Time",
+      placeholder: "Select Task End Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },

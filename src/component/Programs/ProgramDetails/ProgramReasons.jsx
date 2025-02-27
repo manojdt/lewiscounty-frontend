@@ -237,7 +237,7 @@ const ProgramReasons = ({
     //   "program_new",
     // ];
 
-    if (requestId) return null;
+    if (programdetails?.request_data?.request_type!=="program_assign"&&requestId) return null;
 
     // const showRequestDetails =
     //   validRequestTypes.includes(programdetails?.request_data?.request_type) &&

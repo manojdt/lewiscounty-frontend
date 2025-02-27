@@ -46,6 +46,8 @@ import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
 import { formatTableNullValues, FormLabelRequired } from "../../../utils";
 import { SelectBox } from "../../../shared/SelectBox";
+import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
+import moment from "moment";
 
 export default function AssignMentees() {
   const {
@@ -56,6 +58,7 @@ export default function AssignMentees() {
     getValues,
     setValue,
     watch,
+    resetField,
   } = useForm();
   const navigate = useNavigate();
   const state = useLocation()?.state;
@@ -110,7 +113,6 @@ export default function AssignMentees() {
   const [updatedMemberColumn, setUpdatedMemberColumn] =
     useState(MenteeAssignColumns);
   const allFields = watch();
-
   // const { data: currentProgramDetail, isLoading: isDetailFetching } =
   //   useGetSpecificProgramDetailsQuery(
   //     {
@@ -122,26 +124,25 @@ export default function AssignMentees() {
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       {
-        id: type === "new" ? allFields.program_id : allFields.program_id_val,
+        id: type === "new" ? selectedProgram?.id : allFields.program_id_val,
       },
       {
-        skip:
-          type === "new" ? !allFields.program_id : !allFields.program_id_val,
+        skip: type === "new" ? !selectedProgram?.id : !allFields.program_id_val,
         refetchOnMountOrArgChange: true,
       }
     );
 
   const onSubmit = (data) => {
-    console.log(data);
 
     let apiData = {
       ...data,
       program_id:
-        type === "new" ? allFields?.program_id : state?.data?.program_id,
+        type === "new" ? selectedProgram?.id : state?.data?.program_id,
       start_date: new Date(data.start_date).toISOString(),
       end_date: new Date(data.end_date).toISOString(),
       mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
       // due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss"),
+      task_details: data?.task_description
     };
     if (type === "edit" && from_type !== "program") {
       apiData = {
@@ -295,7 +296,6 @@ export default function AssignMentees() {
     }
   }, [allFields?.category_id]);
 
-  // console.log("allFields", allFields);
 
   useEffect(() => {
     if (
@@ -333,7 +333,6 @@ export default function AssignMentees() {
         // start_date: new Date(filteredData?.start_date),
         // end_date: new Date(filteredData?.end_date),
       });
-      console.log(allFields, "allFields");
       dispatch(
         getProgramTaskMentees(
           selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
@@ -370,7 +369,6 @@ export default function AssignMentees() {
       }
     }
   }, [params.id]);
-
   useEffect(() => {
     if (state?.data && Object.keys(state?.data).length) {
       let fieldValue = {
@@ -379,8 +377,10 @@ export default function AssignMentees() {
         program_id_val: state?.data?.program_id,
         goal_id: state?.data?.goal,
         mentor: state?.data?.mentor_name,
-        // start_date: new Date(state?.data?.program_startdate),
-        // end_date: new Date(state?.data?.program_enddate),
+        start_date: state?.data?.start_date ? moment(state?.data?.start_date) : null,
+        end_date: state?.data?.end_date ? moment(state?.data?.end_date) : null,
+        // start_date: moment(programdetails?.start_date),
+        // end_date: moment(programdetails?.end_date),
         duration: `${state?.data?.program_duration} days`,
         mentees_list: state?.data?.list_mentees ?? [],
         due_date: new Date(state?.data?.due_date),
@@ -388,6 +388,7 @@ export default function AssignMentees() {
         task_details: state?.data?.task_details,
         reference_links: state?.data?.reference_link,
         mentor_id: state?.data?.mentor_id,
+        task_description: state?.data?.task_details ?? ""
       };
       setAllMenteeList(state?.data?.list_mentees ?? []);
       reset(fieldValue);
@@ -403,7 +404,6 @@ export default function AssignMentees() {
       const editPay = state?.data?.task_id
         ? `&type=edit_task&task_id=${state?.data?.task_id}`
         : "";
-      console.log(progId, editPay, "editPay");
       dispatch(getProgramTaskMentees(progId + editPay));
     }
   }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]);
@@ -550,7 +550,6 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
-          {console.log("searchresults ==>", searchResults)}
           <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -640,7 +639,6 @@ export default function AssignMentees() {
                                   ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
                                       {searchResults.map((program) => {
-                                        // console.log(program);
 
                                         const isActive =
                                           getValues(field.name) === program?.id;
@@ -657,13 +655,14 @@ export default function AssignMentees() {
                                                : ""
                                            }`}
                                             onClick={() => {
-                                              console.log(program);
 
                                               setValue(
                                                 field.name,
                                                 program.program_name
                                               ); // Set selected value
                                               setSelectedProgram(program);
+                                              resetField("start_date");
+                                              resetField("end_date");
                                               // setSearchResults([]); // Hide dropdown after selection
                                               setSearchTerm(""); // Clear search term after selection
                                             }}
@@ -757,12 +756,7 @@ export default function AssignMentees() {
                           </div>
                         ) : field.type === "date" ? (
                           <>
-                            {console.log(
-                              "state?.data?.start_dateff",
-                              state?.data?.start_date,
-                              selectedProgram?.start_date
-                            )}
-                            <div
+                            {/* <div
                               className="relative input-bg"
                               onClick={(e) => {
                                 !field.disabled &&
@@ -790,14 +784,6 @@ export default function AssignMentees() {
                                   calendarRef?.current[index]?.hide();
                                 }}
                                 disabled={field.disabled}
-                                // {...field.name === 'due_date' ?
-                                //     {
-                                //         minDate: getValues('start_date'),
-                                //         maxDate: getValues('end_date')
-                                //     }
-                                //     : {}
-                                // }
-
                                 minDate={
                                   field?.name === "start_date"
                                     ? new Date()
@@ -806,17 +792,8 @@ export default function AssignMentees() {
                                     ? new Date(getValues("start_date"))
                                     : new Date()
                                 }
+
                                 maxDate={
-                                  //   (() => {
-                                  //   if (field.name !== "due_date")
-                                  //     return undefined;
-                                  //   const endDate = getValues("end_date");
-                                  //   if (!endDate) return undefined;
-                                  //   const date = new Date(endDate);
-                                  //   return isNaN(date.getTime())
-                                  //     ? undefined
-                                  //     : date;
-                                  // })()
                                   state?.data?.end_date
                                     ? new Date(state?.data?.end_date)
                                     : new Date(selectedProgram?.end_date)
@@ -840,7 +817,100 @@ export default function AssignMentees() {
                               <p className="error" role="alert">
                                 {errors[field.name].message}
                               </p>
-                            )}
+                            )} */}
+                            <div className="relative">
+                              
+                              <CustomDateTimePicker
+                                disabled={field.disabled}
+                                {...register(field.name, field.inputRules)}
+                                value={
+                                  getValues(field.name)
+                                    ? moment(getValues(field.name))
+                                    : null
+                                }
+                                placeholder={"mm/dd/yyyy hh:mm AM/PM"}
+                                format="MM-DD-YYYY hh:mm A"
+                                onChange={(newValue) => {
+                                  setValue(
+                                    field.name,
+                                    newValue ? newValue.toISOString() : null
+                                  );
+                                }}
+                                minDate={
+                                  field?.name === "start_date"
+                                    ? moment().format("MM-DD-YYYY") >=
+                                      moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                      ).format("MM-DD-YYYY")
+                                      ? moment()
+                                      : moment().format("MM-DD-YYYY") <=
+                                        moment(
+                                          type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                        ).format("MM-DD-YYYY")
+                                      ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                      : moment()
+                                    : field?.name === "end_date" &&
+                                      getValues("start_date")
+                                    ? moment(getValues("start_date"))
+                                    : moment()
+                                }
+                                maxDate={
+                                  state?.data?.program_enddate
+                                    ? moment(state?.data?.program_enddate)
+                                    : selectedProgram?.end_date
+                                    ? moment(selectedProgram?.end_date)
+                                    : null
+                                }
+
+                                // new start
+
+                                // minDate={
+                                //   field?.name === "start_date"
+                                //     ? dayjs() // Today's date for start_date
+                                //     : field?.name === "end_date" && getValues("start_date")
+                                //     ? dayjs(getValues("start_date")) // Convert start_date to dayjs object
+                                //     : dayjs() // Ensure valid fallback
+                                // }
+                                // maxDate={
+                                //   state?.data?.end_date && dayjs(state?.data?.end_date).isValid()
+                                //     ? dayjs(state?.data?.end_date) // Convert end_date properly
+                                //     : selectedProgram?.end_date && dayjs(selectedProgram?.end_date).isValid()
+                                //     ? dayjs(selectedProgram?.end_date)
+                                //     : dayjs().add(1, "year") // Fallback: 1 year from today
+                                // }
+
+                                // new end
+
+                                // {...(field.name === "start_date"
+                                //   ? {
+                                //       minDate: moment(), // Use moment object directly
+                                //     }
+                                //   : {})}
+                                // {...(field.name === "end_date"
+                                //   ? {
+                                //       minDate: getValues("start_date")
+                                //         ? moment(getValues("start_date")).add(
+                                //             1,
+                                //             "day"
+                                //           ) // Use moment object directly
+                                //         : null,
+                                //       minDateTime: getValues("start_date")
+                                //         ? moment(getValues("start_date"))
+                                //             .add(1, "day")
+                                //             .add(1, "hour")
+                                //             .startOf("hour") // Use moment object directly
+                                //         : null,
+                                //     }
+                                //   : {})}
+
+                                // error={!!errors?.[field.name]}
+                                // helperText={errors?.[field.name]?.message}
+                              />
+                              {errors[field.name] && (
+                                <p className="error" role="alert">
+                                  {errors[field.name].message}
+                                </p>
+                              )}
+                            </div>
                           </>
                         ) : field.type === "text" ? (
                           <>

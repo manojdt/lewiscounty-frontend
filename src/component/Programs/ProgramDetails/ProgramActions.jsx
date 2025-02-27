@@ -18,7 +18,7 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
-import { ThumbUpOffAlt } from "@mui/icons-material";
+import { ExitToApp, ThumbUpOffAlt } from "@mui/icons-material";
 
 export const ApprovedTag = () => {
   return (
@@ -422,7 +422,16 @@ const ProgramActions = ({
         <ApprovedTag />
       )
     }
-
+    if (programdetails?.mentee_program_exit && !requestId) {
+      return (
+        <div className="flex gap-4 pt-10">          
+          <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
+            <ExitToApp />
+            <p>{"Program Exited by Mentee"}</p>
+          </div>
+        </div>
+      );
+    }
     if (programdetails?.status === programActionStatus.yettojoin) {
       if (!programdetails?.program_interest) {
         return (
