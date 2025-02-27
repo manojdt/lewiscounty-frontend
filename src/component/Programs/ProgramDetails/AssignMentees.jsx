@@ -293,8 +293,6 @@ export default function AssignMentees() {
     }
   }, [allFields?.category_id]);
 
-  // console.log("allFields", allFields);
-
   useEffect(() => {
     if (
       (allFields?.program_id || allFields?.program_id_val) &&
@@ -331,7 +329,6 @@ export default function AssignMentees() {
         // start_date: new Date(filteredData?.start_date),
         // end_date: new Date(filteredData?.end_date),
       });
-      console.log(allFields, "allFields");
       dispatch(
         getProgramTaskMentees(
           selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
@@ -401,7 +398,6 @@ export default function AssignMentees() {
       const editPay = state?.data?.task_id
         ? `&type=edit_task&task_id=${state?.data?.task_id}`
         : "";
-      console.log(progId, editPay, "editPay");
       dispatch(getProgramTaskMentees(progId + editPay));
     }
   }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]);
@@ -548,7 +544,6 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
-          {console.log("searchresults ==>", searchResults)}
           <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -638,8 +633,6 @@ export default function AssignMentees() {
                                   ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
                                       {searchResults.map((program) => {
-                                        // console.log(program);
-
                                         const isActive =
                                           getValues(field.name) === program?.id;
                                         // program.program_name.toLowerCase() ===
