@@ -46,6 +46,8 @@ import CloseIcon from "../../../assets/icons/closeIcon.svg";
 import { useGetSpecificProgramDetailsQuery } from "../../../features/program/programApi.services";
 import { formatTableNullValues, FormLabelRequired } from "../../../utils";
 import { SelectBox } from "../../../shared/SelectBox";
+import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
+import moment from "moment";
 
 export default function AssignMentees() {
   const {
@@ -56,6 +58,7 @@ export default function AssignMentees() {
     getValues,
     setValue,
     watch,
+    resetField,
   } = useForm();
   const navigate = useNavigate();
   const state = useLocation()?.state;
@@ -76,7 +79,7 @@ export default function AssignMentees() {
   } = useSelector((state) => state.userPrograms);
   const [searchTerm, setSearchTerm] = useState(""); // For program_id
   const [searchResults, setSearchResults] = useState([]); // For program_id
-  const [selectedProgram, setSelectedProgram] = useState("")
+  const [selectedProgram, setSelectedProgram] = useState("");
 
   const { data, isLoading } = useGetProgramNameQuery(searchTerm, {
     skip: !searchTerm, // Only call API if searchTerm is not empty
@@ -110,7 +113,6 @@ export default function AssignMentees() {
   const [updatedMemberColumn, setUpdatedMemberColumn] =
     useState(MenteeAssignColumns);
   const allFields = watch();
-
   // const { data: currentProgramDetail, isLoading: isDetailFetching } =
   //   useGetSpecificProgramDetailsQuery(
   //     {
@@ -122,11 +124,10 @@ export default function AssignMentees() {
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
     useGetSpecificProgramDetailsQuery(
       {
-        id: type === "new" ? allFields.program_id : allFields.program_id_val,
+        id: type === "new" ? selectedProgram?.id : allFields.program_id_val,
       },
       {
-        skip:
-          type === "new" ? !allFields.program_id : !allFields.program_id_val,
+        skip: type === "new" ? !selectedProgram?.id : !allFields.program_id_val,
         refetchOnMountOrArgChange: true,
       }
     );
@@ -135,11 +136,12 @@ export default function AssignMentees() {
     let apiData = {
       ...data,
       program_id:
-        type === "new" ? allFields?.program_id : state?.data?.program_id,
+        type === "new" ? selectedProgram?.id : state?.data?.program_id,
       start_date: new Date(data.start_date).toISOString(),
       end_date: new Date(data.end_date).toISOString(),
       mentor: type === "new" ? allFields?.mentor_id : state?.data?.mentor_id,
       // due_date: dayjs(data.due_date).format("YYYY-MM-DDTHH:mm:ss"),
+      task_details: data?.task_description
     };
     if (type === "edit" && from_type !== "program") {
       apiData = {
@@ -293,8 +295,6 @@ export default function AssignMentees() {
     }
   }, [allFields?.category_id]);
 
-  // console.log("allFields", allFields);
-
   useEffect(() => {
     if (
       (allFields?.program_id || allFields?.program_id_val) &&
@@ -331,7 +331,11 @@ export default function AssignMentees() {
         // start_date: new Date(filteredData?.start_date),
         // end_date: new Date(filteredData?.end_date),
       });
-      dispatch(getProgramTaskMentees(allFields?.program_id)).then((res) => {
+      dispatch(
+        getProgramTaskMentees(
+          selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
+        )
+      ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           const constructedData = res?.payload?.map((e) => {
             return {
@@ -363,7 +367,6 @@ export default function AssignMentees() {
       }
     }
   }, [params.id]);
-
   useEffect(() => {
     if (state?.data && Object.keys(state?.data).length) {
       let fieldValue = {
@@ -372,8 +375,10 @@ export default function AssignMentees() {
         program_id_val: state?.data?.program_id,
         goal_id: state?.data?.goal,
         mentor: state?.data?.mentor_name,
-        // start_date: new Date(state?.data?.program_startdate),
-        // end_date: new Date(state?.data?.program_enddate),
+        start_date: state?.data?.start_date ? moment(state?.data?.start_date) : null,
+        end_date: state?.data?.end_date ? moment(state?.data?.end_date) : null,
+        // start_date: moment(programdetails?.start_date),
+        // end_date: moment(programdetails?.end_date),
         duration: `${state?.data?.program_duration} days`,
         mentees_list: state?.data?.list_mentees ?? [],
         due_date: new Date(state?.data?.due_date),
@@ -381,6 +386,7 @@ export default function AssignMentees() {
         task_details: state?.data?.task_details,
         reference_links: state?.data?.reference_link,
         mentor_id: state?.data?.mentor_id,
+        task_description: state?.data?.task_details ?? ""
       };
       setAllMenteeList(state?.data?.list_mentees ?? []);
       reset(fieldValue);
@@ -391,15 +397,14 @@ export default function AssignMentees() {
     if (!category.length) {
       dispatch(getAllCategories());
     }
-    const progId = state?.data?.program_id ?? selectedProgram?.id
+    const progId = state?.data?.program_id ?? selectedProgram?.id;
     if (type !== "new") {
       const editPay = state?.data?.task_id
         ? `&type=edit_task&task_id=${state?.data?.task_id}`
         : "";
       dispatch(getProgramTaskMentees(progId + editPay));
     }
-  }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]
-);
+  }, [category, type, state?.data?.program_id, dispatch, selectedProgram?.id]);
 
   const handleAddPopupData = (value) => {
     if (value.length) {
@@ -543,7 +548,6 @@ export default function AssignMentees() {
               </nav>
             </div>
           )}
-          {console.log("searchresults ==>", searchResults)}
           <div className="content px-4 sm:px-4 md:px-6 lg:px-8 xl:px-8">
             <div className="py-9">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -568,7 +572,13 @@ export default function AssignMentees() {
                           <>
                             <input
                               {...register(field.name, field.inputRules)}
-                              value={searchResults.filter((i)=>i?.id === getValues(field.name))?.[0]?.program_name}
+                              // value={
+                              //   field.name === "program_id"
+                              //     ? searchResults.filter(
+                              //         (i) => i?.id === getValues(field.name)
+                              //       )?.[0]?.program_name
+                              //     : getValues(field.name)
+                              // }
                               type={field.fieldtype}
                               className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                               placeholder={field.placeholder}
@@ -584,6 +594,12 @@ export default function AssignMentees() {
                                 if (field.name === "program_id") {
                                   const value = getValues(field.name);
 
+                                  // setValue(
+                                  //   field.name,
+                                  //   searchResults.filter(
+                                  //     (i) => i?.id === getValues(field.name)
+                                  //   )?.[0]?.id
+                                  // );
                                   // Set searchTerm immediately (even if it's empty)
                                   setSearchTerm(value || " ");
                                 }
@@ -591,18 +607,17 @@ export default function AssignMentees() {
                               onChange={(e) => {
                                 const value = e.target.value;
                                 // setValue(field.name, value); // Update form state
-                              
+
                                 // Allow text search but avoid affecting program_id API
                                 if (field.name === "program_id") {
                                   setSearchTerm(value); // Always update search term for dropdown filtering
-                              
+
                                   // Reset API request if input is empty
                                   if (value === "") {
                                     setSearchResults([]);
                                   }
                                 }
                               }}
-                              
                             />
 
                             {errors[field.name] && (
@@ -613,18 +628,22 @@ export default function AssignMentees() {
 
                             {/* Only show dropdown for program_id */}
                             {field.name === "program_id" &&
-                              searchTerm !== "" &&
-                               (
-
+                              searchTerm !== "" && (
                                 <>
-                                  {searchResults.length > 0 ? (
+                                  {isLoading ? ( // Show loading text while fetching data
+                                    <div className="absolute bg-white border border-gray-300 w-full p-2 text-gray-500">
+                                      Loading...
+                                    </div>
+                                  ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
+                                      <p onClick={()=>{
+                                        setSearchTerm("");
+                                      }}>Close</p>
                                       {searchResults.map((program) => {
-                                        console.log(program);
-                                        
-                                        const isActive = getValues(field.name) === program?.id
-                                          // program.program_name.toLowerCase() ===
-                                          // searchTerm.toLowerCase();
+                                        const isActive =
+                                          getValues(field.name) === program?.id;
+                                        // program.program_name.toLowerCase() ===
+                                        // searchTerm.toLowerCase();
 
                                         return (
                                           <li
@@ -638,9 +657,11 @@ export default function AssignMentees() {
                                             onClick={() => {
                                               setValue(
                                                 field.name,
-                                                program.id
+                                                program.program_name
                                               ); // Set selected value
-                                              setSelectedProgram(program)
+                                              setSelectedProgram(program);
+                                              resetField("start_date");
+                                              resetField("end_date");
                                               // setSearchResults([]); // Hide dropdown after selection
                                               setSearchTerm(""); // Clear search term after selection
                                             }}
@@ -734,8 +755,7 @@ export default function AssignMentees() {
                           </div>
                         ) : field.type === "date" ? (
                           <>
-                          {console.log("state?.data?.start_dateff", state?.data?.start_date, selectedProgram?.start_date)}
-                            <div
+                            {/* <div
                               className="relative input-bg"
                               onClick={(e) => {
                                 !field.disabled &&
@@ -763,31 +783,20 @@ export default function AssignMentees() {
                                   calendarRef?.current[index]?.hide();
                                 }}
                                 disabled={field.disabled}
-                                // {...field.name === 'due_date' ?
-                                //     {
-                                //         minDate: getValues('start_date'),
-                                //         maxDate: getValues('end_date')
-                                //     }
-                                //     : {}
-                                // }
-
                                 minDate={
-                                  field?.name === "end_date" ? new Date(getValues("start_date")) : 
-                                  state?.data?.start_date ? new Date(state?.data?.start_date) : new Date(selectedProgram?.start_date)
+                                  field?.name === "start_date"
+                                    ? new Date()
+                                    : field?.name === "end_date" &&
+                                      getValues("start_date")
+                                    ? new Date(getValues("start_date"))
+                                    : new Date()
                                 }
+
                                 maxDate={
-                                //   (() => {
-                                //   if (field.name !== "due_date")
-                                //     return undefined;
-                                //   const endDate = getValues("end_date");
-                                //   if (!endDate) return undefined;
-                                //   const date = new Date(endDate);
-                                //   return isNaN(date.getTime())
-                                //     ? undefined
-                                //     : date;
-                                // })()
-                                state?.data?.end_date ? new Date(state?.data?.end_date) : new Date(selectedProgram?.end_date)
-                              }
+                                  state?.data?.end_date
+                                    ? new Date(state?.data?.end_date)
+                                    : new Date(selectedProgram?.end_date)
+                                }
                                 showTime={field.name !== "due_date"}
                                 hourFormat="12"
                                 dateFormat="mm-dd-yy"
@@ -807,7 +816,110 @@ export default function AssignMentees() {
                               <p className="error" role="alert">
                                 {errors[field.name].message}
                               </p>
-                            )}
+                            )} */}
+                            <div className="relative">
+                              
+                              <CustomDateTimePicker
+                                disabled={field.disabled}
+                                {...register(field.name, field.inputRules)}
+                                value={
+                                  getValues(field.name)
+                                    ? moment(getValues(field.name))
+                                    : null
+                                }
+                                placeholder={"mm/dd/yyyy hh:mm AM/PM"}
+                                format="MM-DD-YYYY hh:mm A"
+                                onChange={(newValue) => {
+                                  setValue(
+                                    field.name,
+                                    newValue ? newValue.toISOString() : null
+                                  );
+                                }}
+                                minDate={
+                                  field?.name === "start_date"
+                                    ? moment().format("MM-DD-YYYY") >=
+                                      moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                      ).format("MM-DD-YYYY")
+                                      ? moment()
+                                      : moment().format("MM-DD-YYYY") <=
+                                        moment(
+                                          type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                        ).format("MM-DD-YYYY")
+                                      ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                      : moment()
+                                    : field?.name === "end_date" &&
+                                      getValues("start_date")
+                                    ? moment(getValues("start_date"))
+                                    : moment()
+                                }
+                                maxDate={
+                                  state?.data?.program_enddate
+                                    ? moment(state?.data?.program_enddate)
+                                    : selectedProgram?.end_date
+                                    ? moment(selectedProgram?.end_date)
+                                    : null
+                                }
+
+                                minTime={
+                                  getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                    field?.name === "start_date"
+                                      ? moment().format("MM-DD-YYYY") >= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                        ? moment()
+                                        : moment().format("MM-DD-YYYY") <= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                        ? moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)
+                                        : moment()
+                                      : field?.name === "end_date" && getValues("start_date")
+                                      ? moment(getValues("start_date"))
+                                      : moment()
+                                  ), "day")
+                                    ?
+                                     moment().set({ hour: 9, minute: 0 }) // Restrict to 9 AM if it's the minDate
+                                    : moment().startOf("day") // Default to start of the day
+                                }
+                                maxTime={
+                                  getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                    state?.data?.program_enddate
+                                      ? moment(state?.data?.program_enddate)
+                                      : selectedProgram?.end_date
+                                      ? moment(selectedProgram?.end_date)
+                                      : null
+                                  ), "day")
+                                    ? moment().set({ hour: 18, minute: 0 }) // Restrict to 6 PM if it's the maxDate
+                                    : moment().endOf("day") // Default to end of the day
+                                }
+
+                                // minTime={
+                                //   field?.name === "start_date"
+                                //     ? moment().format("MM-DD-YYYY") >=
+                                //       moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                //       ).format("MM-DD-YYYY")
+                                //       ? moment()
+                                //       : moment().format("MM-DD-YYYY") <=
+                                //         moment(
+                                //           type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                //         ).format("MM-DD-YYYY")
+                                //       ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                //       : moment()
+                                //     : field?.name === "end_date" &&
+                                //       getValues("start_date")
+                                //     ? moment(getValues("start_date"))
+                                //     : moment()
+                                // }
+                                // maxTime={
+                                //   state?.data?.program_enddate
+                                //     ? moment(state?.data?.program_enddate)
+                                //     : selectedProgram?.end_date
+                                //     ? moment(selectedProgram?.end_date)
+                                //     : null
+                                // }
+
+                              />
+                              {errors[field.name] && (
+                                <p className="error" role="alert">
+                                  {errors[field.name].message}
+                                </p>
+                              )}
+                            </div>
                           </>
                         ) : field.type === "text" ? (
                           <>

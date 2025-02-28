@@ -1,7 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserIcon from "../../assets/icons/user-icon.svg";
-export const TopProgramsCard = ({ topProgramsList,view=true }) => {
+import { user } from "../../utils/constant";
+export const TopProgramsCard = ({
+  topProgramsList,
+  view = true,
+  role = "",
+}) => {
   const navigate = useNavigate();
   return (
     <div
@@ -21,20 +26,21 @@ export const TopProgramsCard = ({ topProgramsList,view=true }) => {
           ></div>
           <h4>Top Programs</h4>
         </div>
-        {view&&
-        <div className="flex justify-center mt-2 mb-2">
-          <p
-            className="text-[12px] py-2 px-2 cursor-pointer"
-            style={{
-              background: "rgba(217, 228, 242, 1)",
-              color: "rgba(29, 91, 191, 1)",
-              borderRadius: "3px",
-            }}
-            onClick={() => navigate("/mentors?req=top_programs")}
-          >
-            View All
-          </p>
-        </div>}
+        {view && (
+          <div className="flex justify-center mt-2 mb-2">
+            <p
+              className="text-[12px] py-2 px-2 cursor-pointer"
+              style={{
+                background: "rgba(217, 228, 242, 1)",
+                color: "rgba(29, 91, 191, 1)",
+                borderRadius: "3px",
+              }}
+              onClick={() => navigate("/mentors?req=top_programs")}
+            >
+              View All
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
@@ -47,11 +53,13 @@ export const TopProgramsCard = ({ topProgramsList,view=true }) => {
                 border: "1px solid rgba(29, 91, 191, 1)",
                 borderRadius: "10px",
               }}
-              onClick={() =>
+              onClick={() => {
+                const roleparams =
+                  role === user.mentee ? "&topProgram=menteeprograms" : "";
                 navigate(
-                  `/program-details/${recentReq.program}?breadcrumbsType=dashboardProgramDetails`
-                )
-              }
+                  `/program-details/${recentReq.program}?breadcrumbsType=dashboardProgramDetails${roleparams}`
+                );
+              }}
             >
               <div
                 className="flex gap-2 pb-3"

@@ -550,6 +550,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
               totalSteps={formFields.length}
               role={role}
               handleSkip={skipAall}
+              refetch={refetch}
               apiData={!isLoading && !isFetching ? data : null} //
             />
           ) : null}

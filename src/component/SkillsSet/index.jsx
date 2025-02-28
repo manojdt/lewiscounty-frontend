@@ -61,13 +61,13 @@ export default function SkillsSet({ programdetails,role }) {
   const handleTaskAction = async () => {
     if(role===user.mentee){
       if (
-        activeTaskDetails.status === TaskAllStatus.yettostart ||
-        activeTaskDetails.status === TaskAllStatus.newtask ||
-        activeTaskDetails.status === TaskAllStatus.pending
+        seletedItem.status === TaskAllStatus.yettostart ||
+        seletedItem.status === TaskAllStatus.newtask ||
+        seletedItem.status === TaskAllStatus.pending
       ) {
         setSuccessModal({ loading: true, success: false });
         const startTask = await api.patch("program_task_assign/task_start", {
-          task_id: activeTaskDetails.assign_task.id,
+          task_id: seletedItem.assign_task.id,
         });
         if (startTask.status === 200 && startTask.data) {
           setSuccessModal({ loading: false, success: true });
@@ -78,10 +78,10 @@ export default function SkillsSet({ programdetails,role }) {
           }, [2000]);
         }
       } else {
-        navigate(`/submit-task-program/${activeTaskDetails.assign_task.id}`);
+        navigate(`/submit-task-program/${seletedItem?.assign_task.id}`);
       }
     }else{
-      navigate(`/mentor-tasks-details/${activeTaskDetails?.id}`);
+      navigate(`/mentor-tasks-details/${seletedItem?.id}`);
 
     }
   };
@@ -95,6 +95,7 @@ export default function SkillsSet({ programdetails,role }) {
           ...e,
         };
       });
+      console.log(constructedTask,"constructedTask")
       setAllTask(constructedTask);
     }
   }, [programdetails]);
@@ -212,11 +213,11 @@ export default function SkillsSet({ programdetails,role }) {
                   field={params.id}
                   className="pr-3 w-[30px]"
                 />
-                {role!==user.mentee? "View Task":activeTaskDetails.status === TaskAllStatus.start
+                {role!==user.mentee? "View Task":seletedItem.status === TaskAllStatus.start
                   ? "Submit Task"
-                  : activeTaskDetails.status === TaskAllStatus.yettostart ||
-                    activeTaskDetails.status === TaskAllStatus.newtask ||
-                    activeTaskDetails.status === TaskAllStatus.pending
+                  : seletedItem.status === TaskAllStatus.yettostart ||
+                    seletedItem.status === TaskAllStatus.newtask ||
+                    seletedItem.status === TaskAllStatus.pending
                   ? "Start Task"
                   : "View Task"}
               </MenuItem>

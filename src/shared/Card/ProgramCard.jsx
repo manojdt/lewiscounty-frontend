@@ -23,7 +23,7 @@ import CalenderIcon from "../../assets/icons/Calender.svg";
 import StarColorIcon from "../../assets/icons/starColor.svg";
 import UploadIcon from "../../assets/images/image_1x.png";
 import DeleteIcon from "../../assets/images/delete_1x.png";
-import { ProgramStatusInCard } from "../../utils/constant";
+import { ProgramStatusInCard, user } from "../../utils/constant";
 import MuiModal from "../Modal";
 import { Button } from "../Button";
 import { updateProgramImage } from "../../services/userprograms";
@@ -53,7 +53,6 @@ export default function ProgramCard({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  console.log(location.pathname);
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorEl, setAnchorEl] = useState(null);
   const [programImage, setProgramImage] = useState(null);
@@ -309,7 +308,7 @@ export default function ProgramCard({
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  {action.map((act, i) => (
+                  {action?.map((act, i) => (
                     <MenuItem
                       key={i}
                       onClick={() => navigate(act.url)}
@@ -342,7 +341,7 @@ export default function ProgramCard({
             }
           >
             {programs && programs.length ? (
-              programs.map((currentProgram, index) => {
+              programs?.map((currentProgram, index) => {
                 let startDate = "";
                 if (currentProgram.start_date !== "") {
                   startDate = new Date(currentProgram.start_date)
@@ -502,39 +501,45 @@ export default function ProgramCard({
                                 </div>
                               )}
                             </div>
-                            {currentProgram.program_edit &&
+                            {((currentProgram.program_edit &&
                               !programEditRestirct.includes(
                                 currentProgram.status
                               ) &&
                               hoverIndex === index &&
                               currentProgram.participated_mentees_count ===
-                                0 && ( // Added condition
-                                <IconButton
-                                  onClick={() => {
-                                    if (
-                                      currentProgram.program_edit &&
-                                      !programEditRestirct.includes(
-                                        currentProgram.status
-                                      )
-                                    ) {
-                                      navigate(
-                                        `/update-program/${currentProgram.id}${
-                                          "admin_assign_program" in
-                                          currentProgram
-                                            ? `?program_create_type=admin_program`
-                                            : ""
-                                        }`
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <img
-                                    // className={`h-[18px] w-[15px]`}
-                                    src={EditIcon}
-                                    alt="EditIcon"
-                                  />
-                                </IconButton>
-                              )}
+                                0) ||
+                              (role === "admin" &&
+                                currentProgram?.created_by ===
+                                  userdetails?.data?.user_id &&
+                                currentProgram?.admin_assign_program &&
+                                currentProgram?.sub_programs.every(
+                                  (val) => val.status === "yettoapprove"
+                                ))) && ( // Added condition
+                              <IconButton
+                                onClick={() => {
+                                  if (
+                                    currentProgram.program_edit &&
+                                    !programEditRestirct.includes(
+                                      currentProgram.status
+                                    )
+                                  ) {
+                                    navigate(
+                                      `/update-program/${currentProgram.id}${
+                                        "admin_assign_program" in currentProgram
+                                          ? `?program_create_type=admin_program`
+                                          : ""
+                                      }`
+                                    );
+                                  }
+                                }}
+                              >
+                                <img
+                                  // className={`h-[18px] w-[15px]`}
+                                  src={EditIcon}
+                                  alt="EditIcon"
+                                />
+                              </IconButton>
+                            )}
                           </div>
                         }
                         <div className="flex justify-between py-1">
@@ -700,16 +705,26 @@ export default function ProgramCard({
                             className="text-[12px] px-2 py-2"
                             style={{
                               background: `${
-                                ProgramStatusInCard[currentProgram.status]?.bg
+                                ProgramStatusInCard[
+                                  currentProgram?.mentee_program_exit
+                                    ? "cancelled"
+                                    : currentProgram.status
+                                ]?.bg
                               }`,
                               color: `${
-                                ProgramStatusInCard[currentProgram.status]
-                                  ?.color
+                                ProgramStatusInCard[
+                                  currentProgram?.mentee_program_exit
+                                    ? "cancelled"
+                                    : currentProgram.status
+                                ]?.color
                               }`,
                               borderRadius: "3px",
                             }}
                           >
-                            {ProgramStatusInCard[currentProgram.status]?.text}
+                            {currentProgram?.mentee_program_exit
+                              ? "Existed"
+                              : ProgramStatusInCard[currentProgram.status]
+                                  ?.text}
                           </div>
                         ) : (
                           <div
@@ -723,25 +738,25 @@ export default function ProgramCard({
                           </div>
                         )} */}
                         {!statusNotShow.includes(currentProgram.status) ? (
-  <StatusIndicator 
-    status={currentProgram.status}
-    sx={{ 
-      padding: "0.5rem", 
-      borderRadius: "3px",
-      backgroundColor: "white"
-    }}
-  />
-) : (
-  <div
-    className="posted-tim text-[10px] px-1 py-1"
-    style={{
-      background: "rgba(241, 241, 241, 1)",
-      borderRadius: "3px",
-    }}
-  >
-    {currentProgram.created_time}
-  </div>
-)}
+                          <StatusIndicator
+                            status={currentProgram.status}
+                            sx={{
+                              padding: "0.5rem",
+                              borderRadius: "3px",
+                              backgroundColor: "white",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className="posted-tim text-[10px] px-1 py-1"
+                            style={{
+                              background: "rgba(241, 241, 241, 1)",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            {currentProgram.created_time}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1011,7 +1026,7 @@ export default function ProgramCard({
                   margin: "15px 0px 30px 0",
                 }}
               >
-                {categoryPopup.categoryList.map((category, index) => (
+                {categoryPopup?.categoryList?.map((category, index) => (
                   <li key={index} className="flex gap-7">
                     <input
                       type="checkbox"

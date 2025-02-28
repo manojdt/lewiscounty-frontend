@@ -152,6 +152,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const typeParams = searchParams.get("type");
   const from = searchParams.get("from");
+  const topProgram = searchParams.get("topProgram");
   const userdetails = useSelector((state) => state.userInfo);
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
@@ -831,7 +832,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       if (
         role === "mentee" &&
         programdetails.status === "completed" &&
-        !programdetails.mentee_program_rating
+        !programdetails.mentee_program_rating&&!topProgram
       ) {
         setRatingModal({ modal: true, success: false });
       }
@@ -2878,7 +2879,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 ((role === "mentee" &&
                   programdetails.mentee_join_status ===
                     programActionStatus.program_join_request_accepted) ||
-                  programdetails?.created_by === userdetails?.data?.user_id) &&
+                  programdetails?.created_by === userdetails?.data?.user_id) && !programdetails?.mentee_program_exit &&
                 (
                   <Box>
                     <Accordian
@@ -2947,6 +2948,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 )}
               {(programdetails.status === programActionStatus.inprogress ||
                 programdetails.status === programActionStatus.paused) &&
+                !programdetails?.mentee_program_exit &&
                 programdetails.task.length > 0 && (
                   <CustomAccordian
                     title={"Program Task"}
@@ -3205,9 +3207,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 <div className="my-4">
                   <SubDetailCardWrapper
                     title={"Upcoming program"}
-                    onViewAll={() =>
-                      navigate("/programs?type=upcoming&filter_by=month")
-                    }
+                    // onViewAll={() =>
+                    //   navigate("/programs?type=upcoming&filter_by=month")
+                    // }
+
                   >
                     <ProgramCard
                       title="Active Programs"
@@ -3218,7 +3221,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     />
                   </SubDetailCardWrapper>
                 </div>
-              )}
+               )} 
             </div>
           </div>
         </div>

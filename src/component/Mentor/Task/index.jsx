@@ -452,21 +452,21 @@ const MentorTask = () => {
         );
       },
     },
-    {
-      field: "due_date",
-      headerName: "Due Date",
-      flex: 1,
-      id: 0,
-      renderCell: (params) => {
-        return (
-          <div>
-            {params?.row?.due_date
-              ? dayjs(params.row.due_date).format("MM-DD-YYYY")
-              : "..."}
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: "due_date",
+    //   headerName: "Due Date",
+    //   flex: 1,
+    //   id: 0,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div>
+    //         {params?.row?.due_date
+    //           ? dayjs(params.row.due_date).format("MM-DD-YYYY")
+    //           : "..."}
+    //       </div>
+    //     );
+    //   },
+    // },
     // {
     //   field: 'file_by',
     //   headerName: 'Link',
@@ -556,7 +556,7 @@ const MentorTask = () => {
               {seletedItem?.editable && (
                 <>
                   <MenuItem
-                    onClick={() => handleEditTask()}
+                    onClick={() => handleEditTask(params?.row)}
                     className="!text-[12px]"
                   >
                     <img
@@ -651,7 +651,7 @@ const MentorTask = () => {
     }
   }, [searchParams, paginationModel]);
 
-  const handleEditTask = () => {
+  const handleEditTask = (details) => {
     const keysToExclude = [
       "results",
       "count",
@@ -669,6 +669,7 @@ const MentorTask = () => {
       )
     );
 
+    
     const constructedData = {
       ...data,
 
@@ -681,7 +682,7 @@ const MentorTask = () => {
       task_details: seletedItem?.task_details,
       due_date: seletedItem?.due_date,
       assign_task_id: seletedItem?.id,
-      list_mentees: seletedItem?.mentees_added_to_program,
+      list_mentees: seletedItem?.mentees_added_to_task,
       program_id: seletedItem?.program_id,
       program_duration: seletedItem?.duration,
       category_id: seletedItem?.category_id,
@@ -689,7 +690,9 @@ const MentorTask = () => {
       mentor_name: seletedItem?.mentor_name,
       task_id: seletedItem?.id,
       state_date: seletedItem?.start_date,
+      // task_start_date: 
     };
+
 
     navigate(`/assign-mentees/?type=edit`, {
       state: {
@@ -842,7 +845,7 @@ const MentorTask = () => {
               </>
             ) : (
               <DataTable
-                rows={formattedMenteeTask ?? []}
+                rows={menteeTask?.results ?? []}
                 columns={mentorTaskColumn}
                 hideCheckbox
                 rowCount={menteeTask?.count}

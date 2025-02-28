@@ -1103,7 +1103,7 @@ export default function CreatePrograms() {
       "zip_code",
     ];
 
-    if (formValues?.program_mode !== "physical_location") {
+    if (formValues?.program_mode && formValues?.program_mode !== "physical_location") {
       isAddressField.forEach((field) => unregister(field));
     }
   }, [formValues?.program_mode, unregister]);

@@ -2271,7 +2271,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
   return [
    
     {
-      // type: type === "new" ? "dropdown" : "input",
+      
       type: "input",
       name: "program_id",
       fieldtype: "text",
@@ -2281,13 +2281,13 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
-      // disabled: bool,
+      disabled: type === "new" ? false : true,
       autoComplete: "off", // Disable browser autocomplete
       options: [],
     },
     {
       type: "input",
-      name: "task_id",
+      name: "task_name",
       fieldtype: "text",
       label: " Interaction Point/Task Name",
       placeholder: "Enter Task Name",
@@ -2305,7 +2305,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: " Interaction Point/Task Description",
       placeholder: "Enter Task Description",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full",
       disabled: false,
@@ -2329,7 +2329,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "start_date",
       label: "Task Start Date and Time",
-      placeholder: "Select Program Start Date and Time",
+      placeholder: "Select Task Start Date and Time",
       inputRules: {
         required: "This field is required",
       },
@@ -2339,7 +2339,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "end_date",
       label: "Task End Date and Time",
-      placeholder: "Select Program End Date and Time",
+      placeholder: "Select Task End Date and Time",
       inputRules: {
         required: "This field is required",
       },

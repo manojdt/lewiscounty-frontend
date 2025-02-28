@@ -42,7 +42,7 @@ import CancelReq from "../../assets/icons/cancelRequest.svg";
 import dayjs from "dayjs";
 import moment from "moment";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import { dateFormat, formatTableNullValues, useDebounce } from "../../utils";
+import { dateFormat, formatRenderCellDateValues, formatTableNullValues, useDebounce } from "../../utils";
 import MentorCardView from "./MentorCardView";
 
 export const Mentors = () => {
@@ -316,20 +316,13 @@ export const Mentors = () => {
       },
     },
     {
-      field: "last_request_date",
+      field: "last_updated_date",
       headerName: "Last Updated Date",
       flex: 1,
       id: 5,
       renderCell: (params) => {
-        return (
-          <div className="flex gap-2 items-center">
-            {" "}
-            {params?.row?.cancelled_date
-              ? moment(params?.row?.cancelled_date).format("MM-DD-YYYY")
-              : "..."}
-          </div>
-        );
-      },
+           return formatRenderCellDateValues(params?.row?.last_updated_date);
+         },
     },
     {
       field: "status",

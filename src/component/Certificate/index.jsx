@@ -23,6 +23,7 @@ import {
   certificateText,
   requestStatusColor,
   requestStatusText,
+  user,
 } from "../../utils/constant";
 import Ratings from "../Programs/Ratings";
 import { useWindowSize } from "../../utils/windowResize";
@@ -407,7 +408,7 @@ export default function Certificate() {
             {width <= 640 && ( <img className='absolute ml-[34px] ' src={AddTicketIcon} alt='' />)}
             {role !== "mentee" && (
               <Button
-                btnName={width <= 640 ? "." : "Request Certificate"} // Empty button text below 640px
+                btnName={width <= 640 ? "." :role===user.mentor? "Request Certificate":"Create Certificate"} // Empty button text below 640px
                 onClick={() =>
                   navigate("/create-certificate", { state: { type: "new" } })
                 }
@@ -429,7 +430,7 @@ export default function Certificate() {
                   {requestBtns.map((actionBtn, index) => (
                     <button
                       key={index}
-                      className="px-5 py-4 text-[14px]"
+                      className="px-4 py-3 text-[14px]"
                       style={{
                         background:
                           requestTab === actionBtn.key
@@ -441,7 +442,7 @@ export default function Certificate() {
                             : "none",
                         color: requestTab === actionBtn.key ? "#fff" : "#000",
                         borderRadius: "3px",
-                        width: "180px",
+                        width: "200px",
                       }}
                       onClick={() => handleTab(actionBtn.key)}
                     >
