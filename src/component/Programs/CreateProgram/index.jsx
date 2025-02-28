@@ -306,15 +306,15 @@ export default function CreatePrograms() {
 
                   return baseItem;
                 });
-                // const hasEmptyValue = updateGoals.some((obj) => {
-                //   return Object.values(obj).some(
-                //     (value) =>
-                //       value === "" || value === null || value === undefined
-                //   );
-                // });
-                // if (!hasEmptyValue) {
+                const hasEmptyValue = updateGoals.some((obj) => {
+                  return Object.values(obj).some(
+                    (value) =>
+                      value === "" || value === null || value === undefined
+                  );
+                });
+                if (!hasEmptyValue) {
                   bodyFormData.append(field, JSON.stringify(updateGoals));
-                // }
+                }
               } else if (field === "prerequisites") {
                 const updatePrerequisites = fieldData[field].map((item) => {
                   // Create a base object with required fields
@@ -327,18 +327,18 @@ export default function CreatePrograms() {
 
                   return baseItem;
                 });
-                // const hasEmptyValue = updatePrerequisites.some((obj) => {
-                //   return Object.values(obj).some(
-                //     (value) =>
-                //       value === "" || value === null || value === undefined
-                //   );
-                // });
-                // if (!hasEmptyValue) {
+                const hasEmptyValue = updatePrerequisites.some((obj) => {
+                  return Object.values(obj).some(
+                    (value) =>
+                      value === "" || value === null || value === undefined
+                  );
+                });
+                if (!hasEmptyValue) {
                   bodyFormData.append(
                     field,
                     JSON.stringify(updatePrerequisites)
                   );
-                // }
+                }
               } else if (field === "recurring_dates") {
                 const updateRecurringProgram = fieldData[field].map((item) => {
                   // Create a base object with required fields
