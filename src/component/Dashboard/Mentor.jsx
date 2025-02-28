@@ -502,16 +502,16 @@ export const Mentor = () => {
                   />
                 </div>
               )}
-              <div className="root-layer grid grid-cols-2 gap-8 pt-6">
+              {/* <div className="root-layer grid grid-cols-2 gap-8 pt-6">
                 <div className="layer-first flex flex-col sm:gap-6 gap-4">
                   <RecentRequests data={programRequest} />
                 </div>
 
                 <div className="layer-second flex flex-col gap-8">
-                  {/* <Programs /> */}
+                  <Programs /> 
                   <ProgramFeeds feedsList={feeds?.results} />
                 </div>
-              </div>
+              </div> */}
             </div>
           ) : (
             <div className="programs-list !h-[100vh]">
