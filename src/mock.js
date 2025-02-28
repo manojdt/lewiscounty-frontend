@@ -619,12 +619,12 @@ export const MentorAssignColumns = [
     flex: 1,
     id: 3,
   },  
-  {
-    field: "action",
-    headerName: "View",
-    flex: 1,
-    id: 5,
-  },
+  // {
+  //   field: "action",
+  //   headerName: "View",
+  //   flex: 1,
+  //   id: 5,
+  // },
 ];
 
 function skillData(name, skills_desc, action) {

@@ -58,6 +58,11 @@ let MuiTheme = createTheme({
         },
       },
     },
+    MuiMenuList: {
+      defaultProps: {
+        dense: true,
+      },
+    },
     MuiDataGrid: {
       defaultProps: {
         sx: {

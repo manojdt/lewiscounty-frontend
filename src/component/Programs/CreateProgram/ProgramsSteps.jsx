@@ -26,14 +26,13 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import PopupTableInput from "../../../shared/PopupTableInput/PopupTableInput";
 import { WeekdaySelector } from "../../../shared/CustomWeekdaySelector/WeekdaySelector";
 import DynamicFieldsComponent from "./DynamicFieldsComponent"; // Import the new component
+import { useGetAllMentorsQuery } from "../../../features/program/programApi.services";
+import { useDebounce } from "../../../utils";
 
 const ProgramSteps = ({
   stepFields,
   stepData,
   handleProgramCheck,
-  isMentorDataLoading,
-  setMentorSearchValue,
-  mentor_assign,
   certificate,
   setViewDetailsInfo,
   setViewDetails,
@@ -50,11 +49,31 @@ const ProgramSteps = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [mentorSearchValue, setMentorSearchValue] = useState("");
+  const [actionModal, setActionModal] = useState("");
+  const assignRole = ["mentor_id", "assign_mentees"].find(
+    (member) => member === actionModal
+  );
+  const searchValue = useDebounce(mentorSearchValue, 500);
 
   const [openEquipmentModal, setOpenEquipmentModal] = React.useState(false);
   const searchBar = useRef(null);
 
   const open = Boolean(anchorEl);
+
+  const { data: mentor_assign, isFetching } = useGetAllMentorsQuery(
+    {
+      role_name: actionModal === "assign_mentees" ? "mentee" : "mentor",
+      page: (tablesPagination?.[assignRole]?.page || 1) + 1, // Fallback to 1 if undefined
+      limit: tablesPagination?.[assignRole]?.pageSize || 10, // Fallback to 10 if undefined
+      status: "active",
+      ...(searchValue && { search: searchValue }),
+    },
+    {
+      skip: !assignRole,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const handleMoreClose = () => {
     setAnchorEl(null);
@@ -159,7 +178,6 @@ const ProgramSteps = ({
       }, 2000);
     }
   };
-  const [actionModal, setActionModal] = useState("");
 
   const handleAction = (key) => {
     setActionModal(key);
@@ -226,14 +244,10 @@ const ProgramSteps = ({
     CertificateColumns,
     "certificate"
   );
-  const updatedMemberColumn = createUpdatedColumns(
-    MentorAssignColumns,
-    "assign_mentor_id"
-  );
 
   const updatedMentorAssignColumns = createUpdatedColumns(
     MentorAssignColumns,
-    "mentor_id"
+    assignRole
   );
 
   // Updated MODAL_CONFIG with correct handlers
@@ -244,17 +258,13 @@ const ProgramSteps = ({
       columns: updatedCertificateColumn,
       btnName: "Add Certificate",
     },
-    members: {
-      modalTitle: "Add Mentor",
-      rows: "assign_mentor_id",
-      columns: updatedMemberColumn,
-      btnName: "Add Mentor",
-    },
-    mentor_id: {
-      modalTitle: "Add Program Manager",
-      rows: "mentor_id",
+    [assignRole]: {
+      modalTitle: `Add ${
+        actionModal === "assign_mentees" ? "Mentee" : "Mentor"
+      }`,
+      rows: assignRole,
       columns: updatedMentorAssignColumns,
-      btnName: "Add Program Manager",
+      btnName: `Add ${actionModal === "assign_mentees" ? "Mentee" : "Mentor"}`,
     },
   };
 
@@ -488,12 +498,12 @@ const ProgramSteps = ({
                   disablePopupField={disablePopupField}
                   disableDateFields={disableDateFields}
                   handleProgramCheck={handleProgramCheck}
-                  isMentorDataLoading={isMentorDataLoading}
+                  isMentorDataLoading={isFetching}
                   setMentorSearchValue={setMentorSearchValue}
                   mentor_assign={mentor_assign}
                   onPaginationChange={onPaginationChange}
                   tablesPagination={tablesPagination}
-                  getDateValidation={getDateValidation}
+                  // getDateValidation={getDateValidation}
                   start_date={start_date}
                   end_date={end_date}
                   MODAL_CONFIG={MODAL_CONFIG}
@@ -513,7 +523,7 @@ const ProgramSteps = ({
                   disablePopupField={disablePopupField}
                   disableDateFields={disableDateFields}
                   disableRecurringProgram={disableRecurringProgram}
-                  getDateValidation={getDateValidation}
+                  // getDateValidation={getDateValidation}
                   MODAL_CONFIG={MODAL_CONFIG}
                   handleAction={handleAction}
                 />
@@ -698,11 +708,16 @@ const ProgramSteps = ({
                       dataSource = certificate || [];
                       fieldValueKey = "name";
                       totalRows = certificate?.length;
-                    } else if (field.name === "assign_mentor_id") {
-                      dataSource = mentor_assign || [];
+                    } else if (
+                      field.name === "mentor_id" ||
+                      field.name === "assign_mentees"
+                    ) {
+                      dataSource = mentor_assign?.results || [];
                       fieldValueKey = "full_name";
-                      totalRows = mentor_assign?.length;
+                      totalRows = mentor_assign?.count;
                     }
+                    const isMentor = field.name === "mentor_id";
+
                     return (
                       <PopupTableInput
                         disabled={disablePopupField}
@@ -720,10 +735,10 @@ const ProgramSteps = ({
                         }
                         label={field.label}
                         valueKey={fieldValueKey}
-                        tableData={dataSource}
+                        tableData={dataSource || []}
                         selectedItems={formValues[field.name] || []}
                         onChange={onChange}
-                        multiSelect={true}
+                        multiSelect={isMentor ? false : true}
                         columns={MODAL_CONFIG[actionModal]?.columns}
                         placeholder={MODAL_CONFIG[actionModal]?.modalTitle}
                         onFieldClick={() => handleAction(field.name)}
@@ -757,7 +772,7 @@ const ProgramSteps = ({
                         onChange={(e) => {
                           const newValue = e.target.value;
                           // Ensure we're passing the correct value type
-                          controlledField.onChange(newValue);                         
+                          controlledField.onChange(newValue);
                         }}
                         SelectProps={{
                           multiple: field.name === "day_numbers",
@@ -826,7 +841,7 @@ const ProgramSteps = ({
                       ? {
                           minDate: getValues("start_date")
                             ? moment(getValues("start_date")).add(1, "day") // Use moment object directly
-                            : null,
+                            : moment(),
                           minDateTime: getValues("start_date")
                             ? moment(getValues("start_date"))
                                 .add(1, "day")
