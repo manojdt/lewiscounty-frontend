@@ -1090,7 +1090,7 @@ export const TaskDetails = () => {
               )}
               {taskData?.fail_reason&&taskData.result !== 'Pass'&&
                <div className="action-set action_cancelled mb-4">
-            <div className="reason-title">{"Task Fail Reason"}</div>
+            <div className="reason-title">{"Task No Pass Reason"}</div>
             <div className="reason-content">
               {taskData?.fail_reason}
             </div>
@@ -1119,7 +1119,7 @@ export const TaskDetails = () => {
                               : 'rgba(224, 56, 45, 1)',
                         }}
                       >
-                        {taskData.result}
+                        {taskData.result ? taskData?.result === "Fail" ? "No Pass" : taskData?.result : "-"}
                       </span>
                     </div>
                   </Stack>

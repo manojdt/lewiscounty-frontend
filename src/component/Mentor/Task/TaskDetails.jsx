@@ -303,7 +303,7 @@ const MentorTaskDetails = () => {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">{`${
-            params?.row?.result ?? "..."
+            params?.row?.result ? params?.row?.result === "Fail" ? "No Pass" : params?.row?.result : "..."
           }`}</div>
         );
       },

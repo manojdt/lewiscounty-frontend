@@ -448,7 +448,7 @@ const ViewTask = () => {
                                 padding: "4px 22px",
                                 marginLeft: "15px"
                             }}>
-                                {taskDetails.result}
+                                {taskDetails.result ? taskDetails?.result === "Fail" ? "No Pass" : taskDetails?.result : "-"}
                             </span>
                         </div>
                     </div>
@@ -458,7 +458,7 @@ const ViewTask = () => {
                 {
                     taskDetails?.result === "Fail" &&
                     <Box className="!bg-[#FFE7E7] !border !border-[#E0382D] rounded-[5px]" mt={3}>
-                        <Typography className='!text-[#E0382D] !text-[18px] px-[20px] py-[12px]' sx={{ fontWeight: 600, borderBottom: "1px solid #E0382D" }}>Failed Reason</Typography>
+                        <Typography className='!text-[#E0382D] !text-[18px] px-[20px] py-[12px]' sx={{ fontWeight: 600, borderBottom: "1px solid #E0382D" }}>No Pass Reason</Typography>
                         <Typography className=' px-[20px] py-[12px] !text-[14px] !text-[#18283D]'>{taskDetails?.fail_reason}</Typography>
                     </Box>
                 }
