@@ -316,13 +316,58 @@ export default function AssignMentees() {
     }
   }, [allFields?.program_id, allFields?.program_id_val, currentProgramDetail]);
 
-  useEffect(() => {
-    if (type === "new" && allFields?.program_id) {
+  // useEffect(() => {
+  //   const isProgramId = searchResults?.filter((i)=>i?.program_name === allFields?.program_id)
+  //   console.log("isProgramId", isProgramId)
+  //   if (type === "new" && allFields?.program_id) {
+  //     const programOption = menteeFields?.filter(
+  //       (e) => e?.name === "program_id"
+  //     )?.[0]?.options;
+  //     const filteredData = programOption?.filter(
+  //       (e) => e?.id === Number(allFields?.program_id)
+  //     )?.[0];
+  //     reset({
+  //       ...getValues(),
+  //       mentor: filteredData?.mentor_name,
+  //       duration: filteredData?.duration + " Days",
+  //       // start_date: new Date(filteredData?.start_date),
+  //       // end_date: new Date(filteredData?.end_date),
+  //     });
+  //     dispatch(
+  //       getProgramTaskMentees(
+  //         selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
+  //       )
+  //     ).then((res) => {
+  //       if (res?.meta?.requestStatus === "fulfilled") {
+  //         const constructedData = res?.payload?.map((e) => {
+  //           return {
+  //             ...e,
+  //             name: `${e?.first_name} ${e?.last_name}`,
+  //           };
+  //         });
+  //         const fields = [...menteeFields].map((field) => {
+  //           if (field.name === "mentor") {
+  //             return {
+  //               ...field,
+  //               options: constructedData ?? [],
+  //             };
+  //           }
+  //           return field;
+  //         });
+
+  //         setMenteeFields(fields);
+  //       }
+  //     });
+  //   }
+  // }, [allFields?.program_id]);
+
+  const getParticipateMenteeList = (program) =>{
+    // if (type === "new" && allFields?.program_id && isProgramId?.length) {
       const programOption = menteeFields?.filter(
         (e) => e?.name === "program_id"
       )?.[0]?.options;
       const filteredData = programOption?.filter(
-        (e) => e?.id === Number(allFields?.program_id)
+        (e) => e?.id === Number(program?.id)
       )?.[0];
       reset({
         ...getValues(),
@@ -332,8 +377,8 @@ export default function AssignMentees() {
         // end_date: new Date(filteredData?.end_date),
       });
       dispatch(
-        getProgramTaskMentees(
-          selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
+        getProgramTaskMentees(program?.id
+          // selectedProgram?.id ? selectedProgram?.id : allFields?.program_id
         )
       ).then((res) => {
         if (res?.meta?.requestStatus === "fulfilled") {
@@ -356,8 +401,8 @@ export default function AssignMentees() {
           setMenteeFields(fields);
         }
       });
-    }
-  }, [allFields?.program_id]);
+    // }
+  }
 
   useEffect(() => {
     if (!Object.keys(programdetails).length) {
@@ -442,6 +487,21 @@ export default function AssignMentees() {
       </div>
     );
   };
+
+  const handleSelectProgram = (field_name, program) =>{
+
+
+      setValue(
+        field_name,
+        program?.id
+      ); // Set selected value
+      setSelectedProgram(program);
+      resetField("start_date");
+      resetField("end_date");
+      // setSearchResults([]); // Hide dropdown after selection
+      setSearchTerm(""); // Clear search term after selection
+      getParticipateMenteeList(program)
+  }
 
   return (
     <div className="px-4 sm:px-4 md:px-9 lg:px-9 xl:px-9 my-6 grid">
@@ -572,13 +632,14 @@ export default function AssignMentees() {
                           <>
                             <input
                               {...register(field.name, field.inputRules)}
-                              // value={
-                              //   field.name === "program_id"
-                              //     ? searchResults.filter(
-                              //         (i) => i?.id === getValues(field.name)
-                              //       )?.[0]?.program_name
-                              //     : getValues(field.name)
-                              // }
+                              value={
+                                field.name === "program_id"
+                                  ? 
+                                  searchResults.filter(
+                                      (i) => i?.id === getValues(field.name)
+                                    )?.[0]?.program_name
+                                  : getValues(field.name)
+                              }
                               type={field.fieldtype}
                               className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
                               placeholder={field.placeholder}
@@ -616,6 +677,8 @@ export default function AssignMentees() {
                                   if (value === "") {
                                     setSearchResults([]);
                                   }
+                                }else{
+                                  setValue(field.name, e.target.value)
                                 }
                               }}
                             />
@@ -651,17 +714,7 @@ export default function AssignMentees() {
                                                ? "bg-background-primary-light text-font-primary-main"
                                                : ""
                                            }`}
-                                            onClick={() => {
-                                              setValue(
-                                                field.name,
-                                                program.program_name
-                                              ); // Set selected value
-                                              setSelectedProgram(program);
-                                              resetField("start_date");
-                                              resetField("end_date");
-                                              // setSearchResults([]); // Hide dropdown after selection
-                                              setSearchTerm(""); // Clear search term after selection
-                                            }}
+                                            onClick={() =>handleSelectProgram(field?.name, program) }
                                           >
                                             {program.program_name}
                                           </li>
@@ -815,7 +868,6 @@ export default function AssignMentees() {
                               </p>
                             )} */}
                             <div className="relative">
-                              
                               <CustomDateTimePicker
                                 disabled={field.disabled}
                                 {...register(field.name, field.inputRules)}
@@ -857,49 +909,33 @@ export default function AssignMentees() {
                                     : null
                                 }
 
-                                // new start
-
-                                // minDate={
-                                //   field?.name === "start_date"
-                                //     ? dayjs() // Today's date for start_date
-                                //     : field?.name === "end_date" && getValues("start_date")
-                                //     ? dayjs(getValues("start_date")) // Convert start_date to dayjs object
-                                //     : dayjs() // Ensure valid fallback
+                                // minTime={
+                                //   getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                //     field?.name === "start_date"
+                                //       ? moment().format("MM-DD-YYYY") >= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                //         ? moment()
+                                //         : moment().format("MM-DD-YYYY") <= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                //         ? moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)
+                                //         : moment()
+                                //       : field?.name === "end_date" && getValues("start_date")
+                                //       ? moment(getValues("start_date"))
+                                //       : moment()
+                                //   ), "day")
+                                //     ?
+                                //      moment().set({ hour: 9, minute: 0 }) // Restrict to 9 AM if it's the minDate
+                                //     : moment().startOf("day") // Default to start of the day
                                 // }
-                                // maxDate={
-                                //   state?.data?.end_date && dayjs(state?.data?.end_date).isValid()
-                                //     ? dayjs(state?.data?.end_date) // Convert end_date properly
-                                //     : selectedProgram?.end_date && dayjs(selectedProgram?.end_date).isValid()
-                                //     ? dayjs(selectedProgram?.end_date)
-                                //     : dayjs().add(1, "year") // Fallback: 1 year from today
-                                // }
-
-                                // new end
-
-                                // {...(field.name === "start_date"
-                                //   ? {
-                                //       minDate: moment(), // Use moment object directly
-                                //     }
-                                //   : {})}
-                                // {...(field.name === "end_date"
-                                //   ? {
-                                //       minDate: getValues("start_date")
-                                //         ? moment(getValues("start_date")).add(
-                                //             1,
-                                //             "day"
-                                //           ) // Use moment object directly
-                                //         : null,
-                                //       minDateTime: getValues("start_date")
-                                //         ? moment(getValues("start_date"))
-                                //             .add(1, "day")
-                                //             .add(1, "hour")
-                                //             .startOf("hour") // Use moment object directly
-                                //         : null,
-                                //     }
-                                //   : {})}
-
-                                // error={!!errors?.[field.name]}
-                                // helperText={errors?.[field.name]?.message}
+                                // maxTime={
+                                //   getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                //     state?.data?.program_enddate
+                                //       ? moment(state?.data?.program_enddate)
+                                //       : selectedProgram?.end_date
+                                //       ? moment(selectedProgram?.end_date)
+                                //       : null
+                                //   ), "day")
+                                //     ? moment().set({ hour: 18, minute: 0 }) // Restrict to 6 PM if it's the maxDate
+                                //     : moment().endOf("day") // Default to end of the day
+                                // }                                
                               />
                               {errors[field.name] && (
                                 <p className="error" role="alert">

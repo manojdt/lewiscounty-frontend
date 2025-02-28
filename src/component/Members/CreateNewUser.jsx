@@ -72,8 +72,6 @@ export default function CreateNewUser() {
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
-    console.log(name, value);
-
     // Clear error for this field when user changes the value
     setErrFields((prevErrors) => ({
       ...prevErrors,
@@ -185,7 +183,6 @@ export default function CreateNewUser() {
           if (response.status === 200 && response.data?.error) {
             alert(response.data.error);
           } else {
-            console.log("Successfully created new org admin:", response.data);
             setTaskSuccess(true);
             setTimeout(() => {
               navigate("/questions");

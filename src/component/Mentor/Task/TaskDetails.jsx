@@ -303,7 +303,7 @@ const MentorTaskDetails = () => {
       renderCell: (params) => {
         return (
           <div className="flex gap-2 items-center">{`${
-            params?.row?.result ?? "..."
+            params?.row?.result ? params?.row?.result === "Fail" ? "No Pass" : params?.row?.result : "..."
           }`}</div>
         );
       },
@@ -452,7 +452,7 @@ const MentorTaskDetails = () => {
                         onClick={() =>
                           handleOpenConfirmPopup(
                             "cancel",
-                            "Task Fail Reason",
+                            "Task No Pass Reason",
                             "fail"
                           )
                         }
@@ -531,8 +531,8 @@ const MentorTaskDetails = () => {
       task_id: menteeTaskList?.assign_task_id,
       program_category_name: data?.category_name,
       program_name: data?.program_name,
-      program_startdate: data?.start_date,
-      program_enddate: data?.end_date,
+      program_startdate: data?.program_startdate,
+      program_enddate: data?.program_enddate,
       task_name: data?.task_name,
       reference_link: data?.reference_link,
       task_details: data?.task_details,
@@ -723,6 +723,10 @@ const MentorTaskDetails = () => {
       title: "Program Start Date",
       value: dateFormatRever(menteeTaskList?.program_startdate),
     },
+    {
+      title: "Task Start Date",
+      value: dateFormatRever(menteeTaskList?.start_date),
+    },
   ];
 
   const rightGridData = [
@@ -733,6 +737,10 @@ const MentorTaskDetails = () => {
     {
       title: "Program End Date",
       value: dateFormatRever(menteeTaskList?.program_enddate),
+    },
+    {
+      title: "Task End Date",
+      value: dateFormatRever(menteeTaskList?.end_date),
     },
   ];
 
@@ -953,12 +961,12 @@ const MentorTaskDetails = () => {
               >
                 {menteeTaskList?.task_name}
               </Typography>
-              <Typography className="!text-[#18283D] !text-[14px]">
+              {/* <Typography className="!text-[#18283D] !text-[14px]">
                 Due date:{" "}
                 {menteeTaskList.due_date
                   ? moment(menteeTaskList.due_date).format("MM-DD-YYYY")
                   : "-"}
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack spacing={3} className="px-[35px] py-[22px]">
               <Typography
