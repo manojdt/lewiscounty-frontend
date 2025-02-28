@@ -1894,7 +1894,7 @@ export const ProgramInformationFields = [
       { key: "false", value: "No" },
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
     for: ["mentor"],
