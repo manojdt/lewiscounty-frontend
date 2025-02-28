@@ -5,7 +5,6 @@ import {
   useLocation,
   useNavigate,
   useParams,
-  useSearchParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ProgramSteps from "./ProgramsSteps";
@@ -319,7 +318,6 @@ export default function CreatePrograms() {
                 });
                 bodyFormData.append(field, JSON.stringify(updateGoals));
               } else if (field === "prerequisites") {
-                console.log("prerequisites==>", fieldData[field]);
                 // For goals, set mentor_id
                 const updatePrerequisites = fieldData[field].map((item) => {
                   // Create a base object with required fields
@@ -399,9 +397,9 @@ export default function CreatePrograms() {
               bodyFormData,
             });
           } else {
-            for (let [key, value] of bodyFormData.entries()) {
-              console.log(`formData: ${key}: ${value}`);
-            }
+            // for (let [key, value] of bodyFormData.entries()) {
+            //   console.log(`formData: ${key}: ${value}`);
+            // }
             if (isReopen) {
               bodyFormData.append("reopen_program_id", params?.id);
             }

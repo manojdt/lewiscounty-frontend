@@ -45,6 +45,7 @@ import { useGetAllProgramsQuery } from "../../features/program/programApi.servic
 import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
 import CategoryFilter from "../../shared/Card/CategoryFilterPopup";
 import { buttonStyle } from "../../utils";
+import DateFilterComponent from "../../shared/DateFilterComponent/DateFilterComponent";
 
 const CustomPagination = ({
   totalItems = 200,
@@ -174,6 +175,10 @@ export default function Programs() {
   const isBookmark = searchParams.get("is_bookmark");
   const programListView = searchParams.get("programView");
   const categoryFilter = searchParams.get("category_id");
+  const [selectedDate1, setSelectedDate1] = useState(new Date());
+  const [currentView1, setCurrentView1] = useState("day");
+  console.log("currentView1", currentView1);
+  console.log("selectedDate1", selectedDate1);
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -203,6 +208,20 @@ export default function Programs() {
       //   role === "admin" && filterType === programActionStatus.program_assign,
     }
   );
+
+  const handleDateChange1 = (date, viewMode) => {
+    setSelectedDate1(date);
+    setCurrentView1(viewMode);
+    console.log("API params could include:", {
+      date: date,
+      viewType: viewMode,
+    });
+  };
+
+  const handleViewChange1 = (viewMode) => {
+    setCurrentView1(viewMode);
+    console.log("View changed to:", viewMode);
+  };
 
   const [openCategory, setOpenCategory] = React.useState(false);
   const token = localStorage.getItem("access_token");
@@ -771,24 +790,21 @@ export default function Programs() {
           ) : null}
         </Backdrop>
         {userInfo?.data?.is_registered && <div> Programs </div>}
-        {userInfo &&
-          userInfo.data &&
-          (userInfo.data.role === "mentor" ||
-            userInfo.data.role === "admin") && (
-            <div>
-              <button
-                onClick={() => navigate("/create-programs")}
-                className="text-[13px] px-4 py-4 !text-white rounded-[6px]"
-                style={{
-                  background:
-                    "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
-                  borderRadius: "5px",
-                }}
-              >
-                Create New Program
-              </button>
-            </div>
-          )}
+        {userInfo && userInfo.data && userInfo.data.role === "admin" && (
+          <div>
+            <button
+              onClick={() => navigate("/create-programs")}
+              className="text-[13px] px-4 py-4 !text-white rounded-[6px]"
+              style={{
+                background:
+                  "linear-gradient(94.18deg, #00AEBD -38.75%, #1D5BBF 195.51%)",
+                borderRadius: "5px",
+              }}
+            >
+              Create New Program
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
@@ -866,6 +882,13 @@ export default function Programs() {
                     <option value="year">Year</option>
                   </select>
                 </p>
+                {/* <DateFilterComponent
+                  label="Select Date"
+                  selectLabel="View Type"
+                  value={selectedDate1}
+                  onChange={handleDateChange1}
+                  onViewChange={handleViewChange1}
+                /> */}
                 <div className="lg:hidden">
                   <ProgramMobileDropDown
                     // cardTitle={"Program Types"}

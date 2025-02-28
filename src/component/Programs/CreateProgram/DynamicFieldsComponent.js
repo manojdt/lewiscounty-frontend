@@ -8,14 +8,9 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
-  IconButton,
   Box,
-  InputAdornment,
-  Typography,
 } from "@mui/material";
 import { Controller, useFormContext, useFieldArray } from "react-hook-form";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import moment from "moment";
 import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
 import { Button as MuiButton } from "@mui/material";
@@ -95,7 +90,7 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
           helperText={
             errors?.[fieldType]?.[index]?.field_options?.[0]?.title?.message
           }
-          sx={{ bgcolor: "#fff"}}
+          sx={{ bgcolor: "#fff" }}
         />
       </div>
     );
@@ -292,6 +287,7 @@ const DynamicFieldsComponent = ({
         return (
           <div className="relative">
             <CustomDateTimePicker
+              disabled={disableDateFields(nestedField.name)}
               placeholder={"mm/dd/yyyy hh:mm AM/PM"}
               {...register(
                 fieldName,
@@ -307,16 +303,8 @@ const DynamicFieldsComponent = ({
               onChange={(newValue) => {
                 setValue(fieldName, newValue ? newValue.toISOString() : null);
               }}
-              minDate={
-                fieldType === "goals" && nestedField.name === "start_date"
-                  ? moment(start_date)
-                  : undefined
-              }
-              maxDate={
-                fieldType === "goals" && nestedField.name === "end_date"
-                  ? moment(end_date)
-                  : undefined
-              }
+              minDate={fieldType === "goals" ? moment(start_date) : undefined}
+              maxDate={fieldType === "goals" ? moment(end_date) : undefined}
               error={!!errors?.[fieldType]?.[index]?.[nestedField.name]}
               helperText={
                 errors?.[fieldType]?.[index]?.[nestedField.name]?.message

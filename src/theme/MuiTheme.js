@@ -31,7 +31,7 @@ let MuiTheme = createTheme({
         variant: "contained",
         color: "primary",
       },
-    },  
+    },
     MuiTextField: {
       defaultProps: {
         variant: "outlined",
@@ -39,12 +39,14 @@ let MuiTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          background: "#1D5BBF0D",
-          border: "none",
-          "& .MuiOutlinedInput-notchedOutline": {
+          "& .MuiInputBase-root": {
+            background: "#1D5BBF0D",
             border: "none",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
           },
-        },        
+        },
       },
     },
     MuiAvatar: {
