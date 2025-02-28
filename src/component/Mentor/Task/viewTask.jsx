@@ -276,7 +276,7 @@ const ViewTask = () => {
                 <Box className="!border !border-[#1D5BBF80] rounded-[3px] mt-5">
                     <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} className='!border-b-2 !border-[#1D5BBF80] px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]'>{taskDetails.task_name}</Typography>
-                        <Typography className='!text-[#18283D] !text-[14px]'>Due date: {moment(taskDetails.due_date).format("MM-DD-YYYY")}</Typography>
+                        {/* <Typography className='!text-[#18283D] !text-[14px]'>Due date: {moment(taskDetails.due_date).format("MM-DD-YYYY")}</Typography> */}
                     </Stack>
                     <Stack spacing={3} className='px-[35px] py-[22px]'>
                         <Typography className='!text-[#18283D] !text-[16px]' sx={{ fontWeight: 500 }}>

@@ -723,6 +723,10 @@ const MentorTaskDetails = () => {
       title: "Program Start Date",
       value: dateFormatRever(menteeTaskList?.program_startdate),
     },
+    {
+      title: "Task Start Date",
+      value: dateFormatRever(menteeTaskList?.start_date),
+    },
   ];
 
   const rightGridData = [
@@ -733,6 +737,10 @@ const MentorTaskDetails = () => {
     {
       title: "Program End Date",
       value: dateFormatRever(menteeTaskList?.program_enddate),
+    },
+    {
+      title: "Task End Date",
+      value: dateFormatRever(menteeTaskList?.end_date),
     },
   ];
 
@@ -953,12 +961,12 @@ const MentorTaskDetails = () => {
               >
                 {menteeTaskList?.task_name}
               </Typography>
-              <Typography className="!text-[#18283D] !text-[14px]">
+              {/* <Typography className="!text-[#18283D] !text-[14px]">
                 Due date:{" "}
                 {menteeTaskList.due_date
                   ? moment(menteeTaskList.due_date).format("MM-DD-YYYY")
                   : "-"}
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack spacing={3} className="px-[35px] py-[22px]">
               <Typography

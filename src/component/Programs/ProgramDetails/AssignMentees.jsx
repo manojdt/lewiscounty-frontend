@@ -857,6 +857,31 @@ export default function AssignMentees() {
                                     : null
                                 }
 
+                                minTime={
+                                  field?.name === "start_date"
+                                    ? moment().format("MM-DD-YYYY") >=
+                                      moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                      ).format("MM-DD-YYYY")
+                                      ? moment()
+                                      : moment().format("MM-DD-YYYY") <=
+                                        moment(
+                                          type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                        ).format("MM-DD-YYYY")
+                                      ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                      : moment()
+                                    : field?.name === "end_date" &&
+                                      getValues("start_date")
+                                    ? moment(getValues("start_date"))
+                                    : moment()
+                                }
+                                maxTime={
+                                  state?.data?.program_enddate
+                                    ? moment(state?.data?.program_enddate)
+                                    : selectedProgram?.end_date
+                                    ? moment(selectedProgram?.end_date)
+                                    : null
+                                }
+
                                 // new start
 
                                 // minDate={
