@@ -13,7 +13,8 @@ const DonutChart = ({data = [],primaryColor='',secondaryColor = '',centeredData=
         colors:colors, // Blue & Yellow
         legend: { position: "right", alignment: "center" },
         pieSliceText: "none", // Hides slice labels
-        chartArea: { width: "100%", height: "100%" },
+        chartArea: { width: "100%", height: "100%", left:'10%' // Adjust left padding
+            },
         fontName: "Arial",
         fontSize: 14,
       };
@@ -32,7 +33,7 @@ const DonutChart = ({data = [],primaryColor='',secondaryColor = '',centeredData=
         style={{
           position: "absolute",
           top: "50%",
-          left: "32%",
+          left: "38%",
           transform: "translate(-50%, -50%)",
           textAlign: "center",
           fontWeight: "bold",

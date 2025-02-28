@@ -347,7 +347,7 @@ export const topProgramListColumns =[
   flex: 1,
   id: 1,
   renderCell : (params) => {
-    return <>{params?.row?.categories?.[0]?.name??'...'}</>
+    return <>{params?.row?.category?.[0]??'...'}</>
   }
 },
 {
