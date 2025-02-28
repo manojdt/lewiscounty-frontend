@@ -1695,7 +1695,7 @@ export default function ProfileView() {
                   )}
 
                 {/* This is Approved and Rejected status shows when come from program Join */}
-                {from === "program_join" &&
+                {/* {from === "program_join" &&
                   !["new", "pending"].includes(requestData?.status) && (
                     <div
                       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
@@ -1715,7 +1715,29 @@ export default function ProfileView() {
                         ? "Rejected"
                         : reqStatus[requestData?.status]}
                     </div>
-                  )}
+                  )} */}
+                  
+                  {from === "program_join" &&
+      !["new", "pending"].includes(requestData?.status) && (
+        <div
+          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
+          }`}
+        >
+          {requestData?.status === "rejected" ? <CancelIcon /> : <VerifiedIcon />}
+          <p>
+            {requestData?.status === "approved"
+              ? "Approved"
+              : requestData?.status === "rejected"
+              ? "Rejected"
+              : reqStatus[requestData?.status]}
+          </p>
+        </div>
+      )}
+
+
+
+                  
 
                 {from !== "program_join" && type !== "view" && (
                   <div
