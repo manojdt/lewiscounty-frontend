@@ -527,13 +527,13 @@ export default function Admin() {
           </div> */}
 
         {/* </div> */}
-        <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
+        {/* <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
           <MemberRequest />
-        </div>
+        </div> */}
 
-        <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
+        {/* <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
           <ProgramFeeds feedsList={feeds?.results} />
-        </div>
+        </div> */}
       </div>
         </div>
       </div>
