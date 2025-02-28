@@ -4,8 +4,8 @@ let MuiTheme = createTheme({
   palette: {
     primary: {
       main: "#1D5BBF",
-      light:"#1D5BBF0D"
-    }
+      light: "#1D5BBF0D",
+    },
   },
   typography: {
     fontFamily: ["Plus Jakarta Sans", "sans-serif"].join(","),
@@ -28,36 +28,33 @@ let MuiTheme = createTheme({
         size: "large",
         disableElevation: true,
         disableTouchRipple: true,
-        variant: 'contained',
-        color: 'primary'
+        variant: "contained",
+        color: "primary",
       },
-    },
-    MuiInputBase: {
+    },  
+    MuiTextField: {
       defaultProps: {
         variant: "outlined",
+        fullWidth: true,
       },
       styleOverrides: {
         root: {
           background: "#1D5BBF0D",
           border: "none",
           "& .MuiOutlinedInput-notchedOutline": {
-            border: "none"
-          }
-        },
-      }
-    },
-    MuiTextField: {
-      defaultProps: {
-        fullWidth: true
-      }
+            border: "none",
+          },
+        },        
+      },
     },
     MuiAvatar: {
       defaultProps: {
         variant: "rounded",
         sx: {
-          width: 25, height: 25
-        }
-      }
+          width: 25,
+          height: 25,
+        },
+      },
     },
     MuiDataGrid: {
       defaultProps: {
@@ -71,9 +68,9 @@ let MuiTheme = createTheme({
           "& .MuiDataGrid-cell:focus-within": {
             outline: "none",
           },
-        }
-      }
-    }
+        },
+      },
+    },
   },
 });
 

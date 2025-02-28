@@ -29,6 +29,7 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
     control,
     watch,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -36,13 +37,37 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
   const {
     fields: optionFields,
     append: appendOption,
-    remove: removeOption,
+    // remove: removeOption,
+    replace: replaceOptions,
   } = useFieldArray({
     control,
     name: `${fieldType}.${index}.field_options`,
   });
 
   const selectedFieldType = watch(`${fieldType}.${index}.field_type`);
+  const previousFieldType = React.useRef(selectedFieldType);
+
+  // Reset field_options when field_type changes
+  useEffect(() => {
+    if (selectedFieldType !== previousFieldType.current) {
+      // Field type has changed, reset options
+      if (selectedFieldType === "memo" || selectedFieldType === "file") {
+        // For memo and file, add just one empty option and clear any existing values
+        replaceOptions([{ title: "" }]);
+        // Clear any existing values (important!)
+        setValue(`${fieldType}.${index}.field_options.0.title`, "");
+      } else if (
+        selectedFieldType === "radio" ||
+        selectedFieldType === "checkbox"
+      ) {
+        // For radio and checkbox, add one empty option to start
+        replaceOptions([{ title: "" }]);
+        // Clear any existing values (important!)
+        setValue(`${fieldType}.${index}.field_options.0.title`, "");
+      }
+      previousFieldType.current = selectedFieldType;
+    }
+  }, [selectedFieldType, replaceOptions, setValue, fieldType, index]);
 
   // Initialize options if needed
   useEffect(() => {
@@ -60,8 +85,9 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
   // For memo and file types, render a single input field
   if (selectedFieldType === "memo" || selectedFieldType === "file") {
     return (
-      <div className={`w-full mt-4`}>
+      <div className={`w-[50%] mt-4`}>
         <TextField
+          variant="standard"
           fullWidth
           placeholder="Enter field value"
           {...register(`${fieldType}.${index}.field_options.0.title`)}
@@ -79,8 +105,9 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
   return (
     <div>
       {optionFields.map((option, optionIndex) => (
-        <Box key={option.id} className={`w-full mt-2`}>
+        <Box key={option.id} className={`w-[50%] mt-2`}>
           <TextField
+            variant="standard"
             fullWidth
             placeholder={`Option ${optionIndex + 1}`}
             {...register(
