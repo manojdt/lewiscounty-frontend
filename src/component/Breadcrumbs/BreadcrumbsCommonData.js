@@ -77,6 +77,8 @@ export const requestPageBreadcrumbs = {
   adminMemberChat : "adminMemberchat",
   menteesProfileCounts : "menteesProfileCount",
   dashboardRecentMembers : "dashboardRecentMembers",
+  newMenteeQuestions : "newMenteeQuestions",
+  createNewusers : "createNewUser",
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -1167,6 +1169,47 @@ export const menteesProfileCounts = (name) => {
     },
     {
       label: `Profile`,
+    },
+  ];
+}; 
+
+//dashboard recent members
+export const dashboard_recent_members = () => {
+  
+  return [
+    {
+      label: "Dashboard",
+      path: -1,
+    },
+    {
+      label: `Member Requests`,
+    },
+  ];
+}; 
+
+//new mentee questions
+export const new_mentee_questions = () => {
+  
+  return [
+    {
+      label: "Active Programs",
+      path: -1,
+    },
+    {
+      label: `Questions`,
+    },
+  ];
+}; 
+//create new user
+export const new_user_create = () => {
+  
+  return [
+    {
+      label: "Member",
+      path: -1,
+    },
+    {
+      label: `Create New User`,
     },
   ];
 }; 

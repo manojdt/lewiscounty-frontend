@@ -2,6 +2,7 @@ import { dateFormat, formatRenderCellDateValues } from ".";
 import { CourseLevelOptions } from "./formFields";
 import StarColorIcon from '../assets/icons/starColor.svg';
 import { programStatusColor, programStatusText, requestStatusColor, requestStatusText } from "./constant";
+import StatusIndicator from "../shared/StatusIndicator/StatusIndicator";
 
 export const myMenteeColumns = [
   {
@@ -211,13 +212,13 @@ export const certificateColumns = [{
         id: 1,
         for: ['mentor', 'mentee','admin']
     },
-    {
-        field: 'program_location',
-        headerName: 'Location',
-        flex: 1,
-        id: 1,
-        for: ['mentee']
-    },
+    // {
+    //     field: 'program_location',
+    //     headerName: 'Location',
+    //     flex: 1,
+    //     id: 1,
+    //     for: ['mentee']
+    // },
     {
         field: 'start_date',
         headerName: 'Start Date',
@@ -407,20 +408,29 @@ export const programListColumns = [
     headerName: 'Status',
     flex: 1,
     id: 5,
-    renderCell: (params) => {
-        return <>
-            <div className='cursor-pointer flex items-center justify-center h-full relative'>
+    // renderCell: (params) => {
+    //     return <>
+    //         <div className='cursor-pointer flex items-center justify-center h-full relative'>
 
-                <span className='w-[100px] flex justify-center h-[30px] px-4'
-                    style={{
-                        background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
-                        borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
-                    }}>
-                    {programStatusText?.[params?.row?.status]}
-                </span>
-            </div>
-        </>
-    }
+    //             <span className='w-[100px] flex justify-center h-[30px] px-4'
+    //                 style={{
+    //                     background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
+    //                     borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
+    //                 }}>
+    //                 {programStatusText?.[params?.row?.status]}
+    //             </span>
+    //         </div>
+    //     </>
+    // }
+    renderCell: (params) => {
+      return (
+        <div className="flex items-center  h-full w-full">
+          <StatusIndicator status={params.row.status}>
+          </StatusIndicator>
+        </div>
+      );
+    },
+    
 },
   // {
   //     field: 'mentor_manager_id',

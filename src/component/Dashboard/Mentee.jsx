@@ -44,7 +44,6 @@ export const Mentee = () => {
   const [topMentotList, setTopMentorList] = useState([]);
   const [openCategory, setOpenCategory] = React.useState(false);
   const userpragrams = useSelector((state) => state.userPrograms);
-  console.log(userpragrams)
   const userInfo = useSelector((state) => state.userInfo);
   const { feeds } = useSelector((state) => state.feeds);
   const token = localStorage.getItem("access_token");
@@ -126,7 +125,7 @@ export const Mentee = () => {
     }
   };
   useEffect(() => {
-    if (role !== "" && userInfo?.data?.is_registered) {
+    if (role !== "" && userInfo?.data?.is_registered&&searchParams.get("type")) {
       getPrograms();
     }
   }, [searchParams, role]);
@@ -269,7 +268,7 @@ export const Mentee = () => {
             <UserInfoCard />
               {topPrograms&&topPrograms?.length>0&&
                       <div className="mt-4">
-                        <TopProgramsCard topProgramsList={topPrograms}/>
+                        <TopProgramsCard topProgramsList={topPrograms} role={role}/>
                       </div>}
             <div
               className="recent-request mt-4"
@@ -481,7 +480,7 @@ export const Mentee = () => {
                   borderRadius: "10px",
                 }}
               >
-                <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
+                {/* <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
                   <div className="flex gap-4">
                     <div
                       className="card-dash"
@@ -493,7 +492,7 @@ export const Mentee = () => {
                     <h4>Program Feeds</h4>
                   </div>
                   <div className="flex gap-4 items-center">
-                    {/* <img src={SearchIcon} alt="statistics" /> */}
+                    <img src={SearchIcon} alt="statistics" />
                     <p
                       className="text-[12px] py-2 px-2 cursor-pointer"
                       onClick={() => navigate("/feeds")}
@@ -505,9 +504,9 @@ export const Mentee = () => {
                       View All
                     </p>
                   </div>
-                </div>
+                </div> */}
 
-                <div className="content flex overflow-x-auto">
+                {/* <div className="content flex overflow-x-auto">
                   {feeds?.results?.map((programFeeds, index) => (
                     // <div
                     //   key={index}
@@ -571,7 +570,7 @@ export const Mentee = () => {
 
                     <FeedCard programFeeds={programFeeds} />
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

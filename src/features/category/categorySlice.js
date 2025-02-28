@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { acceptMember, createCategory, deleteCategory, getCategory, getCategoryView, updateCategoryLocalState } from "../../services/category";
-
+//initialstate
 const initialState = {
     formDetails: {},
     categories: [],

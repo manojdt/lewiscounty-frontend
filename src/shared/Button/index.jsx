@@ -9,6 +9,9 @@ export const Button = (props) => {
     if (btnCategory === 'secondary') {
         customStyle = { border: '1px solid rgba(29, 91, 191, 1)', background: '#fff', color: 'rgba(29, 91, 191, 1)', ...btnStyle }
     }
+    if (btnCategory === 'secondaryfill') {
+        customStyle = { background: 'rgba(29, 91, 191, 1)',  color: '#fff', ...btnStyle }
+    }
     return (
         <button
             type={btnType}

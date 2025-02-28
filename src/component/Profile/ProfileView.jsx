@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared";
 import {
   useLocation,
@@ -8,9 +8,10 @@ import {
 } from "react-router-dom";
 import ProfileImageIcon from "../../assets/icons/profile-image-icon.svg";
 import CancelIcon from "../../assets/images/cancel1x.png";
+import CancelIconn from "@mui/icons-material/Cancel";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
-
+import ArrowDown from "../../assets/icons/blue-arrow-down.svg";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import SearchIcon from "../../assets/icons/search.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,6 +54,8 @@ import { categoryColumns } from "../../mock";
 import { followBtnText, pipeUrls, requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
+import VerifiedIcon from "@mui/icons-material/Verified";
+
 import { updateProfile } from "../../services/profile";
 import {
   admin_menteeMember,
@@ -68,6 +71,7 @@ import {
   topMentorPage,
   topmentorDashBoard,
   menteesProfileCounts,
+  dashboard_recent_members,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { allProfileSections } from "./tabs/ProfileTab";
@@ -78,6 +82,8 @@ import api from "../../services/api";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import { dateFormat } from "../../utils";
 import { activateUser, deactivateUser } from "../../services/members";
+import GoalsAndExpectatonsSection from "./section-edit/GoalsAndExpectatonsSection";
+import MenteeExpectionAndGoalsSection from "./section-edit/MenteeExpectionAndGoalsSection";
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -151,6 +157,8 @@ export default function ProfileView() {
     : "Mentee";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+    const contentRef = useRef(null);
+    const [showAll, setShowAll] = useState(false);
   const { requestData } = useSelector((state) => state.userList);
   const {
     register: registerDeactivate,
@@ -668,6 +676,7 @@ export default function ProfileView() {
     const programDetails = programDetailsProfile();
     const dashBoardTop = topmentorDashBoard();
     const menteesProfile = menteesProfileCounts();
+    const dashboardRecent = dashboard_recent_members();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
@@ -705,6 +714,9 @@ export default function ProfileView() {
       case requestPageBreadcrumbs.menteesProfileCounts:
         setBreadcrumbsArray(menteesProfile);
         break;
+        case requestPageBreadcrumbs.dashboardRecentMembers:
+        setBreadcrumbsArray(dashboard_recent_members);
+        break;
       case "discussion":
         break;
       default:
@@ -717,9 +729,19 @@ export default function ProfileView() {
     }
   }, [breadcrumbsType]);
 
-  const profileSection = allProfileSections.filter((section) =>
-    ["Personal Information"]?.includes(section.title)
-  );
+  const profileSection = allProfileSections.filter((section) => {
+    // Skip duplicate Goals sections
+    if (section.title === "Goals") {
+      // For mentor, only keep GoalsAndExpectatonsSection
+      if (userDetails?.role === "mentor") {
+        return section.component.type === GoalsAndExpectatonsSection;
+      }
+      // For mentee, only keep MenteeExpectionAndGoalsSection
+      return section.component.type === MenteeExpectionAndGoalsSection;
+    }
+    // Keep all other sections that match the role
+    return roleBasedSections[userDetails?.role]?.includes(section.title);
+  });
 
   const getApprovalStatus = () => {
     const member_status = searchParams.get("member_status");
@@ -1439,7 +1461,7 @@ export default function ProfileView() {
                 </div>
               )} */}
 
-            {role !== "admin" && (
+            {/* {role !== "admin" && (
               <>
                 {(state?.data?.status === "new" ||
                   requestData?.status === "new") &&
@@ -1542,7 +1564,95 @@ export default function ProfileView() {
                   </>
                 )}
               </>
-            )}
+            )} */}
+
+{role !== "admin" && (
+  <>
+    {(state?.data?.status === "new" || requestData?.status === "new") &&
+      ["new", "pending"].includes(requestData?.status) && (
+        <>
+          <div className="flex gap-4 pt-10">
+            <button
+              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
+              onClick={() => handleMemberCancelRequest()}
+            >
+              <CancelIconn /> Reject
+            </button>
+            <button
+              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
+              onClick={() => handleMemberAcceptRequest()}
+            >
+              <VerifiedIcon /> Approve
+            </button>
+          </div>
+        </>
+      )}
+
+    {(state?.data?.status === "approved" ||
+      state?.data?.status === "rejected" ||
+      requestData?.status === "approved" ||
+      requestData?.status === "rejected") && (
+      <div className="py-9">
+        <div
+          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
+          }`}
+        >
+          {requestData?.status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
+          <p>
+            {requestData?.status === "approved"
+              ? "Approved"
+              : requestData?.status === "rejected"
+              ? "Rejected"
+              : reqStatus[state?.data?.status]}
+          </p>
+        </div>
+      </div>
+    )}
+
+    {role === "mentor" &&
+      searchParams.has("type") &&
+      searchParams.get("type") === "mentee_request" &&
+      searchParams.has("request_id") &&
+      searchParams.get("request_id") !== "" &&
+      ["new", "pending"].includes(userDetails?.approve_status) && (
+        <div className="flex gap-4 pt-10">
+          <button
+            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
+            onClick={() => handleMemberCancelRequest()}
+          >
+            <CancelIconn /> Reject
+          </button>
+          <button
+            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
+            onClick={() => handleMemberAcceptRequest()}
+          >
+            <VerifiedIcon /> Approve
+          </button>
+        </div>
+      )}
+
+    {role !== "mentor" && (
+      <>
+        <Button
+          onClick={handleShowPopup}
+          btnType="button"
+          btnCategory="secondary"
+          disabled={followInfo.is_follow === "waiting"}
+          btnName={followBtnText[followInfo?.is_follow]}
+          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
+        />
+        <Button
+          btnType="button"
+          btnName="Chat"
+          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
+          onClick={() => navigate("/discussions")}
+        />
+      </>
+    )}
+  </>
+)
+}
 
             {role === "admin" && (
               <div className="flex gap-4 items-center">
@@ -1550,26 +1660,42 @@ export default function ProfileView() {
                 {from !== "program_join" &&
                   !member_state &&
                   !["new", "pending"].includes(userDetails?.approve_status) && (
+                    // <div
+                    //   className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+                    //   style={{
+                    //     ...reqStatusColor[
+                    //       approvalLabel === "Active" ||
+                    //       userDetails?.approve_status === "approved"
+                    //         ? "approved"
+                    //         : approvalLabel === "Deactive" ||
+                    //           userDetails?.approve_status === "rejected"
+                    //         ? "rejected"
+                    //         : userDetails?.approve_status
+                    //     ],
+                    //   }}
+                    // >
+                    //   {approvalLabel}
+                    // </div>
                     <div
-                      className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-                      style={{
-                        ...reqStatusColor[
-                          approvalLabel === "Active" ||
-                          userDetails?.approve_status === "approved"
-                            ? "approved"
-                            : approvalLabel === "Deactive" ||
-                              userDetails?.approve_status === "rejected"
-                            ? "rejected"
-                            : userDetails?.approve_status
-                        ],
-                      }}
-                    >
-                      {approvalLabel}
-                    </div>
+                    className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+                      userDetails?.approve_status === "rejected" ? "text-red-500" : "text-[#16B681]"
+                    }`}
+                  >
+                    {userDetails?.approve_status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
+                    <p>
+                      {approvalLabel === "Active" || userDetails?.approve_status === "approved"
+                        ? "Approved"
+                        : approvalLabel === "Deactive" || userDetails?.approve_status === "rejected"
+                        ? "Rejected"
+                        : approvalLabel}
+                    </p>
+                  </div>
+                  
+
                   )}
 
                 {/* This is Approved and Rejected status shows when come from program Join */}
-                {from === "program_join" &&
+                {/* {from === "program_join" &&
                   !["new", "pending"].includes(requestData?.status) && (
                     <div
                       className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
@@ -1589,7 +1715,29 @@ export default function ProfileView() {
                         ? "Rejected"
                         : reqStatus[requestData?.status]}
                     </div>
-                  )}
+                  )} */}
+                  
+                  {from === "program_join" &&
+      !["new", "pending"].includes(requestData?.status) && (
+        <div
+          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
+          }`}
+        >
+          {requestData?.status === "rejected" ? <CancelIcon /> : <VerifiedIcon />}
+          <p>
+            {requestData?.status === "approved"
+              ? "Approved"
+              : requestData?.status === "rejected"
+              ? "Rejected"
+              : reqStatus[requestData?.status]}
+          </p>
+        </div>
+      )}
+
+
+
+                  
 
                 {from !== "program_join" && type !== "view" && (
                   <div
@@ -1738,7 +1886,16 @@ export default function ProfileView() {
             </div>
           ))}
         </div> */}
-
+ <div
+            ref={contentRef}
+            style={{
+              maxHeight: showAll
+                ? `${contentRef.current.scrollHeight}px`
+                : "380px",
+              overflow: "hidden",
+              transition: "max-height 0.5s ease",
+            }}
+          >
         <FormContextProvider initialValues={userInfoState}>
           {profileSection.map((section, index) => (
             <Accordian key={index} title={section.title} defaultValue={true}>
@@ -1746,7 +1903,20 @@ export default function ProfileView() {
             </Accordian>
           ))}
         </FormContextProvider>
-
+</div>
+<div
+              className="underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? "View less" : "View more"}
+              <img
+                className={`mt-1 transition-all duration-300 ${
+                  showAll ? "rotate-180" : ""
+                }`}
+                src={ArrowDown}
+                alt=""
+              />
+            </div>
         <div className="col-span-2">
           {/* {userDetails?.documents?.length > 0 && (
             <Stack>

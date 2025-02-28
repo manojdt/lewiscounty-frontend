@@ -1078,7 +1078,7 @@ export const myRequestOverview = [
     for: ["admin", "mentor", "mentee"],
   },
   {
-    name: "Member Join Requests",
+    name: "Mentor Join Requests",
     key: RequestStatus.memberJoinRequest,
     count: 0,
     status: RequestStatus.memberJoinRequest.key,
@@ -1091,13 +1091,13 @@ export const myRequestOverview = [
   //   status: RequestStatus.resourceAccessRequest.key,
   //   for: ['admin', 'mentor'],
   // },
-  {
-    name: "Goal Requests",
-    key: RequestStatus.newGoalsRequests.key,
-    count: 0,
-    status: RequestStatus.newGoalsRequests.key,
-    for: ["mentee", "mentor"],
-  },
+  // {
+  //   name: "Goal Requests",
+  //   key: RequestStatus.newGoalsRequests.key,
+  //   count: 0,
+  //   status: RequestStatus.newGoalsRequests.key,
+  //   for: ["mentee", "mentor"],
+  // },
   {
     name: "Certificate Requests",
     key: RequestStatus.certificateRequest,
@@ -1112,13 +1112,13 @@ export const myRequestOverview = [
     status: RequestStatus.reportRequest.key,
     for: ["admin", "mentor"],
   },
-  {
-    name: "Testimonial Requests",
-    key: RequestStatus.testimonicalRequest,
-    count: 0,
-    status: RequestStatus.testimonicalRequest.key,
-    for: ["admin", "mentor"],
-  },
+  // {
+  //   name: "Testimonial Requests",
+  //   key: RequestStatus.testimonicalRequest,
+  //   count: 0,
+  //   status: RequestStatus.testimonicalRequest.key,
+  //   for: ["admin", "mentor"],
+  // },
   // {
   //   name: 'Technical Support Requests',
   //   key: RequestStatus.technicalSupportRequest,
@@ -1126,13 +1126,13 @@ export const myRequestOverview = [
   //   status: RequestStatus.technicalSupportRequest.key,
   //   for: ['admin'],
   // },
-  {
-    name: "Goal Requests",
-    key: RequestStatus.goalRequest,
-    count: 0,
-    status: RequestStatus.goalRequest.key,
-    for: ["admin"],
-  },
+  // {
+  //   name: "Goal Requests",
+  //   key: RequestStatus.goalRequest,
+  //   count: 0,
+  //   status: RequestStatus.goalRequest.key,
+  //   for: ["admin"],
+  // },
   // {
   //   name: 'Extension Requests',
   //   key: RequestStatus.extendedRequests,
@@ -1171,13 +1171,13 @@ export const menteesRequestOverview = [
   //   status: RequestStatus.resourceAccessRequest.key,
   //   for: ['mentor', 'admin'],
   // },
-  {
-    name: "Goal Requests",
-    key: RequestStatus.goalRequest,
-    count: 0,
-    status: RequestStatus.goalRequest.key,
-    for: ["admin"],
-  },
+  // {
+  //   name: "Goal Requests",
+  //   key: RequestStatus.goalRequest,
+  //   count: 0,
+  //   status: RequestStatus.goalRequest.key,
+  //   for: ["admin"],
+  // },
 ];
 
 export const adminRequestOverview = [

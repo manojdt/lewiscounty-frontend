@@ -1793,7 +1793,6 @@ export const ProgramInformationFields = [
       },      
     ],
   },
-
   {
     type: "dropdown",
     name: "course_level",
@@ -2081,7 +2080,7 @@ export const ProgramFields = [ProgramInformationFields, AboutProgramFields];
 export const AssignMenteesFields = (bool = true, type, getValues) => {
   return [
     {
-      // type: type === "new" ? "dropdown" : "input",
+      
       type: "input",
       name: "program_id",
       fieldtype: "text",
@@ -2091,18 +2090,18 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
         required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
-      // disabled: bool,
+      disabled: type === "new" ? false : true,
       autoComplete: "off", // Disable browser autocomplete
       options: [],
     },
     {
       type: "input",
-      name: "task_id",
+      name: "task_name",
       fieldtype: "text",
       label: " Interaction Point/Task Name",
       placeholder: "Enter Task Name",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[48%] md:w-[48%] xl:w-[48%]",
       disabled: false,
@@ -2115,7 +2114,7 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       label: " Interaction Point/Task Description",
       placeholder: "Enter Task Description",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full",
       disabled: false,
@@ -2139,9 +2138,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "start_date",
       label: "Task Start Date and Time",
-      placeholder: "Select Program Start Date and Time",
+      placeholder: "Select Task Start Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
@@ -2149,9 +2148,9 @@ export const AssignMenteesFields = (bool = true, type, getValues) => {
       type: "date",
       name: "end_date",
       label: "Task End Date and Time",
-      placeholder: "Select Program End Date and Time",
+      placeholder: "Select Task End Date and Time",
       inputRules: {
-        // required: "This field is required",
+        required: "This field is required",
       },
       width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     },
@@ -2313,7 +2312,7 @@ export const ReportFields = (bool = false) => [
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
@@ -2324,7 +2323,7 @@ export const ReportFields = (bool = false) => [
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: bool,
@@ -2374,7 +2373,7 @@ export const EditProfileFields = [
     label: "Name",
     placeholder: "Enter Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "width-49",
     disabled: true,
@@ -2386,7 +2385,7 @@ export const EditProfileFields = [
     label: "Postion",
     placeholder: "Enter Postion",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "width-49",
   },
@@ -2678,7 +2677,7 @@ export const CreateMeetingFields = [
     label: "Select",
     placeholder: "Select Week",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: Array.from({ length: 31 }, (_, i) => i + 1).map((count) => count),
     width: "w-[49%]",
@@ -2759,7 +2758,7 @@ export const CreateMeetingFields = [
     label: "Event",
     placeholder: "Select the Event",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [
       {
@@ -2806,7 +2805,7 @@ export const CreateCertificateFields = [
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
@@ -3002,7 +3001,7 @@ export const categoryCreateEditFields = [
     label: "Category Name",
     placeholder: "Enter Category Name",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -3013,7 +3012,7 @@ export const categoryCreateEditFields = [
     label: "Description",
     placeholder: "Enter Description",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -3292,7 +3291,7 @@ export const menteeTicketCreationField = [
     label: "Ticket Subject",
     placeholder: "Ticket Subject",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
     width: "col-span-1",
@@ -3304,7 +3303,7 @@ export const menteeTicketCreationField = [
     label: "Documents Upload",
     placeholder: "",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: false,
     width: "col-span-1",
@@ -3315,7 +3314,7 @@ export const menteeTicketCreationField = [
     label: "Description",
     placeholder: "Enter Description",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
