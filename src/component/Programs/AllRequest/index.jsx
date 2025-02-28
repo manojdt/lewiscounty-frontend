@@ -1085,9 +1085,7 @@ export default function AllRequest() {
       renderCell: (params) => {
         return (
           <div className="flex items-center  h-full w-full">
-            <StatusIndicator status={params.row.status}>
-              {requestStatusText[params.row.status] || ""}
-            </StatusIndicator>
+            <StatusIndicator status={params.row.status || ""}></StatusIndicator>
           </div>
         );
       },
@@ -1236,17 +1234,16 @@ export default function AllRequest() {
       //   );
       // },
       renderCell: (params) => {
+        // Map accept to approved and cancel to rejected as needed
+        const statusCode = params.row.status === "accept" 
+          ? "approved" 
+          : params.row.status === "cancel" 
+            ? "rejected" 
+            : params.row.status;
+            
         return (
-          <div className="flex items-center  h-full w-full">
-            <StatusIndicator status={params.row.status}>
-            {requestStatusText[
-                  params?.row?.status === "accept"
-                    ? "approved"
-                    : params?.row?.status === "cancel"
-                    ? "rejected"
-                    : params?.row?.status
-                ] || ""}
-            </StatusIndicator>
+          <div className="flex items-center h-full w-full">
+            <StatusIndicator status={statusCode} />
           </div>
         );
       },
