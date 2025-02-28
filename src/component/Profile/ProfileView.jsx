@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import ProfileImageIcon from "../../assets/icons/profile-image-icon.svg";
 import CancelIcon from "../../assets/images/cancel1x.png";
+import CancelIconn from "@mui/icons-material/Cancel";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import ArrowDown from "../../assets/icons/blue-arrow-down.svg";
@@ -1460,7 +1461,7 @@ export default function ProfileView() {
                 </div>
               )} */}
 
-            {role !== "admin" && (
+            {/* {role !== "admin" && (
               <>
                 {(state?.data?.status === "new" ||
                   requestData?.status === "new") &&
@@ -1563,7 +1564,95 @@ export default function ProfileView() {
                   </>
                 )}
               </>
-            )}
+            )} */}
+
+{role !== "admin" && (
+  <>
+    {(state?.data?.status === "new" || requestData?.status === "new") &&
+      ["new", "pending"].includes(requestData?.status) && (
+        <>
+          <div className="flex gap-4 pt-10">
+            <button
+              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
+              onClick={() => handleMemberCancelRequest()}
+            >
+              <CancelIconn /> Reject
+            </button>
+            <button
+              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
+              onClick={() => handleMemberAcceptRequest()}
+            >
+              <VerifiedIcon /> Approve
+            </button>
+          </div>
+        </>
+      )}
+
+    {(state?.data?.status === "approved" ||
+      state?.data?.status === "rejected" ||
+      requestData?.status === "approved" ||
+      requestData?.status === "rejected") && (
+      <div className="py-9">
+        <div
+          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
+          }`}
+        >
+          {requestData?.status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
+          <p>
+            {requestData?.status === "approved"
+              ? "Approved"
+              : requestData?.status === "rejected"
+              ? "Rejected"
+              : reqStatus[state?.data?.status]}
+          </p>
+        </div>
+      </div>
+    )}
+
+    {role === "mentor" &&
+      searchParams.has("type") &&
+      searchParams.get("type") === "mentee_request" &&
+      searchParams.has("request_id") &&
+      searchParams.get("request_id") !== "" &&
+      ["new", "pending"].includes(userDetails?.approve_status) && (
+        <div className="flex gap-4 pt-10">
+          <button
+            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
+            onClick={() => handleMemberCancelRequest()}
+          >
+            <CancelIconn /> Reject
+          </button>
+          <button
+            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
+            onClick={() => handleMemberAcceptRequest()}
+          >
+            <VerifiedIcon /> Approve
+          </button>
+        </div>
+      )}
+
+    {role !== "mentor" && (
+      <>
+        <Button
+          onClick={handleShowPopup}
+          btnType="button"
+          btnCategory="secondary"
+          disabled={followInfo.is_follow === "waiting"}
+          btnName={followBtnText[followInfo?.is_follow]}
+          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
+        />
+        <Button
+          btnType="button"
+          btnName="Chat"
+          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
+          onClick={() => navigate("/discussions")}
+        />
+      </>
+    )}
+  </>
+)
+}
 
             {role === "admin" && (
               <div className="flex gap-4 items-center">
@@ -1592,7 +1681,7 @@ export default function ProfileView() {
                       userDetails?.approve_status === "rejected" ? "text-red-500" : "text-[#16B681]"
                     }`}
                   >
-                    {userDetails?.approve_status === "rejected" ? <CancelIcon /> : <VerifiedIcon />}
+                    {userDetails?.approve_status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
                     <p>
                       {approvalLabel === "Active" || userDetails?.approve_status === "approved"
                         ? "Approved"
