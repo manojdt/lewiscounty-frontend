@@ -1,27 +1,41 @@
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import calendar_icon from "../../assets/icons/calendar_icon.svg";
 import { Avatar } from "@mui/material";
+import { useState } from "react";
 
-const CustomDateTimePicker = ({ helperText,placeholder, error, ...restOfProps }) => {
+const CustomDateTimePicker = ({
+  helperText,
+  placeholder,
+  error,
+  disabled,
+  ...restOfProps
+}) => {
+  const [open, setOpen] = useState(false);
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <DateTimePicker
-        slots={{
-          openPickerIcon: () => (
-            <Avatar src={calendar_icon} alt={"calendar_icon"} />
-          ),
-        }}
-        slotProps={{
-          textField: {
-            error: !!error,
-            helperText,
-            ...(placeholder && { placeholder })
-          },
-        }}
-        {...restOfProps}
-      />
-    </LocalizationProvider>
+    <DateTimePicker
+      disabled={disabled}
+      open={open}
+      onClose={() => setOpen(false)}
+      slots={{
+        openPickerIcon: () => (
+          <Avatar
+            className={`${disabled ? "opacity-70" : "opacity-100"}`}
+            src={calendar_icon}
+            alt={"calendar_icon"}
+            onClick={() => setOpen(true)}
+          />
+        ),
+      }}
+      slotProps={{
+        textField: {
+          onClick: disabled ? undefined : () => setOpen(true),
+          error: !!error,
+          helperText,
+          ...(placeholder && { placeholder }),
+        },
+      }}
+      {...restOfProps}
+    />
   );
 };
 

@@ -1,103 +1,103 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import PlusIcon from "../../../assets/icons/add_popup_icon.svg";
 import UploadIcon from "../../../assets/images/image_1x.png";
 import DeleteIcon from "../../../assets/images/delete_1x.png";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import Tooltip from "../../../shared/Tooltip";
-import DownArrowIcon from "../../../assets/icons/arrowDown.svg";
 import {
   FormControl,
   FormControlLabel,
+  FormHelperText,
   MenuItem,
   Radio,
   RadioGroup,
   TextField,
 } from "@mui/material";
-import DataTable from "../../../shared/DataGrid";
-import { MentorAssignColumns } from "../../../mock";
-import MuiModal from "../../../shared/Modal";
-import { useDispatch, useSelector } from "react-redux";
-import { Button } from "../../../shared";
+import { useDispatch } from "react-redux";
 import { Button as MuiButton } from "@mui/material";
-import { formatPhoneNumber, formatZipCode } from "../../../utils/formFields";
+import { formatZipCode } from "../../../utils/formFields";
+import { CertificateColumns, MentorAssignColumns } from "../../../mock";
 import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
 import moment from "moment";
-import DeleteIconRounded from "../../../assets/icons/delete-icon.svg";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { user } from "../../../utils/constant";
-import { OverlayPanel } from "primereact/overlaypanel";
+import { MuiMenuDropDown } from "../../../shared/Dropdown/MuiMenuDropDown";
 import { getProgramAddressDetails } from "../../../services/programInfo";
-import { useDebounce } from "../../../utils";
+import { OverlayPanel } from "primereact/overlaypanel";
+import PopupTableInput from "../../../shared/PopupTableInput/PopupTableInput";
+import { WeekdaySelector } from "../../../shared/CustomWeekdaySelector/WeekdaySelector";
+import DynamicFieldsComponent from "./DynamicFieldsComponent"; // Import the new component
 
 const ProgramSteps = ({
   stepFields,
-  currentStepData,
   stepData,
-  handleAction,
   handleProgramCheck,
-  setToggleRole,
-  toggleRole,
-  mentorSearchValue,
   isMentorDataLoading,
   setMentorSearchValue,
   mentor_assign,
-  goalData,
   certificate,
-  materials,
-  members,
+  setViewDetailsInfo,
+  setViewDetails,
+  onPaginationChange,
+  tablesPagination,
 }) => {
-  const params = useParams();
-  const { admin, mentor } = user;
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
-const editType=searchParams.get("type")
-  const [currentField, setCurrentField] = useState();
-  const [selectedMentorsByField, setSelectedMentorsByField] = useState({});
-  const getRowIdentifier = (row) => {
-    return row.id;
-  };
-  const[searchTerm,setSearchTerm] = useState('');
-  const [selectedField,setSelectedField]  =useState('')
+  const location = useLocation(); // Get query parameters
+
+  // Parse query params
+  const queryParams = new URLSearchParams(location.search);
+  const isReopen = queryParams.get("status") === "isReopen";
+
+  const [anchorEl, setAnchorEl] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
-  const [isLoading,setLoading] = useState(false);
-  const searchBar = React.useRef(null);
-  const role = useSelector((state) => state.userInfo?.data?.role);
-  
+  const [isLoading, setLoading] = useState(false);
+
+  const [openEquipmentModal, setOpenEquipmentModal] = React.useState(false);
+  const searchBar = useRef(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleMoreClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleViewOptionClick = () => {
+    switch (actionModal) {
+      case "equipments":
+        handleClickViewEquipment();
+        break;
+
+      default:
+        break;
+    }
+    handleMoreClose();
+  };
+
+  const handleMenuClick = async (action) => {
+    switch (action) {
+      case "view":
+        handleViewOptionClick();
+        break;
+      default:
+        break;
+    }
+    handleMoreClose();
+  };
+  const params = useParams();
+
   const {
     register,
     formState: { errors },
-    reset,
     getValues,
     setValue,
     watch,
     control,
   } = useFormContext();
   const formValues = watch();
+
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "sub_programs",
+    name: "goals",
   });
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  React.useEffect(()=>{
-    const handleAddressFieldsAPI = (fieldName, value) => {
-     
-      if (!!value) {
-       
-          dispatch(
-            getProgramAddressDetails({ id: value, fieldName: fieldName })
-          ).then((response) => {
-            if (isLoading) {setLoading(false)};
-              setFilteredData(response?.payload?.data); 
-          });
-        }
-      }
-      handleAddressFieldsAPI(selectedField.name,debouncedSearchTerm)
-     
-  },[debouncedSearchTerm])
 
   const {
     fields: recurringFields,
@@ -107,118 +107,169 @@ const editType=searchParams.get("type")
     control,
     name: "recurring_dates",
   });
+  const {
+    fields: prerequisiteFields,
+    append: appendPrerequisiteField,
+    remove: removePrerequisiteField,
+  } = useFieldArray({
+    control,
+    name: "prerequisites",
+  });
 
   const [
-    subProgramCount,
-    is_sponsored = false,
-    sub_programs,
+    goalsCount,
+    is_sponsored,
     program_mode,
     recurring_program,
-    recurring_dates,
+    start_date,
+    end_date,
   ] = watch([
-    "no_of_subprograms",
+    "goals_count",
     "is_sponsored",
-    "sub_programs",
     "program_mode",
     "recurring_program",
-    "recurring_dates",
+    "start_date",
+    "end_date",
   ]);
+
   const handleInputClick = (e, field) => {
-    setSelectedField(field)
-    if (["zip_code", "state", "city"].includes(field.name)){
-     if (!document.getElementById("fields_overlay") && e.target.value) {
+    if (["zip_code", "state", "city"].includes(field.name))
+      if (!document.getElementById("fields_overlay") && e.target.value) {
         searchBar?.current?.toggle(e);
       }
+  };
+
+  const handleAddressFieldsAPI = (fieldName, value) => {
+    if (fieldName === "zip_code") {
+      const zipCodeFormatValue = formatZipCode(value);
+      setValue(fieldName, zipCodeFormatValue);
+    } else {
+      setValue(fieldName, value);
+    }
+    if (!!value) {
+      setTimeout(() => {
+        dispatch(
+          getProgramAddressDetails({ id: value, fieldName: fieldName })
+        ).then((response) => {
+          if (isLoading) setLoading(false);
+          if (!!response?.payload?.data?.length) {
+            setFilteredData(response?.payload?.data);
+          }
+        });
+      }, 2000);
     }
   };
-  
-  const onSearchChange= (value, fieldName) =>{
-    setSearchTerm(value)
-   if (fieldName === "zip_code") {
-    const zipCodeFormatValue = formatZipCode(value);
-    setValue(fieldName, zipCodeFormatValue);
-  } else {
-    setValue(fieldName, value);
-  }
-  }
+  const [actionModal, setActionModal] = useState("");
+
+  const handleAction = (key) => {
+    setActionModal(key);
+  };
+
+  const handleClickViewEquipment = () => {
+    setOpenEquipmentModal(true);
+  };
 
   const handleInputChange = (e, field) => {
     const { value } = e.target;
-
-    if (field.name === "phone_number") {
-      const formattedValue = formatPhoneNumber(value);
-      setValue(field.name, formattedValue);
-    }else if(["zip_code", "state", "city"].includes(field.name)) {
-       setSelectedField(field)
+    if (["zip_code", "state", "city"].includes(field.name)) {
       if (!document.getElementById("fields_overlay") && e.target.value) {
         searchBar?.current?.toggle(e);
       }
       if (!isLoading) {
         setLoading(true);
       }
-      onSearchChange(value,field.name)
-     
-    }
-     else {
+      handleAddressFieldsAPI(field.name, value);
+    } else {
       setValue(field.name, value.trimStart());
     }
   };
-  const handleSelectedRow = (newSelectedRows, fieldId) => {
-    const currentSelection = selectedMentorsByField[fieldId]?.[0];
-    const newSelection = newSelectedRows[newSelectedRows.length - 1];
 
-    setSelectedMentorsByField((prev) => ({
-      ...prev,
-      [fieldId]: !newSelection
-        ? []
-        : !currentSelection || currentSelection.id !== newSelection.id
-        ? [newSelection]
-        : [],
-    }));
+  const ViewDetailsButton = ({ onClick }) => (
+    <MuiButton size="small" onClick={onClick}>
+      View Details
+    </MuiButton>
+  );
+
+  const createUpdatedColumns = (originalColumns, type) => {
+    return originalColumns.map((col) => {
+      if (col.field === "action") {
+        return {
+          ...col,
+          renderCell: (params) => {
+            const handleClick = () => {
+              const updates = {
+                viewDetailsInfo: { [type]: params.row },
+                viewDetails: {
+                  certificate: type === "certificate",
+                },
+              };
+
+              setViewDetailsInfo((prev) => ({
+                ...prev,
+                ...updates.viewDetailsInfo,
+              }));
+
+              setViewDetails(updates.viewDetails);
+            };
+
+            return <ViewDetailsButton onClick={handleClick} />;
+          },
+        };
+      }
+
+      return col;
+    });
   };
 
-  const mentorFooterComponent = ({ selectedRows, setMentorSearchValue }) => {
-    const handleActionPopupData = () => {
-      // For mentor_id, store just the ID of the single selected row
-      const selectedId =
-        selectedRows.length > 0 ? getRowIdentifier(selectedRows[0]) : null;
-      setValue(currentField, selectedId);
-      setCurrentField("");
-      setMentorSearchValue("");
-    };
-    
+  // Create updated columns using the helper function
+  const updatedCertificateColumn = createUpdatedColumns(
+    CertificateColumns,
+    "certificate"
+  );
+  const updatedMemberColumn = createUpdatedColumns(
+    MentorAssignColumns,
+    "assign_mentor_id"
+  );
 
-    return (
-      <div className="flex gap-6 justify-center items-center py-4">
-        <button
-          onClick={() => setCurrentField("")}
-          className="py-3 px-6 rounded-sm border border-background-primary-main text-background-primary-main"
-        >
-          Cancel
-        </button>
-        <Button
-          btnCategory="primary"
-          btnName="Add"
-          onClick={() => handleActionPopupData()}
-          disabled={selectedMentorsByField.length === 0}
-        />
-      </div>
-    );
+  const updatedMentorAssignColumns = createUpdatedColumns(
+    MentorAssignColumns,
+    "mentor_id"
+  );
+
+  // Updated MODAL_CONFIG with correct handlers
+  const MODAL_CONFIG = {
+    certifications: {
+      modalTitle: "Add certificate",
+      rows: "certificate",
+      columns: updatedCertificateColumn,
+      btnName: "Add Certificate",
+    },
+    members: {
+      modalTitle: "Add Mentor",
+      rows: "assign_mentor_id",
+      columns: updatedMemberColumn,
+      btnName: "Add Mentor",
+    },
+    mentor_id: {
+      modalTitle: "Add Program Manager",
+      rows: "mentor_id",
+      columns: updatedMentorAssignColumns,
+      btnName: "Add Program Manager",
+    },
   };
 
   React.useEffect(() => {
-    const count = parseInt(subProgramCount, 10) || 0;
+    const count = parseInt(goalsCount, 10) || 0;
     const currentLength = fields.length;
 
     if (count > currentLength) {
       for (let i = currentLength; i < count; i++) {
         append({
-          admin_program_series: i + 1,
-          title: "",
+          series: i + 1,
+          name: "",
           description: "",
           start_date: "",
           end_date: "",
-          flexible_time: "",
           mentor_id: "",
         });
       }
@@ -227,15 +278,15 @@ const editType=searchParams.get("type")
         remove(i);
       }
     }
-  }, [subProgramCount, fields.length, append, remove]);
+  }, [goalsCount, fields.length, append, remove]);
 
   React.useEffect(() => {
-    if (recurring_program && recurringFields.length === 0) {
+    if (recurring_program && recurringFields?.length === 0 && !params?.id) {
       appendRecurringFields({
         start_date: "",
         end_date: "",
       });
-    } else if (!recurring_program && recurringFields.length > 0) {
+    } else if (!recurring_program && recurringFields?.length > 0) {
       // Clear recurring fields when recurring_program becomes false
       recurringFields.forEach((_, index) => {
         removeRecurringFields(index);
@@ -243,10 +294,23 @@ const editType=searchParams.get("type")
     }
   }, [
     recurring_program,
-    recurringFields.length,
+    recurringFields?.length,
     appendRecurringFields,
     removeRecurringFields,
   ]);
+
+  // Initialize prerequisites if empty
+  React.useEffect(() => {
+    // Initialize with one prerequisite item if none exists
+    if (prerequisiteFields?.length === 0 && !params?.id) {
+      appendPrerequisiteField({
+        question: "",
+        field_type: "",
+        mandatory: false,
+        field_options: [], // Initialize empty - the DynamicFieldsComponent will handle adding options as needed
+      });
+    }
+  }, [prerequisiteFields?.length, appendPrerequisiteField, params?.id]);
 
   const handleLoadFieldValues = () => {
     const fName = [];
@@ -266,67 +330,11 @@ const editType=searchParams.get("type")
     }
   }, [stepData]);
 
-  useEffect(() => {
-    if (currentStepData !== undefined && Object.keys(currentStepData).length) {
-      reset(currentStepData);
-    }
-    setValue("status", "");
-  }, []);
-
-  function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height,
-    };
-  }
-
   const handleDeleteImage = (key) => {
     setValue(key, "");
   };
 
-  const handleActionPopup = (fieldName) => {
-    // Open popup and allow user to select an item
-    setCurrentField(fieldName);
-  };
-  // Watch all start and end dates to implement cross-field validation
-
-  const getMinDate = (field, index, allDates) => {
-    if (field === "start_date") {
-      if (!allDates) return moment(); // First cycle starts from today
-
-      // For subsequent cycles, start date must be after previous cycle's end date
-      const previousEndDate = allDates
-        ? [allDates]?.[index - 1]?.[field]
-        : watch(field);
-      return previousEndDate
-        ? moment(previousEndDate).add(1, "minute")
-        : moment();
-    } else {
-      // End date must be after its start date
-      const currentStartDate = allDates
-        ? [allDates]?.[index]?.[field]
-        : watch(field);
-      return currentStartDate ? moment(currentStartDate) : moment();
-    }
-  };
-
-  const getMaxDate = (field, index, allDates) => {
-    if (field === "start_date") {
-      // Start date must be before its end date if end date is selected
-      const currentEndDate = allDates
-        ? [allDates]?.[index]?.[field]
-        : watch(field);
-      return currentEndDate ? moment(currentEndDate) : null;
-    } else {
-      // End date must be before next cycle's start date if it exists
-      const nextStartDate = allDates
-        ? [allDates]?.[index + 1]?.[field]
-        : watch(field);
-      return nextStartDate ? moment(nextStartDate) : null;
-    }
-  };
-
+  // Get date validation for fields
   const getDateValidation = (fieldName, index = null) => {
     return {
       required: `${
@@ -338,7 +346,7 @@ const editType=searchParams.get("type")
           if (fieldName === "end_date") {
             const startDate =
               index !== null
-                ? getValues(`sub_programs.${index}.start_date`)
+                ? getValues(`goals.${index}.start_date`)
                 : getValues("start_date");
 
             return (
@@ -354,7 +362,7 @@ const editType=searchParams.get("type")
           if (fieldName === "end_date") {
             const startDate =
               index !== null
-                ? getValues(`sub_programs.${index}.start_date`)
+                ? getValues(`goals.${index}.start_date`)
                 : getValues("start_date");
 
             if (
@@ -374,7 +382,7 @@ const editType=searchParams.get("type")
           if (fieldName === "end_date") {
             const startDate =
               index !== null
-                ? getValues(`sub_programs.${index}.start_date`)
+                ? getValues(`goals.${index}.start_date`)
                 : getValues("start_date");
 
             if (value && startDate) {
@@ -397,19 +405,13 @@ const editType=searchParams.get("type")
     };
   };
 
-  // Add cleanup for selectedMentorsByField when fields are removed:
-  useEffect(() => {
-    const fieldIds = fields.map((f, i) => `sub_programs.${i}.mentor_id`);
-    setSelectedMentorsByField((prev) => {
-      const newState = {};
-      Object.keys(prev).forEach((key) => {
-        if (fieldIds.includes(key)) {
-          newState[key] = prev[key];
-        }
-      });
-      return newState;
-    });
-  }, [fields.length]);
+  // Determine if fields should be disabled
+  const disablePopupField = params?.id && !isReopen;
+  const disableRecurringProgram = params?.id && !isReopen;
+  const disableDateFields = (fieldName) =>
+    params?.id &&
+    (fieldName === "start_date" || fieldName === "end_date") &&
+    !isReopen;
 
   return (
     <div>
@@ -428,26 +430,23 @@ const editType=searchParams.get("type")
 
           let watchFile = field.type === "file" ? watch(field.name) : undefined;
 
-          if (field.name === "enrollment_fees" && is_sponsored === true) {
+          if (field.name === "enrollment_fees" && is_sponsored !== false) {
+            // Only show enrollment_fees when is_sponsored is explicitly false
             return null;
           }
-          if (field.name === "sponsor_logos" && is_sponsored === false) {
+          if (field.name === "sponsor_logos" && is_sponsored !== true) {
+            // Only show sponsor_logos when is_sponsored is explicitly true
             return null;
           }
 
-          const disableFields =
-            params?.id &&
-            field.name === "program_name" &&
-            toggleRole === mentor;
+          const disableFields = params?.id && field.name === "program_name";
 
           const disableSelectFields =
             params?.id &&
-            (field.name === "course_level" || field.name === "category") &&
-            toggleRole === mentor;
-          // const disableDateFields = (fieldName) =>
-          //   params?.id &&
-          //   (fieldName === "start_date" || fieldName === "end_date") &&
-          //   role === mentor;
+            (field.name === "course_level" ||
+              field.name === "category" ||
+              field.name === "type");
+
           const onFilteredDataChange = (programInfo) => {
             ["zip_code", "state", "city"].map((item) => {
               const updated_item = item === "state" ? "state_name" : item;
@@ -456,16 +455,90 @@ const editType=searchParams.get("type")
             setValue("location", programInfo.id);
           };
 
-          const disableDateFields = (fieldName) =>
-            params?.id &&
-            (fieldName === "start_date" || fieldName === "end_date") &&
-            toggleRole === mentor &&
-            searchParams.get("type") !== "re_open";
+          if (
+            field.name === "day_numbers" &&
+            formValues?.reminder_type !== "month_week"
+          ) {
+            // Add empty space div if neither byday nor day_numbers should show
+            if (formValues?.reminder_type !== "weekly_byday") {
+              return <div key={`space-${index}`} className="w-[49%]" />;
+            }
+            return null;
+          }
 
-          const disableRecurringProgram =
-            params?.id &&
-            (field.name === "recurring_program"||(field.name==="is_sponsored"&&editType==="admin_assign_edit")) &&
-            toggleRole === mentor;
+          if (
+            field.name === "byday" &&
+            formValues?.reminder_type !== "weekly_byday"
+          ) {
+            return null;
+          }
+
+          // Handle dynamic fields rendering for goals, recurring_dates, and prerequisites
+          if (field.type === "dynamicFields") {
+            if (field.name === "goals") {
+              return (
+                <DynamicFieldsComponent
+                  key={`dynamic-${field.name}`}
+                  fieldType="goals"
+                  fields={fields}
+                  dynamicFields={field.dynamicFields}
+                  removeFieldFunction={remove}
+                  appendFieldFunction={append}
+                  formValues={formValues}
+                  disablePopupField={disablePopupField}
+                  disableDateFields={disableDateFields}
+                  handleProgramCheck={handleProgramCheck}
+                  isMentorDataLoading={isMentorDataLoading}
+                  setMentorSearchValue={setMentorSearchValue}
+                  mentor_assign={mentor_assign}
+                  onPaginationChange={onPaginationChange}
+                  tablesPagination={tablesPagination}
+                  getDateValidation={getDateValidation}
+                  start_date={start_date}
+                  end_date={end_date}
+                  MODAL_CONFIG={MODAL_CONFIG}
+                  handleAction={handleAction}
+                />
+              );
+            } else if (field.name === "recurring_dates" && recurring_program) {
+              return (
+                <DynamicFieldsComponent
+                  key={`dynamic-${field.name}`}
+                  fieldType="recurring_dates"
+                  fields={recurringFields}
+                  dynamicFields={field.dynamicFields}
+                  removeFieldFunction={removeRecurringFields}
+                  appendFieldFunction={appendRecurringFields}
+                  formValues={formValues}
+                  disablePopupField={disablePopupField}
+                  disableDateFields={disableDateFields}
+                  disableRecurringProgram={disableRecurringProgram}
+                  getDateValidation={getDateValidation}
+                  MODAL_CONFIG={MODAL_CONFIG}
+                  handleAction={handleAction}
+                />
+              );
+            } else if (field.name === "prerequisites") {
+              return (
+                <DynamicFieldsComponent
+                  key={`dynamic-${field.name}`}
+                  fieldType="prerequisites"
+                  fields={prerequisiteFields}
+                  dynamicFields={field.dynamicFields}
+                  removeFieldFunction={removePrerequisiteField}
+                  appendFieldFunction={appendPrerequisiteField}
+                  formValues={formValues}
+                  disablePopupField={disablePopupField}
+                  MODAL_CONFIG={MODAL_CONFIG}
+                  handleAction={handleAction}
+                />
+              );
+            } else {
+              return null;
+            }
+          }
+
+          // For standard field types
           return (
             <div className={`relative mb-6  ${field.width}`} key={index}>
               <label
@@ -477,22 +550,31 @@ const editType=searchParams.get("type")
                   {field?.inputRules?.required ? "*" : ""}
                 </span>
               </label>
+
               {field.type === "radio" ? (
-                <FormControl component="fieldset" className="my-3">
-                  <Controller
-                    name={field.name}
-                    control={control}
-                    defaultValue={false}
-                    render={({ field: controllerField }) => (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  defaultValue={false}
+                  rules={field.inputRules}
+                  render={({ field: controllerField }) => (
+                    <FormControl
+                      component="fieldset"
+                      className="my-3"
+                      error={!!errors[field.name]}
+                    >
                       <RadioGroup
                         {...controllerField}
                         row
                         aria-labelledby="radio-buttons-group"
                         value={controllerField.value?.toString()}
                         onChange={(e) => {
-                          const boolValue = e.target.value === "true";
-                          controllerField.onChange(boolValue);
-                          setValue(field.name, boolValue);
+                          const Value =
+                            field.name === "reminder_type"
+                              ? e.target.value
+                              : e.target.value === "true";
+                          controllerField.onChange(Value);
+                          setValue(field.name, Value);
                         }}
                       >
                         {field.options?.map((option) => (
@@ -506,542 +588,218 @@ const editType=searchParams.get("type")
                                   controllerField.value?.toString() ===
                                   option.key
                                 }
-                                checkedIcon={<CheckBoxIcon />}
-                                icon={<CheckBoxOutlineBlankIcon />}
                               />
                             }
                             label={option.value}
                           />
                         ))}
                       </RadioGroup>
-                    )}
-                  />
-                </FormControl>
+                      <FormHelperText>
+                        {errors[field.name]?.message}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                />
+              ) : field.type === "checkbox" ? (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  render={() => (
+                    <WeekdaySelector
+                      control={control}
+                      name={field.name}
+                      options={field.options}
+                    />
+                  )}
+                />
               ) : field.type === "input" ? (
                 <>
-                <div className="relative">
-                  <Controller
-                    name={field.name}
-                    control={control}
-                    defaultValue=""
-                    rules={field.inputRules}
-                    render={({ field: controlledField }) => (
-                      <TextField
-                        type={field.fieldtype}
-                        placeholder={field.placeholder}
-                        disabled={disableFields}
-                        value={formValues[field.name] || ""} // Use formValues directly instead of controlledField.value
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (field.name === "enrollment_fees") {
-                            controlledField.onChange(
-                              value === "" ? "" : Number(value)
-                            );
-                          } else {
-                            handleInputChange(e, field);
-                          }
-                        }}
-                        onClick={(e) => handleInputClick(e, field)}
-                        onBlur={controlledField.onBlur}
-                        InputProps={{
-                          startAdornment: field.name === "enrollment_fees" && (
-                            <AttachMoneyIcon />
-                          ),
-                        }}
-                        error={!!errors[field.name]}
-                        autoComplete={field?.autoComplete}
-                        helperText={errors[field.name]?.message}
-                        onWheel={(e) => e.target.blur()}
-                      />
-                    )}
-                  />
-                </div>
-                 {["zip_code", "state", "city"].includes(field.name) && (
-                  <OverlayPanel
-                    ref={searchBar}
-                    id="fields-overlay"
-                    style={{
-                      width: "350px",
-                      top: "63px !important",
-                      height: "200px",
-                      overflow: "auto",
-                    }}
-                    className={isLoading ? "custom-overlay" : ""}
-                    onClose={() => console.log("Close")}
-                  >
-                  {!!filteredData?.length &&
-                      !isLoading &&
-                      filteredData?.map((item) => {
-                        return (
-                          <div
-                            key={item.id}
-                            className=" flex cursor-pointer"
-                            style={{ height: "50px" }}
-                            onClick={() => onFilteredDataChange(item)}
-                          >
-                            <div className="pr-1">{item.city},</div>
-                            <div className="pr-1">{item.state_code},</div>
-                            <div>{item.zip_code}</div>
-                          </div>
-                        );
-                      })}
-                    {isLoading && <div className="loader"></div>}
-                  </OverlayPanel>
-                  
-                )}
-                </>
-              ) : field.type === "popup-input" ? (
-                <div className="relative">
-                  <div
-                    className="input-bg h-[60px] w-full mt-2 flex items-center text-[12px] gap-2 px-6"
-                    style={{ borderRadius: "3px" }}
-                  >
-                    {(() => {
-                      // Get the current field value from watch
-                      const fieldValue = watch(field.name);
-
-                      if (!fieldValue) {
-                        return null;
-                      }
-                      if (Array.isArray(fieldValue)) {
-                        return (
-                          <>
-                            {fieldValue.slice(0, 6).map((id) => {
-                              const dataSource =
-                                field.name === "certifications"
-                                  ? certificate
-                                  : field.name === "goals"
-                                  ? goalData
-                                  : field.name === "learning_materials"
-                                  ? materials
-                                  : field.name === "members"
-                                  ? members
-                                  : [];
-                              const item = dataSource?.find((g) => g.id === id);
-
-                              if (item) {
-                                return (
-                                  <p
-                                    key={id}
-                                    className="flex items-center gap-1"
-                                  >
-                                    <span
-                                      className="flex items-center px-3 py-3"
-                                      style={{
-                                        background: "rgba(223, 237, 255, 1)",
-                                        borderRadius: "50%",
-                                      }}
-                                    ></span>
-                                    {item.description ||
-                                      item.name ||
-                                      `${item.first_name || ""} ${
-                                        item.last_name || ""
-                                      }`}
-                                  </p>
-                                );
-                              }
-                              return null;
-                            })}
-                            {fieldValue.length > 6 && (
-                              <p className="flex items-center gap-1">
-                                <span
-                                  className="text-white flex items-center px-2 py-1"
-                                  style={{
-                                    background: "rgb(29, 91, 191)",
-                                    borderRadius: "50%",
-                                  }}
-                                >
-                                  +{fieldValue.length - 6}
-                                </span>
-                                Others
-                              </p>
-                            )}
-                          </>
-                        );
-                      }
-                    })()}
-                  </div>
-                  <input
-                    {...register(field.name, field.inputRules)}
-                    type={field.fieldtype}
-                    className="w-full hidden border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:border-none 
-                                                            focus-visible:outline-none text-[14px] h-[60px]"
-                    placeholder={field.placeholder}
-                    style={{
-                      color: "#232323",
-                      borderRadius: "3px",
-                    }}
-                    aria-invalid={!!errors[field.name]}
-                  />
-                  {field.icon && field.icon === "add" && (
-                    <Tooltip title={field.placeholder}>
-                      <img
-                        className="absolute top-4 right-4 cursor-pointer"
-                        onClick={() => handleAction(field.name)}
-                        src={PlusIcon}
-                        alt="PlusIcon"
-                      />
-                    </Tooltip>
-                  )}
-
-                  {errors[field.name] && (
-                    <p className="error" role="alert">
-                      {errors[field.name].message}
-                    </p>
-                  )}
-                </div>
-              ) : field.type === "dropdown" ? (
-                <>
-                  <Controller
-                    name={field.name}
-                    control={control}
-                    defaultValue=""
-                    rules={field.inputRules}
-                    render={({ field: controlledField }) => {
-                      return (
+                  <div className="relative">
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      defaultValue=""
+                      rules={field.inputRules}
+                      render={({ field: controlledField }) => (
                         <TextField
-                          select
-                          fullWidth
-                          disabled={disableSelectFields}
-                          value={formValues[field?.name] || ""}
+                          type={field.fieldtype}
+                          placeholder={field.placeholder}
+                          disabled={disableFields}
+                          {...controlledField}
+                          value={formValues[field.name] || ""}
                           onChange={(e) => {
-                            controlledField.onChange(e);
-
-                            // Handle special case for environment field
-                            if (field.name === "environment") {
-                              setToggleRole(
-                                e.target.value === "Own" ? mentor : admin
+                            const value = e.target.value;
+                            if (field.name === "enrollment_fees") {
+                              controlledField.onChange(
+                                value === "" ? "" : Number(value)
                               );
+                            } else {
+                              handleInputChange(e, field);
                             }
+                          }}
+                          onClick={(e) => handleInputClick(e, field)}
+                          onBlur={controlledField.onBlur}
+                          InputProps={{
+                            startAdornment: field.name ===
+                              "enrollment_fees" && <AttachMoneyIcon />,
                           }}
                           error={!!errors[field.name]}
                           helperText={errors[field.name]?.message}
-                        >
-                          <MenuItem value="">
-                            <em>Select</em>
-                          </MenuItem>
-                          {field.options?.map((option, index) => (
-                            <MenuItem
-                              key={option.id || option.key || index}
-                              value={option.id || option.key}
+                          onWheel={(e) => e.target.blur()}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  {["zip_code", "state", "city"].includes(field.name) && (
+                    <OverlayPanel
+                      ref={searchBar}
+                      id="fields-overlay"
+                      style={{
+                        width: "350px",
+                        top: "63px !important",
+                        height: "200px",
+                        overflow: "auto",
+                      }}
+                      className={isLoading ? "custom-overlay" : ""}
+                      onClose={() => console.log("Close")}
+                    >
+                      {!!filteredData?.length &&
+                        !isLoading &&
+                        filteredData?.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              className=" flex cursor-pointer"
+                              style={{ height: "50px" }}
+                              onClick={() => onFilteredDataChange(item)}
                             >
-                              {option.value || option.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      );
-                    }}
-                  />
-                </>
-              ) : field.name === "sub_programs" ? (
-                <>
-                  {fields &&
-                    fields.length > 0 &&
-                    fields.map((item, index) => {
-                      return (
-                        <div
-                          key={item.id}
-                          className="border border-[#1D5BBF] rounded mb-3"
-                        >
-                          <div className="flex justify-between px-5 py-4 bg-[#F3F7FC] rounded">
-                            <div className="text-sm font-semibold text-font-primary-main">{`${
-                              index + 1
-                            }. Subject`}</div>
-                            <div>
-                              <img
-                                src={DownArrowIcon}
-                                alt="DownArrowIcon"
-                                className="w-4"
-                              />
+                              <div className="pr-1">{item.city},</div>
+                              <div className="pr-1">{item.state_code},</div>
+                              <div>{item.zip_code}</div>
                             </div>
-                          </div>
-                          <div
-                            key={item.id}
-                            className="flex flex-wrap justify-between p-4"
+                          );
+                        })}
+                      {isLoading && <div className="loader"></div>}
+                    </OverlayPanel>
+                  )}
+                </>
+              ) : field.type === "popup-input" ? (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  rules={field.inputRules}
+                  render={({ field: { onChange }, fieldState: { error } }) => {
+                    let dataSource;
+                    let fieldValueKey;
+                    let totalRows = 0;
+
+                    if (field.name === "certifications") {
+                      dataSource = certificate || [];
+                      fieldValueKey = "name";
+                      totalRows = certificate?.length;
+                    } else if (field.name === "assign_mentor_id") {
+                      dataSource = mentor_assign || [];
+                      fieldValueKey = "full_name";
+                      totalRows = mentor_assign?.length;
+                    }
+                    return (
+                      <PopupTableInput
+                        disabled={disablePopupField}
+                        fieldName={field.name}
+                        toolBarComponent={
+                          MODAL_CONFIG[actionModal]?.createBtnName && (
+                            <MuiButton
+                              onClick={
+                                MODAL_CONFIG[actionModal]?.onCreateBtnClick
+                              }
+                            >
+                              {MODAL_CONFIG[actionModal]?.createBtnName}
+                            </MuiButton>
+                          )
+                        }
+                        label={field.label}
+                        valueKey={fieldValueKey}
+                        tableData={dataSource}
+                        selectedItems={formValues[field.name] || []}
+                        onChange={onChange}
+                        multiSelect={true}
+                        columns={MODAL_CONFIG[actionModal]?.columns}
+                        placeholder={MODAL_CONFIG[actionModal]?.modalTitle}
+                        onFieldClick={() => handleAction(field.name)}
+                        paginationMode={"client"}
+                        totalRows={totalRows}
+                        onPaginationChange={onPaginationChange}
+                        tablesPagination={tablesPagination[field.name]}
+                        error={error && error.message}
+                      />
+                    );
+                  }}
+                />
+              ) : field.type === "dropdown" ? (
+                <Controller
+                  name={field.name}
+                  control={control}
+                  defaultValue="" // Explicitly set default value as empty string
+                  rules={field.inputRules}
+                  render={({ field: controlledField }) => {
+                    const fieldValue =
+                      field.name === "day_numbers"
+                        ? formValues[field.name] || []
+                        : formValues[field.name] || ""; // Ensure empty string as fallback
+
+                    return (
+                      <TextField
+                        select
+                        fullWidth
+                        disabled={disableSelectFields}
+                        value={fieldValue} // Use the properly handled value
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          // Ensure we're passing the correct value type
+                          controlledField.onChange(newValue);                         
+                        }}
+                        SelectProps={{
+                          multiple: field.name === "day_numbers",
+                        }}
+                        error={!!errors[field.name]}
+                        helperText={errors[field.name]?.message}
+                      >
+                        <MenuItem value="">
+                          <em>Select</em>
+                        </MenuItem>
+                        {field.options?.map((option) => (
+                          <MenuItem
+                            key={option.id || option.key}
+                            value={option.id || option.key}
                           >
-                            {field.dynamicFields.map((nestedField) => {
-                              return (
-                                <div
-                                  key={nestedField.name}
-                                  className={nestedField.width}
-                                >
-                                  <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
-                                    {nestedField.label}
-                                    <span style={{ color: "red" }}>
-                                      {nestedField?.inputRules?.required
-                                        ? "*"
-                                        : ""}
-                                    </span>
-                                  </label>
-                                  <div>
-                                    {nestedField.type === "input" ? (
-                                      <TextField
-                                        {...register(
-                                          `sub_programs.${index}.${nestedField.name}`,
-                                          nestedField.inputRules
-                                        )}
-                                        placeholder={nestedField.placeholder}
-                                        onBlur={(e) => {
-                                          if (
-                                            nestedField.name === "title" &&
-                                            e?.target?.value
-                                          ) {
-                                            handleProgramCheck(
-                                              e?.target?.value
-                                            );
-                                          }
-                                        }}
-                                        error={
-                                          !!errors?.sub_programs?.[index]?.[
-                                            nestedField.name
-                                          ]
-                                        }
-                                        helperText={
-                                          errors?.sub_programs?.[index]?.[
-                                            nestedField.name
-                                          ]?.message
-                                        }
-                                        onWheel={(e) => e.target.blur()}
-                                      />
-                                    ) : nestedField.type === "textarea" ? (
-                                      <TextField
-                                        multiline
-                                        rows={4}
-                                        placeholder={nestedField.placeholder}
-                                        {...register(
-                                          `sub_programs.${index}.${nestedField.name}`,
-                                          nestedField.inputRules
-                                        )}
-                                        error={
-                                          !!errors?.sub_programs?.[index]?.[
-                                            nestedField.name
-                                          ]
-                                        }
-                                        helperText={
-                                          errors?.sub_programs?.[index]?.[
-                                            nestedField.name
-                                          ]?.message
-                                        }
-                                      />
-                                    ) : nestedField.type === "date" ? (
-                                      <div className="relative">
-                                        <CustomDateTimePicker
-                                          placeholder={"mm/dd/yyyy hh:mm AM/PM"}
-                                          {...register(
-                                            `sub_programs.${index}.${nestedField.name}`,
-                                            getDateValidation(
-                                              nestedField.name,
-                                              index
-                                            )
-                                          )}
-                                          value={
-                                            sub_programs?.[index]?.[
-                                              nestedField.name
-                                            ]
-                                              ? moment(
-                                                  sub_programs?.[index]?.[
-                                                    nestedField.name
-                                                  ]
-                                                )
-                                              : null
-                                          }
-                                          onChange={(newValue) => {
-                                            setValue(
-                                              `sub_programs.${index}.${nestedField.name}`,
-                                              newValue
-                                                ? newValue.toISOString()
-                                                : null
-                                            );
-                                          }}
-                                          minDate={getMinDate(
-                                            nestedField?.name,
-                                            index,
-                                            "sub_programs"
-                                          )}
-                                          maxDate={getMaxDate(
-                                            nestedField?.name,
-                                            index,
-                                            "sub_programs"
-                                          )}
-                                          error={
-                                            !!errors?.sub_programs?.[index]?.[
-                                              nestedField.name
-                                            ]
-                                          }
-                                          helperText={
-                                            errors?.sub_programs?.[index]?.[
-                                              nestedField.name
-                                            ]?.message
-                                          }
-                                        />
-                                      </div>
-                                    ) : nestedField.type === "radio" ? (
-                                      <FormControl
-                                        component="fieldset"
-                                        className={`my-3`}
-                                        error={
-                                          !!errors?.sub_programs?.[index]?.[
-                                            nestedField.name
-                                          ]?.message
-                                        }
-                                      >
-                                        <Controller
-                                          name={`sub_programs.${index}.${nestedField.name}`}
-                                          control={control}
-                                          defaultValue={
-                                            nestedField.options?.[0]?.key ===
-                                              "true" || false
-                                          }
-                                          render={({
-                                            field: nestedcontrollerField,
-                                          }) => (
-                                            <RadioGroup
-                                              {...nestedcontrollerField}
-                                              row
-                                              aria-labelledby="radio-buttons-group"
-                                              value={nestedcontrollerField.value?.toString()}
-                                              onChange={(e) => {
-                                                // Convert string value to boolean before setting
-                                                const boolValue =
-                                                  e.target.value === "true";
-                                                nestedcontrollerField.onChange(
-                                                  boolValue
-                                                );
-                                                setValue(
-                                                  `sub_programs.${index}.${nestedField.name}`,
-                                                  boolValue
-                                                ); // Sync with React Hook Form
-                                              }}
-                                            >
-                                              {nestedField.options.map(
-                                                (option) => (
-                                                  <FormControlLabel
-                                                    key={option.key}
-                                                    value={option.key}
-                                                    control={
-                                                      <Radio
-                                                        checked={
-                                                          nestedcontrollerField.value?.toString() ===
-                                                          option.key
-                                                        }
-                                                        checkedIcon={
-                                                          <CheckBoxIcon />
-                                                        }
-                                                        icon={
-                                                          <CheckBoxOutlineBlankIcon />
-                                                        }
-                                                      />
-                                                    }
-                                                    label={option.value}
-                                                  />
-                                                )
-                                              )}
-                                            </RadioGroup>
-                                          )}
-                                        />
-                                      </FormControl>
-                                    ) : nestedField.type === "popup-input" ? (
-                                      <div className="relative">
-                                        <div
-                                          className="input-bg h-[60px] w-full mt-2 flex items-center relative text-[12px] gap-2 px-6"
-                                          style={{ borderRadius: "3px" }}
-                                        >
-                                          {sub_programs[index]?.mentor_id && (
-                                            <p className="flex items-center gap-1">
-                                              <span
-                                                className="flex items-center px-3 py-3"
-                                                style={{
-                                                  background:
-                                                    "rgba(223, 237, 255, 1)",
-                                                  borderRadius: "50%",
-                                                }}
-                                              />
-                                              {
-                                                mentor_assign?.find(
-                                                  (mentor) =>
-                                                    mentor?.id ===
-                                                    sub_programs[index]
-                                                      .mentor_id
-                                                )?.name
-                                              }
-                                            </p>
-                                          )}
-
-                                          <Controller
-                                            name={`sub_programs.${index}.mentor_id`}
-                                            control={control}
-                                            rules={nestedField.inputRules}
-                                            defaultValue=""
-                                            render={({ field }) => (
-                                              <input
-                                                {...field}
-                                                type="hidden"
-                                                className="hidden"
-                                              />
-                                            )}
-                                          />
-
-                                          {nestedField.icon &&
-                                            nestedField.icon === "add" && (
-                                              <Tooltip
-                                                title={nestedField.placeholder}
-                                              >
-                                                <img
-                                                  className="absolute top-4 right-4 cursor-pointer"
-                                                  onClick={() =>
-                                                    handleActionPopup(
-                                                      `sub_programs.${index}.mentor_id`
-                                                    )
-                                                  }
-                                                  src={PlusIcon}
-                                                  alt="PlusIcon"
-                                                />
-                                              </Tooltip>
-                                            )}
-                                        </div>
-                                        {errors?.sub_programs?.[index]
-                                          ?.mentor_id && (
-                                          <p className="mt-1 text-xs text-red-500">
-                                            {
-                                              errors.sub_programs[index]
-                                                .mentor_id.message
-                                            }
-                                          </p>
-                                        )}
-                                      </div>
-                                    ) : null}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </>
+                            {option.value || option.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    );
+                  }}
+                />
               ) : field.type === "textbox" ? (
-                <>
-                  <TextField
-                    multiline
-                    id={field.name} // Add unique id
-                    key={field.name}
-                    rows={4}
-                    placeholder={field.placeholder}
-                    {...register(field.name, {
-                      ...field.inputRules,
-                      onChange: (e) => {
-                        // Handle change specifically for this field
-                        setValue(field.name, e.target.value.trimStart(), {
-                          shouldValidate: false,
-                          shouldDirty: true,
-                          shouldTouch: true,
-                        });
-                      },
-                    })}
-                    error={!!errors[field.name]}
-                    helperText={errors[field.name]?.message}
-                  />
-                </>
+                <TextField
+                  multiline
+                  id={field.name} // Add unique id
+                  key={field.name}
+                  rows={4}
+                  placeholder={field.placeholder}
+                  {...register(field.name, {
+                    ...field.inputRules,
+                    onChange: (e) => {
+                      // Handle change specifically for this field
+                      setValue(field.name, e.target.value?.trimStart(), {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                      });
+                    },
+                  })}
+                  error={!!errors[field.name]}
+                  helperText={errors[field.name]?.message}
+                />
               ) : field.type === "date" ? (
                 <div className="relative">
                   <CustomDateTimePicker
@@ -1086,11 +844,11 @@ const editType=searchParams.get("type")
                   <div className="flex items-center justify-center w-full">
                     <label
                       htmlFor={field.name}
-                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed cursor-pointer bg-gray-50"
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg
-                          className="w-8 h-8 mb-4 text-gray-200 dark:text-gray-400"
+                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -1104,10 +862,10 @@ const editType=searchParams.get("type")
                             d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                           />
                         </svg>
-                        <p className="mb-2 text-sm text-gray-200 dark:text-gray-400">
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                           <span className="font-semibold">Add Logo/Image</span>
                         </p>
-                        <p className="text-xs text-gray-200 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           (200*200 Pixels)
                         </p>
                       </div>
@@ -1196,160 +954,19 @@ const editType=searchParams.get("type")
                     </p>
                   )}
                 </>
-              ) : (
-                field.name === "recurring_dates" &&
-                recurring_program && (
-                  <div className="w-full">
-                    {recurringFields.map((recField, index) => {
-                      return (
-                        <div
-                          key={recField.id}
-                          className="border rounded-md p-4 mb-4"
-                        >
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-medium text-sm">
-                              Program cycle - {index + 1}
-                            </h4>
-                            {recurringFields.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => removeRecurringFields(index)}
-                              >
-                                <img
-                                  className={"w-8 h-8"}
-                                  src={DeleteIconRounded}
-                                  alt="DeleteIconRounded"
-                                />
-                              </button>
-                            )}
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            {field?.dynamicFields?.map((nestedRecField) => (
-                              <div
-                                key={nestedRecField?.name}
-                                className="relative"
-                              >
-                                <label className="block text-gray-700 text-xs font-bold mb-1">
-                                  {nestedRecField?.label}
-                                </label>
-                                <CustomDateTimePicker
-                                  disabled={disableDateFields(
-                                    nestedRecField.name
-                                  )}
-                                  {...register(
-                                    `recurring_dates.${index}.${nestedRecField?.name}`,
-                                    getDateValidation(
-                                      nestedRecField?.name,
-                                      index
-                                    )
-                                  )}
-                                  value={
-                                    recurring_dates?.[index]?.[
-                                      nestedRecField?.name
-                                    ]
-                                      ? moment(
-                                          recurring_dates?.[index]?.[
-                                            nestedRecField.name
-                                          ]
-                                        )
-                                      : null
-                                  }
-                                  onChange={(newValue) => {
-                                    setValue(
-                                      `recurring_dates.${index}.${nestedRecField?.name}`,
-                                      newValue ? newValue.toISOString() : null
-                                    );
-                                  }}
-                                  minDate={getMinDate(
-                                    nestedRecField?.name,
-                                    index,
-                                    "recurring_dates"
-                                  )}
-                                  maxDate={getMaxDate(
-                                    nestedRecField?.name,
-                                    index,
-                                    "recurring_dates"
-                                  )}
-                                  error={
-                                    !!errors.recurring_dates?.[index]?.[
-                                      nestedRecField?.name
-                                    ]
-                                  }
-                                  helperText={
-                                    errors.recurring_dates?.[index]?.[
-                                      nestedRecField?.name
-                                    ]?.message
-                                  }
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                    <div className="flex justify-end items-center mb-4">
-                      <MuiButton
-                        disabled={params?.id && toggleRole === mentor}
-                        variant="text"
-                        onClick={() =>
-                          appendRecurringFields({
-                            start_date: null,
-                            end_date: null,
-                          })
-                        }
-                        className="py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
-                      >
-                        Add +
-                      </MuiButton>
-                    </div>
-                  </div>
-                )
-              )}
+              ) : null}
             </div>
           );
         })}
       </div>
-      <MuiModal
-        modalSize="md"
-        modalOpen={!!currentField}
-        modalClose={() => {
-          setCurrentField("");
-          setMentorSearchValue("");
-        }}
-        title="Add mentor"
-      >
-        <TextField
-          fullWidth={false}
-          size="small"
-          sx={{
-            marginBottom: 2,
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "1px solid",
-            },
-          }}
-          placeholder="Search mentor"
-          value={mentorSearchValue}
-          onChange={(e) => setMentorSearchValue(e.target.value)}
-        />
-        <DataTable
-          loading={isMentorDataLoading}
-          disableMultipleSelection={true}
-          disableSelectionOnClick={false} // Add this line
-          rows={mentor_assign}
-          columns={MentorAssignColumns}
-          checkboxSelection
-          selectedAllRows={selectedMentorsByField[currentField] || []}
-          handleSelectedRow={(rows) => handleSelectedRow(rows, currentField)}
-          footerAction={() => setCurrentField("")}
-          footerComponent={(props) =>
-            mentorFooterComponent({
-              ...props,
-              selectedMentorsByField,
-              setMentorSearchValue,
-            })
-          }
-        />
-      </MuiModal>
+
+      <MuiMenuDropDown
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMoreClose}
+        menuItems={[]}
+        handleMenuClick={handleMenuClick}
+      />
     </div>
   );
 };

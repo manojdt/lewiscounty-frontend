@@ -237,17 +237,7 @@ const PopupTableInput = ({
       >
         <DataGrid
           loading={loading}
-          sx={{
-            "& .MuiDataGrid-columnHeader": {
-              backgroundColor: "#FFF8F2",
-            },
-            "& .MuiDataGrid-row": {
-              cursor: "pointer",
-              "& .MuiDataGrid-cell:focus , & .MuiDataGrid-cell:focus-within": {
-                outline: "unset",
-              },
-            },
-          }}
+          
           rows={filteredData}
           columns={columns}
           checkboxSelection={multiSelect && !disabled}

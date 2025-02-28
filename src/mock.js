@@ -618,15 +618,9 @@ export const MentorAssignColumns = [
     headerName: "Email",
     flex: 1,
     id: 3,
-  },
+  },  
   {
-    field: "certificates",
-    headerName: "Certificates",
-    flex: 1,
-    id: 4,
-  },
-  {
-    field: "view",
+    field: "action",
     headerName: "View",
     flex: 1,
     id: 5,
@@ -649,48 +643,6 @@ const createSkillsRow = () => {
 };
 
 export const createSkillsRows = createSkillsRow();
-
-export const SkillsColumns = [
-  {
-    field: "name",
-    headerName: "Skills Name",
-    flex: 1,
-    id: 0,
-  },
-  {
-    field: "desc",
-    headerName: "Skills Description",
-    flex: 1,
-    id: 1,
-  },
-  {
-    field: "action",
-    headerName: "Action",
-    flex: 1,
-    id: 3,
-    renderCell: (params) => {
-      return (
-        <button
-          style={{
-            background: "rgb(29, 91, 191)",
-            color: "rgb(255, 255, 255)",
-            padding: "2px 20px",
-            height: "32px",
-            margin: "9px 0px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "3px",
-          }}
-          onClick={() => console.log("click")}
-        >
-          {" "}
-          View Details{" "}
-        </button>
-      );
-    },
-  },
-];
 
 function certificateData(name, action) {
   return {
@@ -720,28 +672,7 @@ export const CertificateColumns = [
     field: "action",
     headerName: "Action",
     width: 430,
-    id: 3,
-    renderCell: (params) => {
-      return (
-        <button
-          style={{
-            background: "rgb(29, 91, 191)",
-            color: "rgb(255, 255, 255)",
-            padding: "2px 20px",
-            height: "32px",
-            margin: "9px 0px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "3px",
-          }}
-          onClick={() => console.log("click")}
-        >
-          {" "}
-          View Details{" "}
-        </button>
-      );
-    },
+    id: 3,    
   },
 ];
 

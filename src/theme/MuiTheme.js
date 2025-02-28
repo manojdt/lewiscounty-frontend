@@ -35,7 +35,6 @@ let MuiTheme = createTheme({
     MuiInputBase: {
       defaultProps: {
         variant: "outlined",
-        fullWidth: true,
       },
       styleOverrides: {
         root: {
@@ -63,6 +62,9 @@ let MuiTheme = createTheme({
     MuiDataGrid: {
       defaultProps: {
         sx: {
+          "& .MuiDataGrid-columnHeader": {
+            backgroundColor: "#1D5BBF0D",
+          },
           "& .MuiDataGrid-cell:focus": {
             outline: "none",
           },
