@@ -2,6 +2,7 @@ import { dateFormat, formatRenderCellDateValues } from ".";
 import { CourseLevelOptions } from "./formFields";
 import StarColorIcon from '../assets/icons/starColor.svg';
 import { programStatusColor, programStatusText, requestStatusColor, requestStatusText } from "./constant";
+import EyeIcon from '../assets/icons/eye-icon.svg'
 
 export const myMenteeColumns = [
   {
@@ -329,7 +330,98 @@ export const certificateMenberColumns = [
 
 ];
 
+export const topProgramListColumns =[
+  
+{
+    field: 'program_name',
+    headerName: 'Program Name',
+    flex: 1,
+    id: 0,
+    renderCell : (params) => {
+      return <>{params?.row?.program_name??'...'}</>
+    }
+},
+{
+  field: 'category_name',
+  headerName: 'Category',
+  flex: 1,
+  id: 1,
+  renderCell : (params) => {
+    return <>{params?.row?.categories?.[0]?.name??'...'}</>
+  }
+},
+{
+  field: 'created_by',
+  headerName: 'Created by',
+  flex: 1,
+  id: 1,
+  renderCell : (params) => {
+    return <>{params?.row?.created_by??'...'}</>
+  }
+},
+{
+  field: 'status',
+  headerName: 'Status',
+  flex: 1,
+  id: 5,
+  renderCell: (params) => {
+      return <>
+          <div className='cursor-pointer flex items-center justify-center h-full relative'>
 
+              <span className='w-[100px] flex justify-center h-[30px] px-4'
+                  style={{
+                      background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
+                      borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
+                  }}>
+                  {programStatusText?.[params?.row?.status]}
+              </span>
+          </div>
+      </>
+  }
+}
+]
+
+export const topMentorListcolumns =[
+  
+  {
+      field: 'program_name',
+      headerName: 'Mentor Name',
+      flex: 1,
+      id: 0,
+      renderCell : (params) => {
+        return <>{params?.row?.mentor_name??'...'}</>
+      }
+  },
+  {
+    field: 'category_name',
+    headerName: 'Category',
+    flex: 1,
+    id: 1,
+    renderCell : (params) => {
+      return <>{params?.row?.categories?.[0]?.name??'...'}</>
+    }
+  },
+  {
+    field: 'phone_number',
+    headerName: 'Phone number',
+    flex: 1,
+    id: 2,
+    renderCell : (params) => {
+      return <>{params?.row?.phone_number??'...'}</>
+    }
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    id: 3,
+    renderCell : (params) => {
+      return <>{params?.row?.email??'...'}</>
+    }
+  },
+  
+  ]
+  
 
 
 export const programListColumns = [
