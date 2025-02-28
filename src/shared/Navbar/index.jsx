@@ -687,8 +687,8 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <div className='flex flex-col pl-5 items-center justify-center'>
-                        <span className='text-[16px] font-semibold'>{profile.name}</span>
+                      <div className='flex flex-col pl-5 items-end '>
+                        <span className='text-[14px] font-semibold'>{profile.name}</span>
                          <span className='text-[#1D5BBF] text-xs'>{capitalizeFirstLetter(role)}</span>
                       </div>
                       
