@@ -94,6 +94,7 @@ import PaymentSuccessfull from "./shared/paymentButton/payment-successfull";
 import BgVerify from "./component/BackgroundVerification/BgVerify";
 import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
+import CreateNewUser from "./component/Members/CreateNewUser";
 
 
 function App() {
@@ -205,6 +206,7 @@ function App() {
             <Route path='/create-meeting' element={<CreateMeeting />} />
             <Route path='/edit-meeting' element={<CreateMeeting />} />
             <Route path='/members' element={<Members />} />
+            <Route path='/members/add' element={<CreateNewUser />} />
             <Route path='/assignMentor' element={<AssignMentor />} />
 
             <Route path='/discussions' element={<Discussions />} />
