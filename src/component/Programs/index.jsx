@@ -44,6 +44,7 @@ import ProgramMobileDropDown from "../../shared/ProgramMobileDropDown";
 import CategoryFilter from "../../shared/Card/CategoryFilterPopup";
 import { buttonStyle } from "../../utils";
 import DateFilterComponent from "../../shared/DateFilterComponent/DateFilterComponent";
+import dayjs from "dayjs";
 
 const CustomPagination = ({
   totalItems = 200,
@@ -173,7 +174,7 @@ export default function Programs() {
   const isBookmark = searchParams.get("is_bookmark");
   const programListView = searchParams.get("programView");
   const categoryFilter = searchParams.get("category_id");
-  const [selectedDate1, setSelectedDate1] = useState(new Date());
+  const [selectedDate1, setSelectedDate1] = useState(null);
   const [currentView1, setCurrentView1] = useState("day");
   console.log("currentView1", currentView1);
   console.log("selectedDate1", selectedDate1);

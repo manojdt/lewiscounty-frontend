@@ -1,5 +1,9 @@
 import moment from "moment";
 import { dateFormat } from ".";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import NotesIcon from "@mui/icons-material/Notes";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 export const formatPhoneNumber = (value) => {
   // Remove all non-numeric characters
@@ -1574,7 +1578,7 @@ export const ProgramInformationFields = [
       },
     ],
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     size: true,
     width: "w-[49%]",
@@ -1598,7 +1602,7 @@ export const ProgramInformationFields = [
     label: "Select",
     placeholder: "Select Week",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: Array.from({ length: 31 }, (_, i) => i + 1).map((count) => ({
       key: count,
@@ -1613,7 +1617,7 @@ export const ProgramInformationFields = [
     label: "Program Description",
     placeholder: "",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -1632,7 +1636,7 @@ export const ProgramInformationFields = [
         label: "Question",
         placeholder: "Enter Question",
         inputRules: {
-          required: "Title is required",
+          // required: "Title is required",
         },
         width: "w-[32%]",
         for: ["admin"],
@@ -1643,24 +1647,28 @@ export const ProgramInformationFields = [
         label: "Select",
         placeholder: "Select",
         inputRules: {
-          required: "This field is required",
+          // required: "This field is required",
         },
         options: [
           {
             key: "memo",
             value: "Memo",
+            icon: <NotesIcon />,
           },
           {
             key: "radio",
             value: "Radio",
+            icon: <RadioButtonCheckedIcon />,
           },
           {
             key: "checkbox",
             value: "Check Box",
+            icon: <CheckBoxOutlineBlankIcon />,
           },
           {
             key: "file",
             value: "File Upload",
+            icon: <FileUploadIcon />,
           },
         ],
         width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
@@ -1692,7 +1700,7 @@ export const ProgramInformationFields = [
             label: "Title",
             placeholder: "Enter Title",
             inputRules: {
-              required: "Title is required",
+              // required: "Title is required",
             },
             width: "w-full",
             for: ["admin"],
@@ -1708,7 +1716,7 @@ export const ProgramInformationFields = [
     placeholder: "Select Number of Goals",
     inputRules: {
       valueAsNumber: true,
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: Array.from({ length: 6 }, (_, i) => i + 1).map((count) => ({
       key: count,
@@ -1731,7 +1739,7 @@ export const ProgramInformationFields = [
         label: "Title",
         placeholder: "Enter Title",
         inputRules: {
-          required: "Title is required",
+          // required: "Title is required",
         },
         width: "w-full",
         for: ["admin"],
@@ -1742,7 +1750,7 @@ export const ProgramInformationFields = [
         label: "Description",
         placeholder: "Enter Description",
         inputRules: {
-          required: "Description is required",
+          // required: "Description is required",
         },
         width: "w-full",
         for: ["admin"],
@@ -1753,7 +1761,7 @@ export const ProgramInformationFields = [
         label: "Start Date",
         placeholder: "Select Start Date",
         inputRules: {
-          required: "Start Date is required",
+          // required: "Start Date is required",
         },
         width: "w-full lg:w-[49%] md:w-[48%] xl:w-[49%]",
         for: ["admin"],
@@ -1764,7 +1772,7 @@ export const ProgramInformationFields = [
         label: "End Date",
         placeholder: "Select End Date",
         inputRules: {
-          required: "End Date is required",
+          // required: "End Date is required",
         },
         width: "w-full lg:w-[49%] md:w-[48%] xl:w-[49%]",
         for: ["admin"],
@@ -1782,7 +1790,7 @@ export const ProgramInformationFields = [
         width: "w-full lg:w-[49%] md:w-[48%] xl:w-[49%]",
         icon: "add",
         for: ["admin"],
-      },
+      },      
     ],
   },
 
@@ -1792,7 +1800,7 @@ export const ProgramInformationFields = [
     label: "Course Level",
     placeholder: "Select Course Level",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: CourseLevelOptions,
     width: "w-full",
@@ -1805,7 +1813,7 @@ export const ProgramInformationFields = [
     label: "Program Mode",
     placeholder: "Select",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [
       {
@@ -1820,13 +1828,14 @@ export const ProgramInformationFields = [
     width: "w-full",
     for: ["mentor", "admin"],
   },
+  
   {
     type: "input",
     name: "address_line1",
     label: "Address 1",
     placeholder: "Enter Address 1",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
@@ -1848,7 +1857,7 @@ export const ProgramInformationFields = [
     label: "State",
     placeholder: "Enter State",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     autoComplete: "off",
@@ -1861,7 +1870,7 @@ export const ProgramInformationFields = [
     label: "City",
     placeholder: "Enter City",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     options: [],
     autoComplete: "off",
@@ -1874,7 +1883,7 @@ export const ProgramInformationFields = [
     label: "Zip code",
     placeholder: "Enter Zip code",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
       pattern: {
         value: /^\d{5}(-\d{4})?$/,
         message: "ZIP code must be in the format XXXXX or XXXXX-XXXX.",
@@ -1883,6 +1892,32 @@ export const ProgramInformationFields = [
     autoComplete: "off",
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
+  },
+  {
+    type: "popup-input",
+    name: "mentor_id",
+    label: "Assign Mentor",
+    placeholder: "Assign Mentor",
+    fieldtype: "text",
+    inputRules: {
+      // required: "This field is required",
+    },
+    width: "w-full lg:w-full md:w-[48%] xl:w-full",
+    icon: "add",
+    for: ["admin"],
+  },
+  {
+    type: "popup-input",
+    name: "assign_mentees",
+    label: "Assign Mentee",
+    placeholder: "Assign Mentee",
+    fieldtype: "text",
+    inputRules: {
+      // required: "This field is required",
+    },
+    width: "w-full lg:w-full md:w-[48%] xl:w-full",
+    icon: "add",
+    for: ["admin"],
   },
   {
     type: "radio",
@@ -1912,9 +1947,9 @@ export const ProgramInformationFields = [
         label: "Start Date and Time",
         placeholder: "Select Start Date and Time",
         inputRules: {
-          required: "Start Date and Time is required",
+          // required: "Start Date and Time is required",
         },
-        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+        width: "w-full lg:w-[49%] md:w-[48%] xl:w-[49%]",
         for: ["mentor"],
       },
       {
@@ -1923,9 +1958,9 @@ export const ProgramInformationFields = [
         label: "End Date and Time",
         placeholder: "Select End Date and Time",
         inputRules: {
-          required: "End Date and Time is required",
+          // required: "End Date and Time is required",
         },
-        width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
+        width: "w-full lg:w-[49%] md:w-[48%] xl:w-[49%]",
         for: ["mentor"],
       },
       {
@@ -1948,7 +1983,7 @@ export const ProgramInformationFields = [
           },
         ],
         inputRules: {
-          required: "This field is required",
+          // required: "This field is required",
         },
         size: true,
         width: "w-[49%]",
@@ -1972,7 +2007,7 @@ export const ProgramInformationFields = [
         label: "Select",
         placeholder: "Select Week",
         inputRules: {
-          required: "This field is required",
+          // required: "This field is required",
         },
         options: Array.from({ length: 31 }, (_, i) => i + 1).map((count) => ({
           key: count,
@@ -1993,7 +2028,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Add Certificates",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     icon: "add",
@@ -2022,8 +2057,7 @@ export const AboutProgramFields = [
     fieldtype: "number",
     placeholder: "Enter fees",
     inputRules: {
-      valueAsNumber: true,
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-[80%]",
     for: ["admin", "mentor"],
@@ -2035,11 +2069,11 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin", "mentor"],
-  },  
+  },
 ];
 
 export const ProgramFields = [ProgramInformationFields, AboutProgramFields];

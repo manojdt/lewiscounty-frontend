@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ProgramSteps from "./ProgramsSteps";
 import { ProgramTabs, ProgramFields } from "../../../utils/formFields";
@@ -44,7 +40,6 @@ export default function CreatePrograms() {
   const params = useParams();
   const [currentStep, setCurrentStep] = useState(DEFAULT_VALUE);
   const [showBackdrop, setShowBackdrop] = useState(false);
-  const [mentorSearchValue, setMentorSearchValue] = useState("");
   const [stepWiseData, setStepWiseData] = useState({});
 
   const [viewDetails, setViewDetails] = useState({
@@ -61,20 +56,16 @@ export default function CreatePrograms() {
     message: "",
   });
 
-  const searchValue = useDebounce(mentorSearchValue, 500);
-
   const methods = useForm({
     defaultValues: {
       goals_count: 1,
       goals: [
         {
-          series: 1,
           name: "",
           description: "",
           start_date: "",
           end_date: "",
-          mentor_id: "",
-          // Safely access the first element of mentor_id
+          mentor_id: [],
         },
       ],
       is_sponsored: false,
@@ -102,6 +93,7 @@ export default function CreatePrograms() {
   const [tablesPagination, setTablesPagination] = useState({
     certifications: { page: 0, pageSize: 10 },
     mentor_id: { page: 0, pageSize: 10 },
+    assign_mentees: { page: 0, pageSize: 10 },
   });
 
   const { data: currentProgramDetail, isLoading: isDetailFetching } =
@@ -113,19 +105,6 @@ export default function CreatePrograms() {
   const { data: category } = useGetAllCategoriesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-
-  const { data: mentor_assign, isFetching } = useGetAllMentorsQuery(
-    {
-      role_name: "mentor",
-      page: tablesPagination.mentor_id.page + 1,
-      limit: tablesPagination.mentor_id.pageSize,
-      status: "active",
-      ...(searchValue && { search: searchValue }),
-    },
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
 
   const { data: certificate } = useGetCertificatesQuery(
     {
@@ -202,7 +181,7 @@ export default function CreatePrograms() {
       });
   };
   const handleTab = (key) => {
-    scrollToTop();
+    // scrollToTop();
     const tabIndex = ProgramTabs.findIndex((tab) => tab.key === key);
     // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
     const nextIndex = tabIndex + 1;
@@ -211,6 +190,14 @@ export default function CreatePrograms() {
     // }
   };
 
+  // const arrayHasEmptyElements = (arrayOfObjects) => {
+  //   const hasEmptyValue = arrayOfObjects.some((obj) => {
+  //     return Object.values(obj).some(
+  //       (value) => value === "" || value === null || value === undefined
+  //     );
+  //   });
+  //   return hasEmptyValue;
+  // };
   const handleNextStep = async (data) => {
     // Get the current step's allowed fields
     let currentStepField = ProgramFields[currentStep - 1];
@@ -248,7 +235,9 @@ export default function CreatePrograms() {
       delete fieldData.sponsor_logos;
     }
     fieldData = Object.entries(fieldData)
-      .filter(([_, value]) => value !== null && value !== undefined)
+      .filter(
+        ([_, value]) => value !== "" && value !== null && value !== undefined
+      )
       .reduce((obj, [key, value]) => {
         obj[key] = value;
         return obj;
@@ -291,12 +280,13 @@ export default function CreatePrograms() {
             "certifications",
             "goals",
             "recurring_dates",
+            "mentor_id",
+            "assign_mentees",
           ];
 
           jsonFields.forEach((field) => {
             if (fieldData[field]) {
               if (field === "goals") {
-                // For goals, set mentor_id
                 const updateGoals = fieldData[field].map((item) => {
                   // Create a base object with required fields
                   const baseItem = {
@@ -316,9 +306,16 @@ export default function CreatePrograms() {
 
                   return baseItem;
                 });
-                bodyFormData.append(field, JSON.stringify(updateGoals));
+                // const hasEmptyValue = updateGoals.some((obj) => {
+                //   return Object.values(obj).some(
+                //     (value) =>
+                //       value === "" || value === null || value === undefined
+                //   );
+                // });
+                // if (!hasEmptyValue) {
+                  bodyFormData.append(field, JSON.stringify(updateGoals));
+                // }
               } else if (field === "prerequisites") {
-                // For goals, set mentor_id
                 const updatePrerequisites = fieldData[field].map((item) => {
                   // Create a base object with required fields
                   const baseItem = {
@@ -330,7 +327,18 @@ export default function CreatePrograms() {
 
                   return baseItem;
                 });
-                bodyFormData.append(field, JSON.stringify(updatePrerequisites));
+                // const hasEmptyValue = updatePrerequisites.some((obj) => {
+                //   return Object.values(obj).some(
+                //     (value) =>
+                //       value === "" || value === null || value === undefined
+                //   );
+                // });
+                // if (!hasEmptyValue) {
+                  bodyFormData.append(
+                    field,
+                    JSON.stringify(updatePrerequisites)
+                  );
+                // }
               } else if (field === "recurring_dates") {
                 const updateRecurringProgram = fieldData[field].map((item) => {
                   // Create a base object with required fields
@@ -351,7 +359,12 @@ export default function CreatePrograms() {
                   JSON.stringify(updateRecurringProgram)
                 );
               } else {
-                const selectedIds = fieldData[field].map((item) => item.id);
+                let selectedIds;
+                if (field === "mentor_id") {
+                  selectedIds = fieldData[field].map((item) => item.id)?.[0];
+                } else {
+                  selectedIds = fieldData[field].map((item) => item.id);
+                }
                 // For other fields, just stringify the array
                 bodyFormData.append(field, JSON.stringify(selectedIds));
               }
@@ -397,9 +410,9 @@ export default function CreatePrograms() {
               bodyFormData,
             });
           } else {
-            // for (let [key, value] of bodyFormData.entries()) {
-            //   console.log(`formData: ${key}: ${value}`);
-            // }
+            for (let [key, value] of bodyFormData.entries()) {
+              console.log(`formData: ${key}: ${value}`);
+            }
             if (isReopen) {
               bodyFormData.append("reopen_program_id", params?.id);
             }
@@ -415,7 +428,7 @@ export default function CreatePrograms() {
             ...tabActionInfo,
             activeTab: ProgramTabs[nextStep - 1]?.key || "",
           });
-          scrollToTop();
+          // scrollToTop();
           return nextStep;
         });
       }
@@ -428,7 +441,7 @@ export default function CreatePrograms() {
       ...tabActionInfo,
       activeTab: ProgramTabs[currentStep - 2].key,
     });
-    scrollToTop();
+    // scrollToTop();
   };
 
   const handleClose = () => {
@@ -638,7 +651,7 @@ export default function CreatePrograms() {
       return newStepData;
     });
     handleNextStep(data);
-    scrollToTop();
+    // scrollToTop();
   };
 
   useEffect(() => {
@@ -657,14 +670,9 @@ export default function CreatePrograms() {
   };
   return (
     <div className="dashboard-content px-8 mt-10">
-      <div
-        style={{
-          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
-          borderRadius: "10px",
-        }}
-      >
-        <div className="title flex justify-between py-3 px-4 border-b-2 items-center">
-          <div className="flex gap-4">
+      <div className="border border-background-primary-main rounded">
+        <div className="title flex justify-between py-5 px-4 border-b-2 items-center">
+          <div className="flex gap-4 font-medium">
             <h4>{params.id ? "Update Program" : "Create New Program"}</h4>
           </div>
           <div className="flex gap-20 items-center">
@@ -752,12 +760,9 @@ export default function CreatePrograms() {
                 <div className="py-9">
                   <ProgramSteps
                     setViewDetailsInfo={setViewDetailsInfo}
-                    setMentorSearchValue={setMentorSearchValue}
-                    isMentorDataLoading={isFetching}
                     handleProgramCheck={handleProgramCheck}
                     stepData={stepData}
                     stepFields={programAllFields[currentStep - 1]}
-                    mentor_assign={mentor_assign}
                     certificate={certificate}
                     category={category}
                     setViewDetails={setViewDetails}
@@ -786,7 +791,7 @@ export default function CreatePrograms() {
                       {"Back"}
                     </MuiButton>
                   )}
-                  {!params?.id && (
+                  {!params?.id && currentStep === ProgramTabs.length && (
                     <MuiButton
                       sx={{
                         background: light,

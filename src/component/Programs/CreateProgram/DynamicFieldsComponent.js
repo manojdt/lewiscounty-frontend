@@ -8,7 +8,8 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
-  Box,
+  ListItemText,
+  ListItemIcon,
 } from "@mui/material";
 import { Controller, useFormContext, useFieldArray } from "react-hook-form";
 import moment from "moment";
@@ -17,7 +18,8 @@ import { Button as MuiButton } from "@mui/material";
 import CustomDateTimePicker from "../../../shared/CustomDateTimePicker/MuiDateTimePicker";
 import PopupTableInput from "../../../shared/PopupTableInput/PopupTableInput";
 import { WeekdaySelector } from "../../../shared/CustomWeekdaySelector/WeekdaySelector";
-
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 // Helper component to handle prerequisite options for a single prerequisite
 const PrerequisiteOptions = ({ index, fieldType }) => {
   const {
@@ -90,7 +92,7 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
           helperText={
             errors?.[fieldType]?.[index]?.field_options?.[0]?.title?.message
           }
-          sx={{ bgcolor: "#fff" }}
+          sx={{ bgcolor: "transparent" }}
         />
       </div>
     );
@@ -100,7 +102,12 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
   return (
     <div>
       {optionFields.map((option, optionIndex) => (
-        <Box key={option.id} className={`w-[50%] mt-2`}>
+        <div key={option.id} className={`flex items-center gap-2 w-[50%] mt-4`}>
+          {selectedFieldType === "radio" ? (
+            <RadioButtonUncheckedIcon />
+          ) : (
+            <CheckBoxOutlineBlankIcon />
+          )}
           <TextField
             variant="standard"
             fullWidth
@@ -127,9 +134,9 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
                 appendOption({ title: "" });
               }
             }}
-            sx={{ bgcolor: "#fff" }}
+            sx={{ bgcolor: "transparent" }}
           />
-        </Box>
+        </div>
       ))}
     </div>
   );
@@ -303,7 +310,7 @@ const DynamicFieldsComponent = ({
               onChange={(newValue) => {
                 setValue(fieldName, newValue ? newValue.toISOString() : null);
               }}
-              minDate={fieldType === "goals" ? moment(start_date) : undefined}
+              minDate={fieldType === "goals" ? moment(start_date) : moment()}
               maxDate={fieldType === "goals" ? moment(end_date) : undefined}
               error={!!errors?.[fieldType]?.[index]?.[nestedField.name]}
               helperText={
@@ -493,7 +500,8 @@ const DynamicFieldsComponent = ({
                       key={option.id || option.key}
                       value={option.id || option.key}
                     >
-                      {option.value || option.name}
+                      <ListItemIcon>{option.icon}</ListItemIcon>
+                      <ListItemText>{option.value || option.name}</ListItemText>
                     </MenuItem>
                   ))}
                 </TextField>
@@ -513,7 +521,10 @@ const DynamicFieldsComponent = ({
   return (
     <div className="w-full">
       {fields.map((item, index) => (
-        <div key={item.id} className="border border-gray-400 rounded mb-3">
+        <div
+          key={item.id}
+          className="border border-background-primary-main rounded mb-3"
+        >
           {renderItemHeader(item, index)}
           <div className="flex flex-wrap justify-between p-4">
             {dynamicFields.map((nestedField) =>
