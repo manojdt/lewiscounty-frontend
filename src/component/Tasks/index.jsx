@@ -147,8 +147,7 @@ export const Tasks = () => {
         renderCell: (params) => {
           return (
             <div className="flex items-center  h-full w-full">
-              <StatusIndicator status={params.row.status}>
-              {taskStatusTextMentee[params.row.status]}
+              <StatusIndicator status={params.row.status}>    
               </StatusIndicator>
             </div>
           );

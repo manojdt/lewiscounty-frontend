@@ -426,7 +426,6 @@ export const programListColumns = [
       return (
         <div className="flex items-center  h-full w-full">
           <StatusIndicator status={params.row.status}>
-          {programStatusText?.[params?.row?.status]}
           </StatusIndicator>
         </div>
       );

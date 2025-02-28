@@ -270,7 +270,6 @@ const Reports = () => {
         return (
           <div className="flex items-center  h-full w-full">
             <StatusIndicator status={params.row.status}>
-              {reportStatus[params.row.status] || ""}
             </StatusIndicator>
           </div>
         );
