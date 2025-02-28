@@ -34,6 +34,7 @@ import SettingsModal from "../Feeds/SettingsModal";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { tabQuertyData } from "../Breadcrumbs/BreadcrumbsCommonData";
 import { formatTableNullValues, useDebounce } from "../../utils";
+import StatusIndicator from "../../shared/StatusIndicator/StatusIndicator";
 
 const Reports = () => {
   const navigate = useNavigate();
@@ -244,27 +245,36 @@ const Reports = () => {
       headerName: "Status",
       flex: 1,
       id: 10,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background: reportStatusColor[params.row.status]?.bg || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             height: "34px",
+      //             color: reportStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {reportStatus[params.row.status]}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background: reportStatusColor[params.row.status]?.bg || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  height: "34px",
-                  color: reportStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {reportStatus[params.row.status]}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+            </StatusIndicator>
+          </div>
         );
       },
+      
     },
     {
       field: "action",

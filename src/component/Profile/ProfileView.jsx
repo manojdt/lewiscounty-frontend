@@ -53,6 +53,8 @@ import { categoryColumns } from "../../mock";
 import { followBtnText, pipeUrls, requestStatus } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
+import VerifiedIcon from "@mui/icons-material/Verified";
+
 import { updateProfile } from "../../services/profile";
 import {
   admin_menteeMember,
@@ -1569,22 +1571,38 @@ export default function ProfileView() {
                 {from !== "program_join" &&
                   !member_state &&
                   !["new", "pending"].includes(userDetails?.approve_status) && (
+                    // <div
+                    //   className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
+                    //   style={{
+                    //     ...reqStatusColor[
+                    //       approvalLabel === "Active" ||
+                    //       userDetails?.approve_status === "approved"
+                    //         ? "approved"
+                    //         : approvalLabel === "Deactive" ||
+                    //           userDetails?.approve_status === "rejected"
+                    //         ? "rejected"
+                    //         : userDetails?.approve_status
+                    //     ],
+                    //   }}
+                    // >
+                    //   {approvalLabel}
+                    // </div>
                     <div
-                      className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-                      style={{
-                        ...reqStatusColor[
-                          approvalLabel === "Active" ||
-                          userDetails?.approve_status === "approved"
-                            ? "approved"
-                            : approvalLabel === "Deactive" ||
-                              userDetails?.approve_status === "rejected"
-                            ? "rejected"
-                            : userDetails?.approve_status
-                        ],
-                      }}
-                    >
-                      {approvalLabel}
-                    </div>
+                    className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+                      userDetails?.approve_status === "rejected" ? "text-red-500" : "text-[#16B681]"
+                    }`}
+                  >
+                    {userDetails?.approve_status === "rejected" ? <CancelIcon /> : <VerifiedIcon />}
+                    <p>
+                      {approvalLabel === "Active" || userDetails?.approve_status === "approved"
+                        ? "Approved"
+                        : approvalLabel === "Deactive" || userDetails?.approve_status === "rejected"
+                        ? "Rejected"
+                        : approvalLabel}
+                    </p>
+                  </div>
+                  
+
                   )}
 
                 {/* This is Approved and Rejected status shows when come from program Join */}
