@@ -27,7 +27,8 @@ const StepComponenRender = ({
   stepName,
   handleSkip,
   totalSteps,
-  apiData
+  apiData,
+  refetch
 }) => {
   const navigate = useNavigate();
   const calendarRef = useRef([]);
@@ -137,6 +138,7 @@ const StepComponenRender = ({
       if (response.status === 200 || response.status === 201) {
         toast.success(response?.data?.message)
        await docUpload(allValues)
+       refetch()
        // handleLogout()
        // reset();
       }
@@ -649,7 +651,7 @@ const StepComponenRender = ({
             })}
           </div>
           <div className='flex gap-6 justify-center align-middle'>
-            {currentStep === 1 && (
+            {currentStep === 1&&role==="mentee" && (
               <Button
                 btnName='Cancel'
                 btnCategory='secondary'
@@ -672,7 +674,7 @@ const StepComponenRender = ({
             {role===user.mentor && (
               <Button
                 btnName='Save'
-                btnCategory='primary'
+                btnCategory='secondaryfill'
                 onClick={()=>submitMentorData(getValues())}
               />
              )} 

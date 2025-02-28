@@ -26,6 +26,7 @@ import { requestStatus } from "../../utils/constant";
 import { categoryColumns } from "../../mock";
 import { Button } from "../../shared";
 import { formatTableNullValues } from "../../utils";
+import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 
 export default function MemberRequest() {
   const { memberRequest, categoryList, loading, status, error } = useSelector(
@@ -159,7 +160,7 @@ export default function MemberRequest() {
               <MenuItem
                 onClick={(e) => {
                   handleClose();
-                  navigate(`/mentor-details/${seletedItem.id}?breadcrumbsType=`, {
+                  navigate(`/mentor-details/${seletedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.dashboardRecentMembers}`, {
                     state: {
                       reqType: "dashborad",
                     },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared";
 import {
   useLocation,
@@ -10,7 +10,7 @@ import ProfileImageIcon from "../../assets/icons/profile-image-icon.svg";
 import CancelIcon from "../../assets/images/cancel1x.png";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
-
+import ArrowDown from "../../assets/icons/blue-arrow-down.svg";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import SearchIcon from "../../assets/icons/search.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,6 +68,7 @@ import {
   topMentorPage,
   topmentorDashBoard,
   menteesProfileCounts,
+  dashboard_recent_members,
 } from "../Breadcrumbs/BreadcrumbsCommonData";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { allProfileSections } from "./tabs/ProfileTab";
@@ -78,6 +79,8 @@ import api from "../../services/api";
 import ProgramCard from "../../shared/Card/ProgramCard";
 import { dateFormat } from "../../utils";
 import { activateUser, deactivateUser } from "../../services/members";
+import GoalsAndExpectatonsSection from "./section-edit/GoalsAndExpectatonsSection";
+import MenteeExpectionAndGoalsSection from "./section-edit/MenteeExpectionAndGoalsSection";
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -151,6 +154,8 @@ export default function ProfileView() {
     : "Mentee";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+    const contentRef = useRef(null);
+    const [showAll, setShowAll] = useState(false);
   const { requestData } = useSelector((state) => state.userList);
   const {
     register: registerDeactivate,
@@ -668,6 +673,7 @@ export default function ProfileView() {
     const programDetails = programDetailsProfile();
     const dashBoardTop = topmentorDashBoard();
     const menteesProfile = menteesProfileCounts();
+    const dashboardRecent = dashboard_recent_members();
     switch (key) {
       case requestPageBreadcrumbs.member_join_request:
         setBreadcrumbsArray(admin_request);
@@ -705,6 +711,9 @@ export default function ProfileView() {
       case requestPageBreadcrumbs.menteesProfileCounts:
         setBreadcrumbsArray(menteesProfile);
         break;
+        case requestPageBreadcrumbs.dashboardRecentMembers:
+        setBreadcrumbsArray(dashboard_recent_members);
+        break;
       case "discussion":
         break;
       default:
@@ -717,9 +726,19 @@ export default function ProfileView() {
     }
   }, [breadcrumbsType]);
 
-  const profileSection = allProfileSections.filter((section) =>
-    ["Personal Information"]?.includes(section.title)
-  );
+  const profileSection = allProfileSections.filter((section) => {
+    // Skip duplicate Goals sections
+    if (section.title === "Goals") {
+      // For mentor, only keep GoalsAndExpectatonsSection
+      if (userDetails?.role === "mentor") {
+        return section.component.type === GoalsAndExpectatonsSection;
+      }
+      // For mentee, only keep MenteeExpectionAndGoalsSection
+      return section.component.type === MenteeExpectionAndGoalsSection;
+    }
+    // Keep all other sections that match the role
+    return roleBasedSections[userDetails?.role]?.includes(section.title);
+  });
 
   const getApprovalStatus = () => {
     const member_status = searchParams.get("member_status");
@@ -1738,7 +1757,16 @@ export default function ProfileView() {
             </div>
           ))}
         </div> */}
-
+ <div
+            ref={contentRef}
+            style={{
+              maxHeight: showAll
+                ? `${contentRef.current.scrollHeight}px`
+                : "380px",
+              overflow: "hidden",
+              transition: "max-height 0.5s ease",
+            }}
+          >
         <FormContextProvider initialValues={userInfoState}>
           {profileSection.map((section, index) => (
             <Accordian key={index} title={section.title} defaultValue={true}>
@@ -1746,7 +1774,20 @@ export default function ProfileView() {
             </Accordian>
           ))}
         </FormContextProvider>
-
+</div>
+<div
+              className="underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? "View less" : "View more"}
+              <img
+                className={`mt-1 transition-all duration-300 ${
+                  showAll ? "rotate-180" : ""
+                }`}
+                src={ArrowDown}
+                alt=""
+              />
+            </div>
         <div className="col-span-2">
           {/* {userDetails?.documents?.length > 0 && (
             <Stack>
