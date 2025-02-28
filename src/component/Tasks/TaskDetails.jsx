@@ -506,7 +506,7 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                      {taskData?.goal_name}
+                      {taskData?.goal_name ?? "-"}
                     </td>
                   </tr>
                   <tr className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
@@ -561,7 +561,7 @@ export const TaskDetails = () => {
                       className='px-6 py-4 text-white'
                       style={{ background: 'rgba(29, 91, 191, 1)' }}
                     >
-                        {taskData?.reference_link}
+                        {taskData?.reference_link?.length ? taskData?.reference_link : '-'}
                     </td>
                   </tr>
                 </tbody>
