@@ -225,7 +225,6 @@ export const TaskDetails = () => {
         setValue('file', files ?? [], {
           shouldValidate: taskData?.statue === 'draft' ? false : true,
         });
-        console.log("from set ===>", allFields)
         setTaskFile(files ?? []);
       }
     });
@@ -586,6 +585,13 @@ export const TaskDetails = () => {
                       </button>
                     </div>
                   )}
+
+              {(taskData?.individual_cancel_reason?.length > 0 ) && <div className="action-set action_cancelled mb-4 mt-4">
+                <div className="reason-title">{"Cancel Reason"}</div>
+                <div className="reason-content">
+                  {taskData?.individual_cancel_reason}
+                </div>
+              </div>}
               {isPreview && (
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>

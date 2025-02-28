@@ -636,6 +636,9 @@ export default function AssignMentees() {
                                     </div>
                                   ) : searchResults.length > 0 ? (
                                     <ul className="absolute bg-white border border-gray-300 w-full z-10 max-h-48 overflow-y-auto">
+                                      <p onClick={()=>{
+                                        setSearchTerm("");
+                                      }}>Close</p>
                                       {searchResults.map((program) => {
                                         const isActive =
                                           getValues(field.name) === program?.id;
@@ -858,73 +861,58 @@ export default function AssignMentees() {
                                 }
 
                                 minTime={
-                                  field?.name === "start_date"
-                                    ? moment().format("MM-DD-YYYY") >=
-                                      moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
-                                      ).format("MM-DD-YYYY")
-                                      ? moment()
-                                      : moment().format("MM-DD-YYYY") <=
-                                        moment(
-                                          type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
-                                        ).format("MM-DD-YYYY")
-                                      ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                  getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                    field?.name === "start_date"
+                                      ? moment().format("MM-DD-YYYY") >= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                        ? moment()
+                                        : moment().format("MM-DD-YYYY") <= moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate).format("MM-DD-YYYY")
+                                        ? moment(type === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)
+                                        : moment()
+                                      : field?.name === "end_date" && getValues("start_date")
+                                      ? moment(getValues("start_date"))
                                       : moment()
-                                    : field?.name === "end_date" &&
-                                      getValues("start_date")
-                                    ? moment(getValues("start_date"))
-                                    : moment()
+                                  ), "day")
+                                    ?
+                                     moment().set({ hour: 9, minute: 0 }) // Restrict to 9 AM if it's the minDate
+                                    : moment().startOf("day") // Default to start of the day
                                 }
                                 maxTime={
-                                  state?.data?.program_enddate
-                                    ? moment(state?.data?.program_enddate)
-                                    : selectedProgram?.end_date
-                                    ? moment(selectedProgram?.end_date)
-                                    : null
+                                  getValues(field.name) && moment(getValues(field.name)).isSame(moment(
+                                    state?.data?.program_enddate
+                                      ? moment(state?.data?.program_enddate)
+                                      : selectedProgram?.end_date
+                                      ? moment(selectedProgram?.end_date)
+                                      : null
+                                  ), "day")
+                                    ? moment().set({ hour: 18, minute: 0 }) // Restrict to 6 PM if it's the maxDate
+                                    : moment().endOf("day") // Default to end of the day
                                 }
 
-                                // new start
-
-                                // minDate={
+                                // minTime={
                                 //   field?.name === "start_date"
-                                //     ? dayjs() // Today's date for start_date
-                                //     : field?.name === "end_date" && getValues("start_date")
-                                //     ? dayjs(getValues("start_date")) // Convert start_date to dayjs object
-                                //     : dayjs() // Ensure valid fallback
+                                //     ? moment().format("MM-DD-YYYY") >=
+                                //       moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                //       ).format("MM-DD-YYYY")
+                                //       ? moment()
+                                //       : moment().format("MM-DD-YYYY") <=
+                                //         moment(
+                                //           type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate
+                                //         ).format("MM-DD-YYYY")
+                                //       ? moment(type  === "new" ? selectedProgram?.start_date : state?.data?.program_startdate)                                        
+                                //       : moment()
+                                //     : field?.name === "end_date" &&
+                                //       getValues("start_date")
+                                //     ? moment(getValues("start_date"))
+                                //     : moment()
                                 // }
-                                // maxDate={
-                                //   state?.data?.end_date && dayjs(state?.data?.end_date).isValid()
-                                //     ? dayjs(state?.data?.end_date) // Convert end_date properly
-                                //     : selectedProgram?.end_date && dayjs(selectedProgram?.end_date).isValid()
-                                //     ? dayjs(selectedProgram?.end_date)
-                                //     : dayjs().add(1, "year") // Fallback: 1 year from today
+                                // maxTime={
+                                //   state?.data?.program_enddate
+                                //     ? moment(state?.data?.program_enddate)
+                                //     : selectedProgram?.end_date
+                                //     ? moment(selectedProgram?.end_date)
+                                //     : null
                                 // }
 
-                                // new end
-
-                                // {...(field.name === "start_date"
-                                //   ? {
-                                //       minDate: moment(), // Use moment object directly
-                                //     }
-                                //   : {})}
-                                // {...(field.name === "end_date"
-                                //   ? {
-                                //       minDate: getValues("start_date")
-                                //         ? moment(getValues("start_date")).add(
-                                //             1,
-                                //             "day"
-                                //           ) // Use moment object directly
-                                //         : null,
-                                //       minDateTime: getValues("start_date")
-                                //         ? moment(getValues("start_date"))
-                                //             .add(1, "day")
-                                //             .add(1, "hour")
-                                //             .startOf("hour") // Use moment object directly
-                                //         : null,
-                                //     }
-                                //   : {})}
-
-                                // error={!!errors?.[field.name]}
-                                // helperText={errors?.[field.name]?.message}
                               />
                               {errors[field.name] && (
                                 <p className="error" role="alert">
