@@ -19,7 +19,7 @@ import SuccessIcon from "../../../assets/images/Success_tic1x.png";
 import FailedIcon from "../../../assets/icons/programErrorIcon.svg";
 import ToastNotification from "../../../shared/Toast";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button as MuiButton } from "@mui/material";
+import { Button as MuiButton, useTheme } from "@mui/material";
 import {
   useCreateProgramMutation,
   useUpdateProgramMutation,
@@ -34,13 +34,17 @@ import { useDebounce } from "../../../utils";
 const DEFAULT_VALUE = 1;
 
 export default function CreatePrograms() {
+  const {
+    palette: {
+      primary: { main, light },
+    },
+  } = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
   const params = useParams();
   const [currentStep, setCurrentStep] = useState(DEFAULT_VALUE);
   const [showBackdrop, setShowBackdrop] = useState(false);
-  const [searchParams] = useSearchParams();
   const [mentorSearchValue, setMentorSearchValue] = useState("");
   const [stepWiseData, setStepWiseData] = useState({});
 
@@ -86,7 +90,15 @@ export default function CreatePrograms() {
     },
   });
 
-  const { handleSubmit, reset, setValue, watch, unregister } = methods;
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    unregister,
+    clearErrors,
+    trigger,
+  } = methods;
   const formValues = watch();
   const [tablesPagination, setTablesPagination] = useState({
     certifications: { page: 0, pageSize: 10 },
@@ -371,7 +383,7 @@ export default function CreatePrograms() {
           }
           bodyFormData.append("program_admin", userInfo.data?.user_id);
 
-          if (currentProgramDetail?.status === "draft") {
+          if (fieldData?.status === "draft") {
             bodyFormData.append("status", "create");
           }
           if (typeof fieldData?.sponsor_logos === "string" && isReopen) {
@@ -565,9 +577,18 @@ export default function CreatePrograms() {
     }
   }, [tabActionInfo.error]);
 
-  const handleDraft = () => {
-    setValue("status", "draft");
-    document.getElementById("program-submit").click();
+  const onDraftSubmit = async () => {
+    clearErrors();
+    let isValid = true;
+    const mandatoryFields = ["category", "program_name"];
+    for (const fields of mandatoryFields) {
+      if (!formValues?.[fields]) {
+        isValid = await trigger(fields);
+      }
+    }
+    if (isValid) {
+      await onSubmit({ ...formValues, status: "draft" });
+    }
   };
 
   useEffect(() => {
@@ -767,19 +788,18 @@ export default function CreatePrograms() {
                       {"Back"}
                     </MuiButton>
                   )}
-                  {/* {currentStep === ProgramTabs.length && (
-                    <Button
-                      btnType="button"
-                      onClick={handleDraft}
-                      btnStyle={{
-                        background: "#787575",
-                        color: "#000",
+                  {!params?.id && (
+                    <MuiButton
+                      sx={{
+                        background: light,
+                        color: main,
+                        border: "none",
                       }}
-                      btnCls="w-[150px]"
-                      btnName={"Save as Draft"}
-                      btnCategory="primary"
-                    />
-                  )} */}
+                      onClick={onDraftSubmit}
+                    >
+                      {"Draft"}
+                    </MuiButton>
+                  )}
                   {/* {(currentStep !== '' &&
                             (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
                                 btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}

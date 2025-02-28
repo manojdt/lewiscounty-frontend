@@ -95,7 +95,7 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
           helperText={
             errors?.[fieldType]?.[index]?.field_options?.[0]?.title?.message
           }
-          sx={{ bgcolor: "#f7f9fc", borderRadius: "4px" }}
+          sx={{ bgcolor: "#fff"}}
         />
       </div>
     );
@@ -132,6 +132,7 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
                 appendOption({ title: "" });
               }
             }}
+            sx={{ bgcolor: "#fff" }}
           />
         </Box>
       ))}
