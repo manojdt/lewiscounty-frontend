@@ -41,6 +41,7 @@ import OverDeleteIcon from "../../assets/images/delete_1x.png";
 import Bg_verificatin_icon from "../../assets/icons/bg-verification-icon.svg";
 import DocuSign_icon from "../../assets/icons/docu-sign-icon.svg";
 import { docuSign } from "../../services/activities";
+import StatusIndicator from "../../shared/StatusIndicator/StatusIndicator";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -364,38 +365,55 @@ const handleFilterSubmit = () => {
             );
           },
       },
-      {
-        field: "status",
-        headerName: "Activity",
-        flex: 1,
-        id: 2,
-        renderCell: (params) => {
-          return (
-            <>
-              <div className="cursor-pointer flex items-center h-full relative">
-                <span
-                  className="w-[80px] flex justify-center h-[30px] px-7"
-                  style={{
-                    background: params.row.member_active
-                      ? memberStatusColor.accept.bgColor
-                      : memberStatusColor.cancel.bgColor,
-                    lineHeight: "30px",
-                    borderRadius: "3px",
-                    width: params.row.member_active ? "110px" : "110px",
-                    height: "34px",
-                    color: params.row.member_active
-                      ? memberStatusColor.accept?.color
-                      : memberStatusColor.cancel.color,
-                    fontSize: "12px",
-                  }}
-                >
-                  {params.row.member_active ? "Active" : "Deactive"}
-                </span>
+      // {
+      //   field: "status",
+      //   headerName: "Activity",
+      //   flex: 1,
+      //   id: 2,
+        // renderCell: (params) => {
+        //   return (
+        //     <>
+        //       <div className="cursor-pointer flex items-center h-full relative">
+        //         <span
+        //           className="w-[80px] flex justify-center h-[30px] px-7"
+        //           style={{
+        //             background: params.row.member_active
+        //               ? memberStatusColor.accept.bgColor
+        //               : memberStatusColor.cancel.bgColor,
+        //             lineHeight: "30px",
+        //             borderRadius: "3px",
+        //             width: params.row.member_active ? "110px" : "110px",
+        //             height: "34px",
+        //             color: params.row.member_active
+        //               ? memberStatusColor.accept?.color
+        //               : memberStatusColor.cancel.color,
+        //             fontSize: "12px",
+        //           }}
+        //         >
+        //           {params.row.member_active ? "Active" : "Deactive"}
+        //         </span>
+        //       </div>
+        //     </>
+        //   );
+        // },
+        {
+          field: "status",
+          headerName: "Activity",
+          flex: 1,
+          id: 2,
+          renderCell: (params) => {
+            // Derive the status code based on member_active property
+            const statusCode = params.row.member_active ? "Active" : "Deactive";
+            
+            return (
+              <div className="flex items-center h-full w-full">
+                <StatusIndicator status={statusCode} />
               </div>
-            </>
-          );
+            );
+          },
         },
-      },
+        
+      
       {
         field: "action",
         headerName: "Action",

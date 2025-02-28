@@ -1523,7 +1523,7 @@ export const ProgramInformationFields = [
     label: "Program Type",
     placeholder: "Select Program Type",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [
       {
@@ -1567,7 +1567,7 @@ export const ProgramInformationFields = [
     label: "Environment Name",
     placeholder: "Enter envirnoment Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
@@ -1672,7 +1672,7 @@ export const ProgramInformationFields = [
         label: "Title",
         placeholder: "Enter Title",
         inputRules: {
-          // required: "Title is required",
+          required: "Title is required",
         },
         width: "w-full",
         for: ["admin"],

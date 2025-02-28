@@ -36,6 +36,7 @@ import Crown_Icon from "../../assets/icons/cronwn.svg";
 import moment from "moment";
 import NoDataIcon from "../../assets/icons/no-data-2.svg";
 import { requestPageBreadcrumbs } from "../../component/Breadcrumbs/BreadcrumbsCommonData";
+import StatusIndicator from "../StatusIndicator/StatusIndicator";
 
 export default function ProgramCard({
   title,
@@ -694,7 +695,7 @@ export default function ProgramCard({
                           <span className="program-time">{timeInAMPM}</span>
                         </div>
 
-                        {!statusNotShow.includes(currentProgram.status) ? (
+                        {/* {!statusNotShow.includes(currentProgram.status) ? (
                           <div
                             className="text-[12px] px-2 py-2"
                             style={{
@@ -720,7 +721,27 @@ export default function ProgramCard({
                           >
                             {currentProgram.created_time}
                           </div>
-                        )}
+                        )} */}
+                        {!statusNotShow.includes(currentProgram.status) ? (
+  <StatusIndicator 
+    status={currentProgram.status}
+    sx={{ 
+      padding: "0.5rem", 
+      borderRadius: "3px",
+      backgroundColor: "white"
+    }}
+  />
+) : (
+  <div
+    className="posted-tim text-[10px] px-1 py-1"
+    style={{
+      background: "rgba(241, 241, 241, 1)",
+      borderRadius: "3px",
+    }}
+  >
+    {currentProgram.created_time}
+  </div>
+)}
                       </div>
                     </div>
                   </div>

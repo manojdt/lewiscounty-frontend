@@ -30,6 +30,7 @@ import {
 import { fileNameFromUrl, fileNameString, formatTableNullValues } from '../../utils';
 import { updateUserProgramInfo } from '../../services/userprograms';
 import api from '../../services/api';
+import StatusIndicator from '../../shared/StatusIndicator/StatusIndicator';
 
 export const Tasks = () => {
   const [requestTab, setRequestTab] = useState('all');
@@ -120,29 +121,39 @@ export const Tasks = () => {
     if (column.field === 'status') {
       return {
         ...column,
+        // renderCell: (params) => {
+        //   return (
+        //     <>
+        //       <div className='cursor-pointer flex items-center h-full relative'>
+        //         <span
+        //           className='w-[150px] flex justify-center h-[30px] px-3'
+        //           style={{
+        //             background: taskStatusColor[params.row.status]?.bg || '',
+        //             lineHeight: '30px',
+        //             borderRadius: '3px',
+        //             width: params.row.status==="waiting_for_approval"?'150px':'110px',
+        //             height: '34px',
+        //             color: taskStatusColor[params.row.status]?.color || '',
+        //             fontSize: '12px',
+        //           }}
+        //         >
+        //           {' '}
+        //           {taskStatusTextMentee[params.row.status]}
+        //         </span>
+        //       </div>
+        //     </>
+        //   );
+        // },
         renderCell: (params) => {
           return (
-            <>
-              <div className='cursor-pointer flex items-center h-full relative'>
-                <span
-                  className='w-[150px] flex justify-center h-[30px] px-3'
-                  style={{
-                    background: taskStatusColor[params.row.status]?.bg || '',
-                    lineHeight: '30px',
-                    borderRadius: '3px',
-                    width: params.row.status==="waiting_for_approval"?'150px':'110px',
-                    height: '34px',
-                    color: taskStatusColor[params.row.status]?.color || '',
-                    fontSize: '12px',
-                  }}
-                >
-                  {' '}
-                  {taskStatusTextMentee[params.row.status]}
-                </span>
-              </div>
-            </>
+            <div className="flex items-center  h-full w-full">
+              <StatusIndicator status={params.row.status}>
+              {taskStatusTextMentee[params.row.status]}
+              </StatusIndicator>
+            </div>
           );
         },
+        
       };
     }
     return column;

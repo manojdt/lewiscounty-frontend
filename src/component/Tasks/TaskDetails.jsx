@@ -33,6 +33,7 @@ import {
   TaskFileTypes,
   TaskStatus,
 } from '../../utils/constant';
+import CancelIconn from "@mui/icons-material/Cancel";
 import { useForm } from 'react-hook-form';
 import ToastNotification from '../../shared/Toast';
 import { getSpecificTask } from '../../services/task';
@@ -570,22 +571,18 @@ export const TaskDetails = () => {
                 </div>
               </div>}
                   
-              {taskData.status === "rejected"&&!isPreview && (
-                    <div className="flex gap-4 pt-10">
-                      <button
-                        className="py-3 px-16 text-white text-[14px] flex items-center"
-                        style={{
-                          border: "1px solid #E0382D",
-                          borderRadius: "5px",
-                          color: "#E0382D",
-                          cursor: "not-allowed",
-                        }}
-                        onClick={() => undefined}
-                      >
-                        Cancelled
-                      </button>
-                    </div>
-                  )}
+              {taskData.status === "rejected" && !isPreview && (
+  <div className="flex gap-4 pt-10">
+    <button
+      className="py-3 px-16 text-[14px] flex items-center  border-[#E0382D] text-[#E0382D] rounded-md cursor-not-allowed"
+      disabled
+    >
+      <CancelIconn className="mr-2 font-medium" />
+      Cancelled
+    </button>
+  </div>
+)}
+
               {isPreview && (
                 <Box mb={3}>
                   <div style={{ marginTop: '40px' }}>
