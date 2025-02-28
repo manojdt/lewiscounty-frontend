@@ -639,6 +639,14 @@ export const Navbar = () => {
                   />
                 </div>
               )}
+               {role==='admin' &&<div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
+                      <img
+                        src={SettingIcon}
+                        onClick={handleTooltipOpen}
+                        className='cursor-pointer'
+                      />
+                      </div>
+                     }
 
               {/* Setting Start */}
               {role === 'admin' && (
@@ -687,20 +695,14 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <div className='flex flex-col pl-5 items-end '>
+                      
+                      <div className='flex flex-col pl-2 items-end '>
                         <span className='text-[14px] font-semibold'>{profile.name}</span>
                          <span className='text-[#1D5BBF] text-xs'>{capitalizeFirstLetter(role)}</span>
                       </div>
                       
-                     {/* {<div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
-                      <img
-                        src={SettingIcon}
-                        onClick={handleTooltipOpen}
-                        className='cursor-pointer'
-                      />
-                      </div>
-                     }
-                       */}
+                    
+                      
                     </HtmlTooltip>
                   </div>
                 </ClickAwayListener>
