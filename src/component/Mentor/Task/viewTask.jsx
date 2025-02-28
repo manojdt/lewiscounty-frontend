@@ -233,10 +233,10 @@ const ViewTask = () => {
                             </tr>
                             <tr className="bg-white border-b  dark:bg-gray-800">
                                 <th style={{ border: '1px solid rgba(0, 174, 189, 1)', background: '#fff', color: '#000' }} scope="row" className="px-6 py-4 font-medium whitespace-nowrap !text-[#18283D] !text-[14px]">
-                                    Due Date
+                                    Goal
                                 </th>
                                 <td className="px-6 py-4 text-white !text-[14px]" style={{ background: 'rgba(0, 174, 189, 1)' }}>
-                                    {taskDetails.due_date ? moment(taskDetails.due_date).format("MM-DD-YYYY") : "-"}
+                                    {taskDetails.goal_name ?? "-"}
                                 </td>
                             </tr>
 
@@ -448,7 +448,7 @@ const ViewTask = () => {
                                 padding: "4px 22px",
                                 marginLeft: "15px"
                             }}>
-                                {taskDetails.result}
+                                {taskDetails.result ? taskDetails?.result === "Fail" ? "No Pass" : taskDetails?.result : "-"}
                             </span>
                         </div>
                     </div>
@@ -458,7 +458,7 @@ const ViewTask = () => {
                 {
                     taskDetails?.result === "Fail" &&
                     <Box className="!bg-[#FFE7E7] !border !border-[#E0382D] rounded-[5px]" mt={3}>
-                        <Typography className='!text-[#E0382D] !text-[18px] px-[20px] py-[12px]' sx={{ fontWeight: 600, borderBottom: "1px solid #E0382D" }}>Failed Reason</Typography>
+                        <Typography className='!text-[#E0382D] !text-[18px] px-[20px] py-[12px]' sx={{ fontWeight: 600, borderBottom: "1px solid #E0382D" }}>No Pass Reason</Typography>
                         <Typography className=' px-[20px] py-[12px] !text-[14px] !text-[#18283D]'>{taskDetails?.fail_reason}</Typography>
                     </Box>
                 }

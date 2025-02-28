@@ -675,8 +675,8 @@ const MentorTask = () => {
 
       program_category_name: seletedItem?.category_name,
       program_name: seletedItem?.prgrame_name,
-      program_startdate: seletedItem?.start_date,
-      program_enddate: seletedItem?.end_date,
+      program_startdate: seletedItem?.program_start_date,
+      program_enddate: seletedItem?.program_end_date,
       task_name: seletedItem?.task_name,
       reference_link: seletedItem?.reference_links,
       task_details: seletedItem?.task_details,
