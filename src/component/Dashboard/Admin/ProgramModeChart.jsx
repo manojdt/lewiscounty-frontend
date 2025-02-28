@@ -29,7 +29,7 @@ const ProgramModeChart = ({programMetrics ={}}) => {
                     ></div>
                     <h4>Program Mode Metrics</h4>
                 </div>
-                {
+                {/* {
                     <p
                         className="leading-8 cursor-pointer text-[12px] px-2"
                         style={{
@@ -40,7 +40,7 @@ const ProgramModeChart = ({programMetrics ={}}) => {
                     >
                       Month
                     </p>
-                }
+                } */}
             </div>
             <div className="flex items-center justify-center">
             <DonutChart data={data} primaryColor={primaryColor} secondaryColor={secondaryColor} centeredData={centeredData}/>
