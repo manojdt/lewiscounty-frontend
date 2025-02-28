@@ -21,14 +21,23 @@ import ViewIcon from "../../assets/images/view1x.png";
 import ShareIcon from "../../assets/icons/Share.svg";
 import FilterIcon from "../../assets/icons/filterIcon.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { activateUser, deactivateUser, deleteUser, getMembersList } from "../../services/members";
+import {
+  activateUser,
+  deactivateUser,
+  deleteUser,
+  getMembersList,
+} from "../../services/members";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { memberStatusColor } from "../../utils/constant";
 import MuiModal from "../../shared/Modal";
 import { useForm } from "react-hook-form";
 import { Button } from "../../shared";
 import AssignMentorProgram from "./AssignMentorProgram";
-import { capitalizeFirstLetter, formatTableNullValues, useDebounce } from "../../utils";
+import {
+  capitalizeFirstLetter,
+  formatTableNullValues,
+  useDebounce,
+} from "../../utils";
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import {
   memberMentorDashBoard,
@@ -42,6 +51,7 @@ import Bg_verificatin_icon from "../../assets/icons/bg-verification-icon.svg";
 import DocuSign_icon from "../../assets/icons/docu-sign-icon.svg";
 import { docuSign } from "../../services/activities";
 import StatusIndicator from "../../shared/StatusIndicator/StatusIndicator";
+import AddTicketIcon from "../../assets/icons/add-ticket-icon.svg";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -59,12 +69,12 @@ const Members = () => {
   const [allData, setAllData] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [search] = useSearchParams();
-  const breadcrumbsType = search.get("breadcrumbsType") || "";  
+  const breadcrumbsType = search.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [seletedItem, setSelectedItem] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isDeleteModal,setDeleteModal] = useState(false);
+  const [isDeleteModal, setDeleteModal] = useState(false);
   const [actionColumnInfo, setActionColumnInfo] = useState({
     cancelPopup: false,
     menteecancel: false,
@@ -73,14 +83,18 @@ const Members = () => {
     assignPopup: false,
     message: "",
   });
-  const [filterInfo, setFilterInfo] = useState({ search: "", status: "",role:'' });
+  const [filterInfo, setFilterInfo] = useState({
+    search: "",
+    status: "",
+    role: "",
+  });
   const dispatch = useDispatch();
-  const { mentor, mentee,admin, loading, error } = useSelector(
+  const { mentor, mentee, admin, loading, error } = useSelector(
     (state) => state.members
   );
-  console.log(mentor,mentee,admin)
-  const [formattedMentor, setFormattedMentor] = React.useState([])
-  const [formattedMentee, setFormattedMentee] = React.useState([])
+  console.log(mentor, mentee, admin);
+  const [formattedMentor, setFormattedMentor] = React.useState([]);
+  const [formattedMentee, setFormattedMentee] = React.useState([]);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 10,
@@ -90,10 +104,9 @@ const Members = () => {
     selectedItem: "", // Change from array to string
     options: [
       { id: "mentor", name: "Mentor" },
-      { id: "mentee", name: "Mentee" }
-    ]
+      { id: "mentee", name: "Mentee" },
+    ],
   });
-  
 
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedRequestedTab = searchParams.get("tabType");
@@ -110,7 +123,7 @@ const Members = () => {
 
   const handleDeactive = () => {
     handleClose();
-    const isOpenDeactivePopup = ['mentor','mentee'].includes(actionTab);
+    const isOpenDeactivePopup = ["mentor", "mentee"].includes(actionTab);
     setActionColumnInfo({
       cancelPopup: isOpenDeactivePopup,
       menteecancel: actionTab === "mentee",
@@ -121,56 +134,56 @@ const Members = () => {
     reset();
     setActionColumnInfo({ cancelPopup: false, menteecancel: false });
   };
-// Handle filter icon click
-const handleFilterIconClick = (e) => {
-  // e.stopPropagation();
-  setFilterPopup({
-    ...filterPopup,
-    show: true,
-    selectedItem: filterInfo.role || ""
-  });
-};
-
-// Handle option selection (now only stores one value)
-const handleSelectOption = (id) => {
-  // If same item is clicked again, deselect it
-  if (filterPopup.selectedItem === id) {
+  // Handle filter icon click
+  const handleFilterIconClick = (e) => {
+    // e.stopPropagation();
     setFilterPopup({
       ...filterPopup,
-      selectedItem: ""
+      show: true,
+      selectedItem: filterInfo.role || "",
     });
-  } else {
-    // Otherwise, select the new item
+  };
+
+  // Handle option selection (now only stores one value)
+  const handleSelectOption = (id) => {
+    // If same item is clicked again, deselect it
+    if (filterPopup.selectedItem === id) {
+      setFilterPopup({
+        ...filterPopup,
+        selectedItem: "",
+      });
+    } else {
+      // Otherwise, select the new item
+      setFilterPopup({
+        ...filterPopup,
+        selectedItem: id,
+      });
+    }
+  };
+
+  // Handle filter submission for single selection
+  const handleFilterSubmit = () => {
+    // Update filterInfo with selected role
+    const newFilterInfo = { ...filterInfo };
+
+    if (filterPopup.selectedItem) {
+      newFilterInfo.role = filterPopup.selectedItem;
+    } else {
+      delete newFilterInfo.role;
+    }
+
+    setFilterInfo(newFilterInfo);
+    setPaginationModel({
+      page: 0,
+      pageSize: 10,
+    });
+
+    // Close the popup
     setFilterPopup({
       ...filterPopup,
-      selectedItem: id
+      show: false,
     });
-  }
-};
-
-// Handle filter submission for single selection
-const handleFilterSubmit = () => {
-  // Update filterInfo with selected role
-  const newFilterInfo = { ...filterInfo };
-  
-  if (filterPopup.selectedItem) {
-    newFilterInfo.role = filterPopup.selectedItem;
-  } else {
-    delete newFilterInfo.role;
-  }
-  
-  setFilterInfo(newFilterInfo);
-  setPaginationModel({
-    page: 0,
-    pageSize: 10,
-  });
-  
-  // Close the popup
-  setFilterPopup({
-    ...filterPopup,
-    show: false
-  });
-};
+  };
   //Mentor/Mentee deactive ---> active
   const handleActivate = () => {
     handleClose();
@@ -188,7 +201,7 @@ const handleFilterSubmit = () => {
         })
       );
     });
-  }
+  };
 
   // Mentor Deactivate
   const handleCancelReasonPopupSubmit = (data) => {
@@ -301,7 +314,7 @@ const handleFilterSubmit = () => {
       tableData = admin;
     }
 
-    let columns = allMembersColumns
+    let columns = allMembersColumns;
 
     if (actionTab === "mentor") {
       columns = columns.map((column) => {
@@ -328,9 +341,11 @@ const handleFilterSubmit = () => {
     const onViewClick = () => {
       handleClose();
       const adminview = `&breadcrumbsType=${actionTab}`;
-      const memberStatus = seletedItem.member_active ? 'Active' : 'Deactive';
-      navigate(`/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`);
-    }
+      const memberStatus = seletedItem.member_active ? "Active" : "Deactive";
+      navigate(
+        `/mentor-details/${seletedItem.id}?member_status=${memberStatus}${adminview}`
+      );
+    };
 
     const updatedColumns = [
       ...columns,
@@ -339,31 +354,31 @@ const handleFilterSubmit = () => {
         headerName: "User Type",
         flex: 1,
         id: 5,
-          for: ["admin"],
-          sortable: false, // Remove default sorting
-          renderHeader: (params) => (
-            <div className="flex items-center gap-1">
-              <span className="font-semibold">{params.colDef.headerName}</span>
-              <img 
-                src={FilterIcon} 
-                alt="Filter" 
-                className="w-4 h-4 cursor-pointer pt-1" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Call your filter function here
-                  handleFilterIconClick(e)
-                }}
-              />
+        for: ["admin"],
+        sortable: false, // Remove default sorting
+        renderHeader: (params) => (
+          <div className="flex items-center gap-1">
+            <span className="font-semibold">{params.colDef.headerName}</span>
+            <img
+              src={FilterIcon}
+              alt="Filter"
+              className="w-4 h-4 cursor-pointer pt-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Call your filter function here
+                handleFilterIconClick(e);
+              }}
+            />
+          </div>
+        ),
+        renderCell: (params) => {
+          return (
+            <div className="flex gap-2 items-center">
+              {" "}
+              {capitalizeFirstLetter(params?.row?.role)}
             </div>
-          ),
-          renderCell: (params) => {
-            return (
-              <div className="flex gap-2 items-center">
-                {" "}
-                {capitalizeFirstLetter(params?.row?.role)}
-              </div>
-            );
-          },
+          );
+        },
       },
       // {
       //   field: "status",
@@ -438,7 +453,10 @@ const handleFilterSubmit = () => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem onClick={() => onViewClick()} className="!text-[12px]">
+                <MenuItem
+                  onClick={() => onViewClick()}
+                  className="!text-[12px]"
+                >
                   <img
                     src={ViewIcon}
                     alt="ViewIcon"
@@ -480,7 +498,7 @@ const handleFilterSubmit = () => {
                     Deactivate
                   </MenuItem>
                 )}
-                 <MenuItem
+                <MenuItem
                   onClick={() => navigate("/bgVerify")}
                   className="!text-[12px]"
                 >
@@ -516,18 +534,16 @@ const handleFilterSubmit = () => {
                   />
                   Delete
                 </MenuItem>
-
-               
               </Menu>
             </>
           );
         },
       },
     ];
-    const formattedRowData = formatTableNullValues(tableData?.results)
-    setAllData(tableData)
+    const formattedRowData = formatTableNullValues(tableData?.results);
+    setAllData(tableData);
     setActiveTableDetails({ data: formattedRowData, column: updatedColumns });
-  }, [mentor, mentee,admin, anchorEl]);
+  }, [mentor, mentee, admin, anchorEl]);
 
   useEffect(() => {
     let payload = {
@@ -558,7 +574,7 @@ const handleFilterSubmit = () => {
   const handleBreadcrumbs = (key) => {
     const dashboardMemberMentor = memberMentorDashBoard();
     const dashboardMemberMentee = memberMenteeDashBoard();
-  
+
     switch (key) {
       case requestPageBreadcrumbs.dashboardMemberMentor:
         setBreadcrumbsArray(dashboardMemberMentor);
@@ -584,38 +600,47 @@ const handleFilterSubmit = () => {
       <div className="pb-3">
         {breadcrumbsType && <Breadcrumbs items={breadcrumbsArray} />}
       </div>
-    
 
       {/* Search and Filters */}
       <div className="flex justify-between">
-      <div className="pl-6 flex items-center font-medium text-[18px]">
-        <p>Users</p>
-      </div>
-      <div className="title flex flex-row sm:flex-row justify-end py-3 px-4 items-center gap-4 mr-4">
-        <div className="relative w-3/4 sm:w-3/6 md:w-[35%] lg:w-[35%] xl:w-[25%] flex-1">
-          <input
-            type="text"
-            id="search-navbar"
-            className="block w-full p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search here..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-          <div className="absolute inset-y-0 end-0 flex items-center pe-3">
-            <img src={SearchIcon} alt="SearchIcon" />
+        <div className="pl-6 flex items-center font-medium text-[18px]">
+          <p>Users</p>
+        </div>
+        <div className="title flex flex-row sm:flex-row justify-end py-3 px-4 items-center gap-4 mr-4">
+          <div className="relative w-3/4 sm:w-3/6 md:w-[35%] lg:w-[35%] xl:w-[25%] flex-1">
+            <input
+              type="text"
+              id="search-navbar"
+              className="block w-full p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search here..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            <div className="absolute inset-y-0 end-0 flex items-center pe-3">
+              <img src={SearchIcon} alt="SearchIcon" />
+            </div>
+          </div>
+          <div className="relative flex gap-3 items-center">
+            <select
+              className="focus:outline-none p-2 text-sm rounded-md border"
+              onChange={handleStatus}
+            >
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Deactive</option>
+            </select>
+          </div>
+          <div className="flex items-center relative">
+            <img className="absolute ml-5" src={AddTicketIcon} alt="" />
+            <Button
+              btnType="button"
+              btnCls="w-[180px] h-12 flex items-center justify-center gap-2 whitespace-nowrap px-4"
+              btnName={"Create New User"}
+              btnCategory="primary"
+              onClick={() => navigate(`/members/add?breadcrumbsType=${requestPageBreadcrumbs.createNewusers}`)}
+            />
           </div>
         </div>
-        <div className="relative flex gap-3 items-center">
-          <select
-            className="focus:outline-none p-2 text-sm rounded-md border"
-            onChange={handleStatus}
-          >
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="inactive">Deactive</option>
-          </select>
-        </div>
-      </div>
       </div>
 
       {/* Data Table */}
@@ -703,7 +728,9 @@ const handleFilterSubmit = () => {
             className="py-5 px-5"
           >
             <div className="flex justify-between mb-4">
-              <h3 className="text-base text-black font-medium">User Type  {filterPopup.column}</h3>
+              <h3 className="text-base text-black font-medium">
+                User Type {filterPopup.column}
+              </h3>
               <img
                 className="cursor-pointer"
                 onClick={() => setFilterPopup({ ...filterPopup, show: false })}
@@ -794,7 +821,7 @@ const handleFilterSubmit = () => {
             </div>
           </div>
         </div>
-      </Backdrop> 
+      </Backdrop>
     </div>
   );
 };

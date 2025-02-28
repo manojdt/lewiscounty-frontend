@@ -1,20 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import CircularProgress from '@mui/material/CircularProgress';
-import Backdrop from '@mui/material/Backdrop';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import SuccessTik from '../../assets/images/blue_tik1x.png';
-import rightArrow from '../../assets/images/right.png';
-import { Button, Navbar, Stepper } from '../../shared';
-import { MenteeStepsList, StepsList, user, userStatus } from '../../utils/constant';
+import SuccessTik from "../../assets/images/blue_tik1x.png";
+import rightArrow from "../../assets/images/right.png";
+import { Button, Navbar, Stepper } from "../../shared";
+import {
+  MenteeStepsList,
+  StepsList,
+  user,
+  userStatus,
+} from "../../utils/constant";
 import {
   StepFormFields,
   Stepname,
   MenteeStepname,
   MenteeStepFormFields,
-} from '../../utils/formFields';
-import StepComponenRender from './StepComponentRender';
+} from "../../utils/formFields";
+import StepComponenRender from "./StepComponentRender";
 
 import {
   updateInfo,
@@ -24,13 +29,18 @@ import {
   updateToken,
   updateUserInfo,
   updateUserRole,
-} from '../../services/loginInfo';
-import SuccessIcon from '../../assets/images/Success_tic1x.png';
-import ToastNotification from '../../shared/Toast';
-import api from '../../services/api';
-import { jwtDecode } from 'jwt-decode';
-import { launchProgram } from '../../services/userprograms';
-import { useGetMentorQuestionsQuery } from '../../features/questions/questionsapi.service';
+} from "../../services/loginInfo";
+import SuccessIcon from "../../assets/images/Success_tic1x.png";
+import ToastNotification from "../../shared/Toast";
+import api from "../../services/api";
+import { jwtDecode } from "jwt-decode";
+import { launchProgram } from "../../services/userprograms";
+import { useGetMentorQuestionsQuery } from "../../features/questions/questionsapi.service";
+import {
+  requestPageBreadcrumbs,
+  new_mentee_questions,
+} from "../Breadcrumbs/BreadcrumbsCommonData";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export const Questions = () => {
   const navigate = useNavigate();
@@ -40,6 +50,8 @@ export const Questions = () => {
   const [allStepList, setAllStepList] = useState([]);
   const [formFields, setFormFields] = useState([]);
   const [stepData, setStepData] = useState({});
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+
   const [btnTypeAction, setBtnTypeAction] = useState({
     back: false,
     next: false,
@@ -54,12 +66,14 @@ export const Questions = () => {
     redirect: false,
   });
   const [searchParams] = useSearchParams();
+  const breadcrumbsType = searchParams.get("breadcrumbsType");
+
   const [customLoading, setCustomLoading] = useState(false);
 
-  const role = userInfo?.data?.role || '';
-const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
+  const role = userInfo?.data?.role || "";
+  const { data, isLoading, refetch, isFetching } = useGetMentorQuestionsQuery();
   const submitQuestionsData = (apiData) => {
-    if (role === 'mentee') {
+    if (role === "mentee") {
       const menteeApiData = {
         ...apiData,
         gender: apiData.gender
@@ -67,7 +81,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             ? apiData.gender[0]
             : apiData.gender
           : null,
-        dob: apiData.dob && new Date(apiData.dob).toISOString().split('T')[0],
+        dob: apiData.dob && new Date(apiData.dob).toISOString().split("T")[0],
         phone_number: apiData.phone_number,
         documents: undefined,
       };
@@ -85,17 +99,16 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
           : null,
         phone_number: apiData.phone_number,
         documents: undefined,
-     is_questions_completed:true
+        is_questions_completed: true,
       };
-      if(data?.data){
+      if (data?.data) {
         dispatch(updateQuestions(mentorApiData)).then((res) => {
           docUpload(apiData);
         });
-      }else{
+      } else {
         dispatch(updateQuestionsPost(mentorApiData)).then((res) => {
           docUpload(apiData);
         });
-
       }
     }
   };
@@ -105,36 +118,36 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     let bodyFormData = new FormData();
     if (data?.documents?.length) {
       data.documents.forEach((file) =>
-        bodyFormData.append('documents', file[0])
+        bodyFormData.append("documents", file[0])
       );
     }
     const headers = {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     };
 
     setCustomLoading(true);
-    const submitDocument = await api.post('user/documents', bodyFormData, {
+    const submitDocument = await api.post("user/documents", bodyFormData, {
       headers: headers,
     });
 
     if (submitDocument.status === 201 || submitDocument.status === 200) {
-      if (userInfo?.data?.role === 'mentee') {
+      if (userInfo?.data?.role === "mentee") {
         dispatch(
           launchProgram({
             program:
-              searchParams.get('program_id') &&
-              parseInt(searchParams.get('program_id')),
-            request_type: 'program_join',
+              searchParams.get("program_id") &&
+              parseInt(searchParams.get("program_id")),
+            request_type: "program_join",
           })
         ).then(async (res) => {
-          if (res.meta.requestStatus === 'fulfilled') {
-            const updateToken = await api.post('generate_new_token', {
+          if (res.meta.requestStatus === "fulfilled") {
+            const updateToken = await api.post("generate_new_token", {
               headers: headers,
             });
 
             if (updateToken.status === 200) {
-              localStorage.setItem('access_token', updateToken.data.access);
-              localStorage.setItem('refresh_token', updateToken.data.refresh);
+              localStorage.setItem("access_token", updateToken.data.access);
+              localStorage.setItem("refresh_token", updateToken.data.refresh);
               handleSubmitData(updateToken);
               setCustomLoading(false);
             }
@@ -148,13 +161,13 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
         // }
       } else {
         // handleSubmitData(submitDocument);
-        const updateToken = await api.post('generate_new_token', {
+        const updateToken = await api.post("generate_new_token", {
           headers: headers,
         });
 
         if (updateToken.status === 200) {
-          localStorage.setItem('access_token', updateToken.data.access);
-          localStorage.setItem('refresh_token', updateToken.data.refresh);
+          localStorage.setItem("access_token", updateToken.data.access);
+          localStorage.setItem("refresh_token", updateToken.data.refresh);
           handleSubmitData(updateToken);
           // setCustomLoading(false);
         }
@@ -165,8 +178,8 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   };
 
   const handleSubmitData = (submitDocument) => {
-    localStorage.setItem('access_token', submitDocument.data.access);
-    localStorage.setItem('refresh_token', submitDocument.data.refresh);
+    localStorage.setItem("access_token", submitDocument.data.access);
+    localStorage.setItem("refresh_token", submitDocument.data.refresh);
     let decoded = jwtDecode(submitDocument.data.access);
     dispatch(updateUserInfo({ data: decoded }));
     // reset()
@@ -185,14 +198,14 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     const updatedSteps = allStepList.map((step, index) => {
       // Set the last step to "In-Progress"
       if (index === lastStep - 1) {
-        return { ...step, status: 'In-Progress' };
+        return { ...step, status: "In-Progress" };
       }
       // Retain "Completed" status for steps before the last step
-      if (index < lastStep - 1 && step.status === 'Completed') {
-        return { ...step, status: 'Completed' };
+      if (index < lastStep - 1 && step.status === "Completed") {
+        return { ...step, status: "Completed" };
       }
       // Set other steps after the last step to an empty status
-      return { ...step, status: '' };
+      return { ...step, status: "" };
     });
 
     setAllStepList(updatedSteps);
@@ -203,7 +216,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
       .filter((field) => field.inputRules?.required)
       .filter((field) => {
         const value = data[field.name];
-        return !value || (typeof value === 'string' && value.trim() === ''); // Check if it's missing or empty
+        return !value || (typeof value === "string" && value.trim() === ""); // Check if it's missing or empty
       });
 
     if (missingFields.length > 0) {
@@ -240,12 +253,12 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     if (actionInfo.modal) {
       let userRole = userInfo?.data?.role;
       setTimeout(() => {
-        if (userRole === 'mentee') {
+        if (userRole === "mentee") {
           setActionInfo({ modal: false, loading: false });
-          navigate(`/program-details/${searchParams.get('program_id')}`);
+          navigate(`/program-details/${searchParams.get("program_id")}`);
         }
-        if (userRole === 'mentor') {
-          navigate('/dashboard');
+        if (userRole === "mentor") {
+          navigate("/dashboard");
         }
       }, 1000);
     }
@@ -293,9 +306,9 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
 
     const activeSteps = allStepList.map((step) => {
       if (step.key === stepName[currentStep - 1])
-        return { ...step, status: 'Completed' };
+        return { ...step, status: "Completed" };
       if (step.key === stepName[currentStep])
-        return { ...step, status: 'In-Progress' };
+        return { ...step, status: "In-Progress" };
       return step;
     });
     const fieldData = { ...stepData, ...data };
@@ -304,7 +317,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     if (formFields.length === currentStep) {
       const { first_name, last_name, email, ...apiData } = {
         ...fieldData,
-        prev_mentorship: stepData.prev_mentorship === 'true',
+        prev_mentorship: stepData.prev_mentorship === "true",
       };
       const res = handleSubmit(combinedData);
       if (!res) {
@@ -315,15 +328,15 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   };
 
   const handleRedirect = () => {
-    if (role === 'mentor') {
+    if (role === "mentor") {
       // navigate('/mentor-doc-upload')
     }
 
-    if (role === 'mentee') {
+    if (role === "mentee") {
       const url =
-        searchParams.get('program_id') && searchParams.get('program_id') !== ''
-          ? `/mentee-doc-upload/${searchParams.get('program_id')}`
-          : '/programs';
+        searchParams.get("program_id") && searchParams.get("program_id") !== ""
+          ? `/mentee-doc-upload/${searchParams.get("program_id")}`
+          : "/programs";
       // navigate(url)
     }
   };
@@ -347,9 +360,9 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     ) {
       setStepData({
         ...stepData,
-        [role === 'mentee' ? 'first_name' : 'first_name']:
+        [role === "mentee" ? "first_name" : "first_name"]:
           userInfo.data.first_name,
-        [role === 'mentee' ? 'last_name' : 'last_name']:
+        [role === "mentee" ? "last_name" : "last_name"]:
           userInfo.data.last_name,
         email: userInfo.data.email,
       });
@@ -368,9 +381,9 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const handlePreviousStep = (data) => {
     const activeSteps = allStepList.map((step) => {
       if (step.key === stepName[currentStep - 1])
-        return { ...step, status: '' };
+        return { ...step, status: "" };
       if (step.key === stepName[currentStep - 2])
-        return { ...step, status: 'In-Progress' };
+        return { ...step, status: "In-Progress" };
       return step;
     });
     setStepData({ ...stepData, ...data });
@@ -380,7 +393,7 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   };
 
   useEffect(() => {
-    if (role === 'mentee') {
+    if (role === "mentee") {
       setAllStepList(MenteeStepsList);
       setFormFields(MenteeStepFormFields);
       setStepName(MenteeStepname);
@@ -395,14 +408,14 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
     const updatedSteps = allStepList.map((step, index) => {
       // Set the clicked step to "In-Progress"
       if (index === stepNumber - 1) {
-        return { ...step, status: 'In-Progress' };
+        return { ...step, status: "In-Progress" };
       }
       // Retain "Completed" status for steps before the clicked step
-      if (index < stepNumber - 1 && step.status === 'Completed') {
-        return { ...step, status: 'Completed' };
+      if (index < stepNumber - 1 && step.status === "Completed") {
+        return { ...step, status: "Completed" };
       }
       // Set other steps after the clicked step to an empty status
-      return { ...step, status: '' };
+      return { ...step, status: "" };
     });
 
     setAllStepList(updatedSteps);
@@ -420,16 +433,16 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const skipAall = () => {
     return (
       // (
-        // (role === 'mentor' && currentStep >= 2) ||
-        // (role === 'mentee' && currentStep > 1)) &&
-        currentStep > 1 &&
+      // (role === 'mentor' && currentStep >= 2) ||
+      // (role === 'mentee' && currentStep > 1)) &&
+      currentStep > 1 &&
       currentStep !== formFields.length && (
-        <div className='flex items-center gap-2' onClick={handleSkip}>
-          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Skip All</p>
+        <div className="flex items-center gap-2" onClick={handleSkip}>
+          <p style={{ fontWeight: "bold", cursor: "pointer" }}>Skip All</p>
           <img
             src={rightArrow}
-            className='h-[20px] w-[20px] cursor-pointer'
-            alt='right'
+            className="h-[20px] w-[20px] cursor-pointer"
+            alt="right"
           />
         </div>
       )
@@ -445,10 +458,24 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
   const handleLogout = () => {
     // localStorage.removeItem("access_token");
     // localStorage.removeItem("refresh_token");
-    localStorage.clear()
+    localStorage.clear();
     dispatch({ type: "logout" });
     navigate("/login");
   };
+  const handleBreadcrumbs = (key) => {
+    const new_mentee = new_mentee_questions();
+
+    // Check for the correct key that exists in your object
+    if (requestPageBreadcrumbs.newMenteeQuestions) {
+      setBreadcrumbsArray(new_mentee);
+    }
+  };
+  useEffect(() => {
+    if (breadcrumbsType) {
+      handleBreadcrumbs(breadcrumbsType);
+    }
+  }, [breadcrumbsType, requestPageBreadcrumbs]);
+
   return (
     <>
       <Navbar />
@@ -503,6 +530,9 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             </div>
           </div>
         </Backdrop>
+        <div className="pb-2">
+          <Breadcrumbs items={breadcrumbsArray} />
+        </div>
         {/* {role === "mentor" && (
           <div className="flex justify-end pb-2">
             <Button
@@ -514,17 +544,22 @@ const { data, isLoading, refetch, isFetching}=useGetMentorQuestionsQuery()
             />
           </div>
         )} */}
-        <div className='mb-1'>
-          {role===user.mentor&&
-        <div className='flex items-center gap-1'onClick={()=>handleLogout()}>
-          <img
-            src={rightArrow}
-            className='h-[20px] w-[20px] cursor-pointer rotate-180'
-            alt='right'
-          />
-          <p style={{ fontWeight: 'bold', cursor: 'pointer' }}>Go to Login</p>
-        </div>}
-
+        <div className="mb-1">
+          {role === user.mentor && (
+            <div
+              className="flex items-center gap-1"
+              onClick={() => handleLogout()}
+            >
+              <img
+                src={rightArrow}
+                className="h-[20px] w-[20px] cursor-pointer rotate-180"
+                alt="right"
+              />
+              <p style={{ fontWeight: "bold", cursor: "pointer" }}>
+                Go to Login
+              </p>
+            </div>
+          )}
         </div>
         <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
           <div
