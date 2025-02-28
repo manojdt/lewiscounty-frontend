@@ -40,7 +40,36 @@ export const getPost = createAsyncThunk(
     }
 );
 
+export const getProgramPost = createAsyncThunk(
+    "getProgramPost",
+    async (data = {}) => {
+        let url = `post/mentee-registered-programs`;
+        
+        const params = new URLSearchParams();
+        
+        if (data.page) {
+            params.append('page', data.page);
+        }
+        if (data.pageSize) {
+            params.append('limit', data.pageSize);
+        }
+        if (data.search) {
+            params.append('search', data.search);
+        }
 
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+        console.log("URL:", url);
+
+        const getProgramPostData = await api.get(url);
+
+        if (getProgramPostData.status === 200 && getProgramPostData.data) {
+            return getProgramPostData.data;
+        }
+        return getProgramPostData;
+    }
+);
 export const getPostDetails = createAsyncThunk(
     "getPostDetails",
     async (id) => {
@@ -62,6 +91,35 @@ export const getRecentPosts = createAsyncThunk(
         return getRecentPostDetail;
     }
 );
+export const getRecentView = createAsyncThunk(
+    "getRecentView",
+    async (id) => {
+        const getRecentViewDetail = await api.get(`post/feedback-track?program_id=${id}`);
+        if (getRecentViewDetail.status === 200 && getRecentViewDetail.data) {
+            return getRecentViewDetail.data;
+        }
+        return getRecentViewDetail;
+    }
+);
+export const createFeedbackTrack = createAsyncThunk(
+    "createFeedbackTrack",
+    async (data) => {
+        if (!data.program_id) {
+            throw new Error('program_id is required');
+        }
+
+        const createFeedbackTrackResponse = await api.post('post/feedback-track', {
+            program_id: data.program_id,
+            ...data
+        });
+
+        if ((createFeedbackTrackResponse.status === 200 || createFeedbackTrackResponse.status === 201) && createFeedbackTrackResponse.data) {
+            const recentViewResponse = await api.get(`post/feedback-track?program_id=${data.program_id}`);
+            return recentViewResponse.data;
+        }
+        return createFeedbackTrackResponse;
+    }
+);
 
 export const getFeedTrack = createAsyncThunk(
     "getFeedTrack",
@@ -71,6 +129,16 @@ export const getFeedTrack = createAsyncThunk(
             return getFeedTrack.data;
         }
         return getFeedTrack;
+    }
+);
+export const getProgramFeedTrack = createAsyncThunk(
+    "getProgramFeedTrack",
+    async (id) => {
+        const getProgramFeedTrack = await api.get(`post/comments?program_id=${id}`);
+        if (getProgramFeedTrack.status === 200 && getProgramFeedTrack.data) {
+            return getProgramFeedTrack.data;
+        }
+        return getProgramFeedTrack;
     }
 );
 

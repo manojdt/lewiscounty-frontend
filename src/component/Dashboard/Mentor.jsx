@@ -23,6 +23,7 @@ import api from "../../services/api";
 import { getUserProfile } from "../../services/profile";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { getPost } from "../../services/feeds";
+import { getProgramPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
@@ -214,17 +215,26 @@ export const Mentor = () => {
     }
   }, [userpragrams.status]);
 
+  // React.useEffect(() => {
+  //   //   if (feedsList?.length === 0) {
+  //   let feedData = {
+  //     page: 1,
+  //     pageSize: 5,
+  //   };
+  //   dispatch(getPost(feedData));
+  //   getTopMentors();
+  //   // fetchTopPrograms()
+  //   //   }
+  // }, []);
   React.useEffect(() => {
-    //   if (feedsList?.length === 0) {
-    let feedData = {
-      page: 1,
-      pageSize: 5,
-    };
-    dispatch(getPost(feedData));
-    getTopMentors();
-    // fetchTopPrograms()
-    //   }
-  }, []);
+      //   if (feedsList?.length === 0) {
+      let feedData = {
+        page: 1,
+        // pageSize: 5,
+      };
+      dispatch(getProgramPost(feedData));
+      //   }
+    }, []);
 
   const getTopMentors = async () => {
     const topMentor = await api.get("rating/top_mentor");
