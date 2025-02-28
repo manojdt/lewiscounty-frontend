@@ -452,7 +452,7 @@ const MentorTaskDetails = () => {
                         onClick={() =>
                           handleOpenConfirmPopup(
                             "cancel",
-                            "Task Fail Reason",
+                            "Task No Pass Reason",
                             "fail"
                           )
                         }
@@ -531,8 +531,8 @@ const MentorTaskDetails = () => {
       task_id: menteeTaskList?.assign_task_id,
       program_category_name: data?.category_name,
       program_name: data?.program_name,
-      program_startdate: data?.start_date,
-      program_enddate: data?.end_date,
+      program_startdate: data?.program_startdate,
+      program_enddate: data?.program_enddate,
       task_name: data?.task_name,
       reference_link: data?.reference_link,
       task_details: data?.task_details,
