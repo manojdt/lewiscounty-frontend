@@ -95,6 +95,7 @@ import BgVerify from "./component/BackgroundVerification/BgVerify";
 import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
 import CreateNewUser from "./component/Members/CreateNewUser";
+import { IndividualPage } from "./component/Questions/IndividualPage";
 
 
 function App() {
@@ -286,6 +287,8 @@ function App() {
             <Route path='/testimonialView/:id' element={<TestimonialView />} />
             <Route path='/historyNotes/:id' element={<HistoryNotes />} />
           </Route>
+          <Route path="/individual" element={<IndividualPage />} />
+          {/* <Route path="/group" element={<GroupPage />} /> */}
         </Route>
 
         <Route path='/logout' element={<Logout />} />
