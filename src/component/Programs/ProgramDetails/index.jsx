@@ -635,7 +635,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const decodedKey = decodeURIComponent(key);
     // Get 'type' from URL search params
     const searchParams = new URLSearchParams(window.location.search);
-    const type = searchParams.get("type");
+    const type = searchParams.get("statustype");
 
     // Define labels based on 'type'
     const typeLabels = {
