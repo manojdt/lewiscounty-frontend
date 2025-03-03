@@ -155,7 +155,6 @@ export default function Feedback() {
     dispatch(getProgramPost());
   }
 };
-  console.log("feeds", feeds);
 
   const displayCommentBtns = (replyData, rIndex, marginLeft) => {
     return (

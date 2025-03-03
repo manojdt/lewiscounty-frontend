@@ -60,7 +60,6 @@ export const getProgramPost = createAsyncThunk(
         if (params.toString()) {
             url += `?${params.toString()}`;
         }
-        console.log("URL:", url);
 
         const getProgramPostData = await api.get(url);
 
