@@ -581,14 +581,14 @@ export const Navbar = () => {
                   />
                 </div>
               )}
-               {role==='admin' &&<div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
+               {/* {role==='admin' &&<div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
                       <img
                         src={SettingIcon}
                         onClick={handleTooltipOpen}
                         className='cursor-pointer'
                       />
                       </div>
-                     }
+                     } */}
 
               {/* Setting Start */}
               {role === "admin" && (
