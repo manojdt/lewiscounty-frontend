@@ -12,6 +12,7 @@ import {
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Card from "../../../shared/Card";
+import StatusIndicator from "../../../shared/StatusIndicator/StatusIndicator";
 import {
   adminRequestOverview,
   menteesRequestOverview,
@@ -785,29 +786,37 @@ export default function AllRequest() {
         "program_reschedule",
         "program_new",
       ],
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status} />
+          </div>
         );
       },
+      
     },
     {
       ...// role !== "mentee" &&
@@ -1050,29 +1059,37 @@ export default function AllRequest() {
       flex: 1,
       id: 2,
       for: ["admin", "mentor", "mentee"],
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status || ""}></StatusIndicator>
+          </div>
         );
       },
+      
     },
     {
       field: "action",
@@ -1187,35 +1204,50 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[
+      //             params?.row?.status === "accept"
+      //               ? "approved"
+      //               : params?.row?.status === "cancel"
+      //               ? "rejected"
+      //               : params?.row?.status
+      //           ] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
+        // Map accept to approved and cancel to rejected as needed
+        const statusCode = params.row.status === "accept" 
+          ? "approved" 
+          : params.row.status === "cancel" 
+            ? "rejected" 
+            : params.row.status;
+            
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[
-                  params?.row?.status === "accept"
-                    ? "approved"
-                    : params?.row?.status === "cancel"
-                    ? "rejected"
-                    : params?.row?.status
-                ] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center h-full w-full">
+            <StatusIndicator status={statusCode} />
+          </div>
         );
       },
+      
     },
     {
       field: "action",
@@ -1344,29 +1376,39 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+            {requestStatusText[params.row.status] || ""}
+            </StatusIndicator>
+          </div>
         );
       },
+      
     },
     {
       field: "action",
@@ -1396,31 +1438,43 @@ export default function AllRequest() {
       flex: 1,
       id: 2,
       for: ["admin", "mentor", "mentee"],
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {params.row.status === "rejected"
+      //             ? "Reviewed"
+      //             : requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {params.row.status === "rejected"
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+            {params.row.status === "rejected"
                   ? "Reviewed"
                   : requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+            </StatusIndicator>
+          </div>
         );
       },
+      
     },
     {
       field: "action",
@@ -1540,28 +1594,38 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background: requestStatusColor[params.row.status]?.bg || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background: requestStatusColor[params.row.status]?.bg || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+              {requestStatusText[params.row.status] || ""}
+            </StatusIndicator>
+          </div>
         );
       },
+      
     },
     {
       field: "action",
@@ -1660,27 +1724,36 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+              {requestStatusText[params.row.status] || ""}
+            </StatusIndicator>
+          </div>
         );
       },
     },
@@ -1811,29 +1884,39 @@ export default function AllRequest() {
       headerName: "Status",
       flex: 1,
       id: 2,
+      // renderCell: (params) => {
+      //   return (
+      //     <>
+      //       <div className="cursor-pointer flex items-center h-full relative">
+      //         <span
+      //           className="w-[80px] flex justify-center h-[30px] px-7"
+      //           style={{
+      //             background:
+      //               requestStatusColor[params.row.status]?.bgColor || "",
+      //             lineHeight: "30px",
+      //             borderRadius: "3px",
+      //             width: "110px",
+      //             height: "34px",
+      //             color: requestStatusColor[params.row.status]?.color || "",
+      //             fontSize: "12px",
+      //           }}
+      //         >
+      //           {requestStatusText[params.row.status] || ""}
+      //         </span>
+      //       </div>
+      //     </>
+      //   );
+      // },
       renderCell: (params) => {
         return (
-          <>
-            <div className="cursor-pointer flex items-center h-full relative">
-              <span
-                className="w-[80px] flex justify-center h-[30px] px-7"
-                style={{
-                  background:
-                    requestStatusColor[params.row.status]?.bgColor || "",
-                  lineHeight: "30px",
-                  borderRadius: "3px",
-                  width: "110px",
-                  height: "34px",
-                  color: requestStatusColor[params.row.status]?.color || "",
-                  fontSize: "12px",
-                }}
-              >
-                {requestStatusText[params.row.status] || ""}
-              </span>
-            </div>
-          </>
+          <div className="flex items-center  h-full w-full">
+            <StatusIndicator status={params.row.status}>
+              {requestStatusText[params.row.status] || ""}
+            </StatusIndicator>
+          </div>
         );
       },
+
     },
     {
       field: "action",

@@ -1493,7 +1493,7 @@ export const ProgramInformationFields = [
     label: "Program Environment",
     placeholder: "Select Environment",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [
       {
@@ -1523,7 +1523,7 @@ export const ProgramInformationFields = [
     label: "Program Type",
     placeholder: "Select Program Type",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [
       {
@@ -1567,7 +1567,7 @@ export const ProgramInformationFields = [
     label: "Environment Name",
     placeholder: "Enter envirnoment Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin"],
@@ -1611,7 +1611,7 @@ export const ProgramInformationFields = [
     label: "Phone Number",
     placeholder: "Enter Phone Number",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
       pattern: {
         value: /^(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/,
         message: "Invalid phone number format",
@@ -1672,7 +1672,7 @@ export const ProgramInformationFields = [
         label: "Title",
         placeholder: "Enter Title",
         inputRules: {
-          // required: "Title is required",
+          required: "Title is required",
         },
         width: "w-full",
         for: ["admin"],
@@ -1771,7 +1771,7 @@ export const ProgramInformationFields = [
     label: "Sessions",
     placeholder: "Select Sessions",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: SessionCounts(),
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
@@ -1794,7 +1794,7 @@ export const ProgramInformationFields = [
     label: "Description",
     placeholder: "",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
     for: ["mentor"],
@@ -2110,7 +2110,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Add Certificates",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
     icon: "add",
@@ -2178,7 +2178,7 @@ export const AboutProgramFields = [
     placeholder: "Enter fees",
     inputRules: {
       valueAsNumber: true,
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "width-82",
     for: ["admin", "mentor"],
@@ -2190,7 +2190,7 @@ export const AboutProgramFields = [
     fieldtype: "text",
     placeholder: "Multiple Skills added",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
     for: ["admin", "mentor"],
@@ -2818,7 +2818,7 @@ export const CreateMeetingFields = [
     label: "Add Title",
     placeholder: "Enter Title",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
   },
@@ -2846,7 +2846,7 @@ export const CreateMeetingFields = [
       },
     ],
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     size: true,
     width: "w-[49%]",
@@ -2880,7 +2880,7 @@ export const CreateMeetingFields = [
     label: "Start Date",
     placeholder: "Select Start Date",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2890,7 +2890,7 @@ export const CreateMeetingFields = [
     label: "End Date",
     placeholder: "Select End Date",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2901,7 +2901,7 @@ export const CreateMeetingFields = [
     label: "Start Time",
     placeholder: "Start Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-[24%]",
   },
@@ -2912,7 +2912,7 @@ export const CreateMeetingFields = [
     label: "End Time",
     placeholder: "End Time",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
       validate: {
         validEndTime: (endTime, formValues) => {
           if (!endTime || !formValues.start) return true;
@@ -2938,7 +2938,7 @@ export const CreateMeetingFields = [
     fieldtype: "text",
     placeholder: "Select Mentee",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
     icon: "add",
