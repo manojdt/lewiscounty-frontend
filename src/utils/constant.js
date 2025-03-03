@@ -908,7 +908,7 @@ export const programMenus = (page = "dashboard") => {
       name: "Drafted Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.draft}`,
-      for: ["mentor"],
+      for: ["admin"],
       mentorStatus: "draft",
       menteeStatus: "",
       status: programActionStatus.draft,
