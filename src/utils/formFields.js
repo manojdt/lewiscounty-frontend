@@ -1617,7 +1617,7 @@ export const ProgramInformationFields = [
     label: "Program Description",
     placeholder: "",
     inputRules: {
-      required: "This field is required",
+      // required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -1750,7 +1750,7 @@ export const ProgramInformationFields = [
         label: "Description",
         placeholder: "Enter Description",
         inputRules: {
-          required: "Description is required",
+          // required: "Description is required",
         },
         width: "w-full",
         for: ["admin"],
