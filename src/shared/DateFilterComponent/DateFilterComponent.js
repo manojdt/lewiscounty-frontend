@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem, Stack, Box } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { format } from "date-fns";
 
-// Available view options
+// Available view options with "All" as default
 const VIEW_OPTIONS = [
+  { value: "all", label: "All" },
   { value: "day", label: "Day" },
   { value: "month", label: "Month" },
   { value: "year", label: "Year" },
@@ -15,7 +17,7 @@ const DateFilterComponent = ({
   value = null,
   onChange,
   onViewChange,
-  defaultView = "day",
+  defaultView = "all", // Changed default to "all"
   availableViews = VIEW_OPTIONS,
   datePickerProps = {},
   selectProps = {},
@@ -36,7 +38,9 @@ const DateFilterComponent = ({
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     if (onChange) {
-      onChange(newDate, viewMode);
+      // Format date based on view mode before sending to parent
+      const formattedDate = formatDateByViewMode(newDate, viewMode);
+      onChange(newDate, viewMode, formattedDate);
     }
   };
 
@@ -51,8 +55,35 @@ const DateFilterComponent = ({
     }
 
     // Also call the main onChange with current date and new view mode
-    if (onChange) {
-      onChange(selectedDate, newViewMode);
+    if (onChange && selectedDate) {
+      const formattedDate = formatDateByViewMode(selectedDate, newViewMode);
+      onChange(selectedDate, newViewMode, formattedDate);
+    }
+  };
+
+  /**
+   * Format date based on view mode
+   * day - MM-DD-YYYY
+   * month - MM-YYYY
+   * year - YYYY
+   */
+  const formatDateByViewMode = (date, mode) => {
+    if (!date) return "";
+
+    try {
+      switch (mode) {
+        case "day":
+          return format(date, "mm-dd-yyyy");
+        case "month":
+          return format(date, "mm-yyyy");
+        case "year":
+          return format(date, "yyyy");
+        default:
+          return "";
+      }
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "";
     }
   };
 
@@ -61,21 +92,28 @@ const DateFilterComponent = ({
    */
   const getDatePickerProps = () => {
     // Set views and openTo based on viewMode
-    let views, openTo;
+    let views, openTo, inputFormat;
 
     switch (viewMode) {
       case "month":
         views = ["month", "year"];
         openTo = "month";
+        inputFormat = "MM/yyyy";
         break;
       case "year":
         views = ["year"];
         openTo = "year";
+        inputFormat = "yyyy";
         break;
       case "day":
+        views = ["day", "month", "year"];
+        openTo = "day";
+        inputFormat = "MM/dd/yyyy";
+        break;
       default:
         views = ["day", "month", "year"];
         openTo = "day";
+        inputFormat = "MM/dd/yyyy";
         break;
     }
 
@@ -83,9 +121,10 @@ const DateFilterComponent = ({
     const pickerProps = {
       value: selectedDate,
       onChange: handleDateChange,
-      label: label,
+      placeholder: label,
       views: views,
       openTo: openTo,
+      inputFormat: inputFormat,
       ...datePickerProps,
     };
 
@@ -106,7 +145,7 @@ const DateFilterComponent = ({
       direction={{ xs: "column", sm: "row" }}
       alignItems="center"
     >
-      <FormControl sx={{ minWidth: 120 }} {...selectProps}>
+      <FormControl sx={{ minWidth: 120 }} {...selectProps} size="small">
         <Select
           value={viewMode}
           placeholder={selectLabel}
@@ -120,9 +159,18 @@ const DateFilterComponent = ({
           ))}
         </Select>
       </FormControl>
-      <Box sx={{ width: "100%" }}>
-        <DatePicker {...getDatePickerProps()} />
-      </Box>
+      {viewMode !== "all" && (
+        <Box sx={{ width: "100%" }}>
+          <DatePicker
+            slotProps={{
+              textField: {
+                size: "small",
+              },
+            }}
+            {...getDatePickerProps()}
+          />
+        </Box>
+      )}
     </Stack>
   );
 };

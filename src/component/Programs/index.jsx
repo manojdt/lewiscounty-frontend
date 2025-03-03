@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Backdrop,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Backdrop, CircularProgress, Stack, Typography } from "@mui/material";
 
 import Card from "../../shared/Card";
 import CloseIcon from "../../assets/icons/blueCloseIcon.svg";
@@ -174,10 +169,12 @@ export default function Programs() {
   const isBookmark = searchParams.get("is_bookmark");
   const programListView = searchParams.get("programView");
   const categoryFilter = searchParams.get("category_id");
-  const [selectedDate1, setSelectedDate1] = useState(null);
-  const [currentView1, setCurrentView1] = useState("day");
-  console.log("currentView1", currentView1);
-  console.log("selectedDate1", selectedDate1);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [currentView, setCurrentView] = useState("all");
+  const [formattedDate, setFormattedDate] = useState("");
+  console.log("currentView", currentView);
+  console.log("selectedDate", selectedDate);
+  console.log("formattedDate", formattedDate);
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -208,19 +205,41 @@ export default function Programs() {
     }
   );
 
-  const handleDateChange1 = (date, viewMode) => {
-    setSelectedDate1(date);
-    setCurrentView1(viewMode);
-    console.log("API params could include:", {
-      date: date,
+  const customViews = [
+    { value: "all", label: "All" },
+    { value: "day", label: "Day" },
+    { value: "month", label: "Monthly" },
+    { value: "year", label: "Yearly" }
+  ];
+
+  // Handler that receives date, view mode, and formatted date
+  const handleDateChange = (date, viewMode, formatted) => {
+    console.log('formatted', formatted)
+    setSelectedDate(date);
+    setCurrentView(viewMode);
+    setFormattedDate(formatted);
+    
+    // Example of API request parameters
+    const apiParams = {
       viewType: viewMode,
-    });
+      formattedDate: formatted,
+      // For 'all', you might not send a date parameter
+      ...(viewMode !== 'all' && { date: date })
+    };
+    
+    console.log('API params:', apiParams);
   };
 
-  const handleViewChange1 = (viewMode) => {
-    setCurrentView1(viewMode);
-    console.log("View changed to:", viewMode);
+  // Separate view change handler
+  const handleDateViewChange = (viewMode) => {
+    setCurrentView(viewMode);
+    // If switching to "all", you might want to clear the date
+    if (viewMode === 'all') {
+      setSelectedDate(null);
+      setFormattedDate('');
+    }
   };
+
 
   const [openCategory, setOpenCategory] = React.useState(false);
   const token = localStorage.getItem("access_token");
@@ -883,10 +902,15 @@ export default function Programs() {
                 </p>
                 {/* <DateFilterComponent
                   label="Select Date"
-                  selectLabel="View Type"
-                  value={selectedDate1}
-                  onChange={handleDateChange1}
-                  onViewChange={handleViewChange1}
+                  selectLabel="Filter By"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  onViewChange={handleDateViewChange}
+                  defaultView="all"
+                  availableViews={customViews}
+                  datePickerProps={{
+                    disableFuture: true,
+                  }}
                 /> */}
                 <div className="lg:hidden">
                   <ProgramMobileDropDown
