@@ -1,37 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import UserImage from "../../assets/icons/user-icon.svg";
 import {
-  activityStatusColor,
   empty,
   programActionStatus,
   programMenus,
-  statusAction,
   user,
 } from "../../utils/constant";
 
-import RightArrow from "../../assets/icons/rightArrow.svg";
 import ListCard from "../../shared/Card/ListCard";
 import ProgramMetrix from "./ProgramMetrix";
 import CardWrapper from "../../shared/Card/CardWrapper";
-import DashboardPrograms from "./Admin/DashboardPrograms";
-import Tooltip from "../../shared/Tooltip";
 import {
   chartProgramList,
   getProgramCounts,
 } from "../../services/userprograms";
-import MemberRequest from "./MemberRequest";
 import protectedApi from "../../services/api";
-import { getPost } from "../../services/feeds";
 import { getProgramPost } from "../../services/feeds";
-import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
-import UserIcon from "../../assets/icons/user-icon.svg";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
-import UserInfoCard from "./UserInfoCard";
-import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
 import TopProgramsDataTable from "./Admin/TopProgramsDataTable";
 import TopMentorsDataTable from "./Admin/TopMentorsDataTable";
 import ProgramTypeChart from "./Admin/ProgramTypeChart";
