@@ -483,7 +483,7 @@ const DynamicFieldsComponent = ({
                   SelectProps={{
                     multiple: nestedField.name === "day_numbers",
                     renderValue: (selected) => {
-                      if (nestedField.name === "day_numbers") return selected;
+                      if (nestedField.name === "day_numbers") return selected.join(', ');
                       return selected || "";
                     },
                   }}
