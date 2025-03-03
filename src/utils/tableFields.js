@@ -366,19 +366,25 @@ export const topProgramListColumns =[
   flex: 1,
   id: 5,
   renderCell: (params) => {
-      return <>
-          <div className='cursor-pointer flex items-center justify-center h-full relative'>
+//     return <>
+//     <div className='cursor-pointer flex items-center justify-center h-full relative'>
 
-              <span className='w-[100px] flex justify-center h-[30px] px-4'
-                  style={{
-                      background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
-                      borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
-                  }}>
-                  {programStatusText?.[params?.row?.status]}
-              </span>
-          </div>
-      </>
-  }
+//         <span className='w-[100px] flex justify-center h-[30px] px-4'
+//             style={{
+//                 background: programStatusColor[params?.row?.status]?.bgColor, lineHeight: '30px',
+//                 borderRadius: '3px', width: '110px', height: '34px',  fontSize: '12px', color: programStatusColor?.[params?.row?.status]?.color
+//             }}>
+//             {programStatusText?.[params?.row?.status]}
+//         </span>
+//     </div>
+//  </>
+    const { status } = params.row; 
+    return (
+      <div className="cursor-pointer flex items-center  h-full relative">
+        <StatusIndicator status={status}> </StatusIndicator>
+      </div>
+    );
+  },
 }
 ]
 
