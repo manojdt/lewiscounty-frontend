@@ -348,7 +348,14 @@ const Members = () => {
     };
 
     const updatedColumns = [
-      ...columns,
+      // ...columns,
+      {
+        field: "full_name",
+        headerName: "Name",
+        flex: 1,
+        id: 0,
+        for: ["admin"],
+      },
       {
         field: "average_rating",
         headerName: "User Type",
@@ -379,6 +386,20 @@ const Members = () => {
             </div>
           );
         },
+      },
+      {
+        field: "phone_number",
+        headerName: "Phone Number",
+        flex: 1,
+        id: 4,
+        for: ["admin"],
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        flex: 2,
+        id: 5,
+        for: ["admin"],
       },
       // {
       //   field: "status",
@@ -413,7 +434,7 @@ const Members = () => {
         // },
         {
           field: "status",
-          headerName: "Activity",
+          headerName: "Status",
           flex: 1,
           id: 2,
           renderCell: (params) => {
