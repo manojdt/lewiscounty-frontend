@@ -2249,8 +2249,6 @@ export default function AllRequest() {
     }
     dispatch(getMemberRequest(payload));
   
-    );
-
   };
   const getExtendRequestApi = () => {
     let payload = {
