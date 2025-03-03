@@ -9,6 +9,9 @@ import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { Button } from "../../shared";
 import MultiSelectElement from "../MultiSelectElement/MultiSelectElement";
 import protectedApi from "../../services/api";
+import { formatPhoneNumber } from "../../utils/formFields";
+import SuccessTik from "../../assets/images/blue_tik1x.png";
+import MuiModal from "../../shared/Modal";
 
 export default function CreateNewUser() {
   const [taskSuccess, setTaskSuccess] = useState(false);
@@ -94,6 +97,18 @@ export default function CreateNewUser() {
       setFormDetail((prevDetail) => ({
         ...prevDetail,
         [name]: [Number(value)], // Store as an array of numbers
+      }));
+    } else if (
+      name === "PrimaryPhoneNumber" ||
+      name === "SecondaryPhoneNumber"
+    ) {
+      // For single select, store the value as an array
+      console.log(name, "name");
+      const numericValue = value.replace(/\D/g, "");
+      const formattedValue = formatPhoneNumber(numericValue);
+      setFormDetail((prevDetail) => ({
+        ...prevDetail,
+        [name]: formattedValue, // Store as an array of numbers
       }));
     } else {
       // For other form fields, just store the value as usual
@@ -185,7 +200,8 @@ export default function CreateNewUser() {
           } else {
             setTaskSuccess(true);
             setTimeout(() => {
-              navigate("/questions");
+              setTaskSuccess(false);
+              navigate(-1);
             }, 3000);
           }
         })
@@ -300,9 +316,9 @@ export default function CreateNewUser() {
                     name="PrimaryPhoneNumber"
                     value={formDetail.PrimaryPhoneNumber}
                     onInput={handleInputChange}
-                    type="number"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    type="tel"
+                    inputMode="tel"
+                    pattern="(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})"
                     className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]"
                     placeholder="Enter Primary Phone Number"
                   />
@@ -320,25 +336,25 @@ export default function CreateNewUser() {
                     name="SecondaryPhoneNumber"
                     value={formDetail.SecondaryPhoneNumber}
                     onInput={handleInputChange}
-                    type="number"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    type="tel"
+                    inputMode="tel"
+                    pattern="(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})"
                     className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]"
                     placeholder="Enter Secondary Phone Number"
                   />
                 </FormField>
               </div>
               <div className="col-span-12 md:col-span-6">
-              <FormField label="Select Role" required>
-                <MultiSelectElement
-                  name="Role"
-                  options={[{ label: "Mentor", value: "mentor" }]}
-                  value={selectedRoles} // Bind state to value
-                  onChange={handledrop}
-                  className="content-center w-full border-none py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                  placeholder="Select Role"
-                  required
-                />
+                <FormField label="Select Role" required>
+                  <MultiSelectElement
+                    name="Role"
+                    options={[{ label: "Mentor", value: "mentor" }]}
+                    value={selectedRoles} // Bind state to value
+                    onChange={handledrop}
+                    className="content-center w-full border-none py-[0.32rem] leading-[2.15] input-bg focus:border-none focus-visible:outline-none text-[14px] h-[60px]"
+                    placeholder="Select Role"
+                    required
+                  />
                 </FormField>
               </div>
               <div className="col-span-12 md:col-span-6">
@@ -377,7 +393,7 @@ export default function CreateNewUser() {
                 btnName="Cancel"
                 btnCls="w-[30%] sm:w-[30%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
                 btnCategory="secondary"
-                onClick={() => navigate("")}
+                onClick={() => navigate(-1)}
               />
               <Button
                 btnType="submit"
@@ -389,6 +405,26 @@ export default function CreateNewUser() {
           </form>
         </div>
       </div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={taskSuccess}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-5 py-10 px-20 mt-20 mb-20"
+            style={{
+              background:
+                "linear-gradient(101.69deg, #1D5BBF -94.42%, #00AEBD 107.97%)",
+              borderRadius: "10px",
+            }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p className="text-white text-[12px]">
+              New User successfully created!
+            </p>
+          </div>
+        </div>
+      </Backdrop>
     </div>
   );
 }

@@ -94,6 +94,12 @@ export const programsApi = rtkQueryApiServices.injectEndpoints({
       query: () => "category",
     }),
 
+    //get Program Metrics
+
+    getProgramMetrics:builder.query({
+      query: (params) => ({ url: `program-metrics`, params }),
+    }),
+
     // Get Program Goals
     getProgramGoals: builder.query({
       query: (params) => ({ url: `goals/program-goals`, params }),
@@ -417,4 +423,5 @@ export const {
   useGetProgramListWithCategoryQuery,
   useUpdateAdminProgramStatusMutation,
   useGetProgramNameQuery,
+  useGetProgramMetricsQuery
 } = programsApi;

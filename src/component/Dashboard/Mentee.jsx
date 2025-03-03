@@ -32,6 +32,7 @@ import { acceptMember, getCategory } from "../../services/category";
 import { jwtDecode } from "jwt-decode";
 import { FeedCard } from "./feedCard";
 import { getPost } from "../../services/feeds";
+import { getProgramPost } from "../../services/feeds";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
 import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
@@ -242,15 +243,24 @@ export const Mentee = () => {
     }
   };
 
+  // React.useEffect(() => {
+  //   //   if (feedsList?.length === 0) {
+  //   let feedData = {
+  //     page: 1,
+  //     pageSize: 5,
+  //   };
+  //   dispatch(getPost(feedData));
+  //   //   }
+  // }, []);
   React.useEffect(() => {
-    //   if (feedsList?.length === 0) {
-    let feedData = {
-      page: 1,
-      pageSize: 5,
-    };
-    dispatch(getPost(feedData));
-    //   }
-  }, []);
+      //   if (feedsList?.length === 0) {
+      let feedData = {
+        page: 1,
+        // pageSize: 5,
+      };
+      dispatch(getProgramPost(feedData));
+      //   }
+    }, []);
 
   return (
     <>
