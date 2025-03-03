@@ -1626,7 +1626,7 @@ export const ProgramInformationFields = [
     label: "Program Description",
     placeholder: "",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full",
     for: ["admin"],
@@ -1683,7 +1683,7 @@ export const ProgramInformationFields = [
         label: "Description",
         placeholder: "Enter Description",
         inputRules: {
-          // required: "Description is required",
+          required: "Description is required",
         },
         width: "w-full",
         for: ["admin"],
@@ -1970,7 +1970,7 @@ export const ProgramInformationFields = [
     label: "Address 1",
     placeholder: "Enter Address 1",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
@@ -2996,7 +2996,7 @@ export const CreateCertificateFields = [
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [],
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
