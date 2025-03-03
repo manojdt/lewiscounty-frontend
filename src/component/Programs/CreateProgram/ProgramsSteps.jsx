@@ -31,7 +31,7 @@ import { useDebounce } from "../../../utils";
 
 const ProgramSteps = ({
   stepFields,
-  stepData,
+  // stepData,
   handleProgramCheck,
   certificate,
   setViewDetailsInfo,
@@ -322,23 +322,23 @@ const ProgramSteps = ({
     }
   }, [prerequisiteFields?.length, appendPrerequisiteField, params?.id]);
 
-  const handleLoadFieldValues = () => {
-    const fName = [];
-    const f = {};
-    stepFields.forEach((step) => {
-      fName.push(step.name);
-    });
-    for (const field in stepData) {
-      if (fName.includes(field)) f[field] = stepData[field];
-      setValue(field, stepData[field]);
-    }
-  };
+  // const handleLoadFieldValues = () => {
+  //   const fName = [];
+  //   const f = {};
+  //   stepFields.forEach((step) => {
+  //     fName.push(step.name);
+  //   });
+  //   for (const field in stepData) {
+  //     if (fName.includes(field)) f[field] = stepData[field];
+  //     setValue(field, stepData[field]);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (Object.keys(stepData).length && params.id !== "") {
-      handleLoadFieldValues();
-    }
-  }, [stepData]);
+  // useEffect(() => {
+  //   if (Object.keys(stepData).length && params.id !== "") {
+  //     handleLoadFieldValues();
+  //   }
+  // }, [stepData]);
 
   const handleDeleteImage = (key) => {
     setValue(key, "");
@@ -939,7 +939,7 @@ const ProgramSteps = ({
                           Uploaded Image{" "}
                         </div>
                         <div
-                          className="flex justify-between items-center w-[30%] mt-5 px-4 py-4"
+                          className="flex justify-between items-center w-[30%] mt-5 px-4 py-4 overflow-hidden"
                           style={{
                             border: "1px solid rgba(29, 91, 191, 0.5)",
                             borderRadius: "3px",

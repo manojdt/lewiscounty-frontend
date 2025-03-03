@@ -1930,7 +1930,7 @@ export const ProgramInformationFields = [
     inputRules: {
       // required: "This field is required",
     },
-    size: true,
+    width: "w-full lg:w-full md:w-[48%] xl:w-full",
     for: ["mentor"],
   },
   {
@@ -2016,6 +2016,45 @@ export const ProgramInformationFields = [
         for: ["mentor"],
       },
     ],
+  },
+  {
+    type: "radio",
+    name: "is_sponsored",
+    label: "Sponsor:",
+    placeholder: "",
+    options: [
+      { key: "true", value: "Yes" },
+      { key: "false", value: "No" },
+    ],
+    inputRules: {
+      // required: "This field is required",
+    },
+    size: true,
+    for: ["admin", "mentor"],
+  },
+  {
+    type: "input",
+    name: "enrollment_fees",
+    label: "Fees",
+    fieldtype: "number",
+    placeholder: "Enter fees",
+    inputRules: {
+      // required: "This field is required",
+    },
+    width: "w-[80%]",
+    for: ["admin", "mentor"],
+  },
+  {
+    type: "file",
+    name: "sponsor_logos",
+    label: "Add Sponsor Logo",
+    fieldtype: "text",
+    placeholder: "Multiple Skills added",
+    inputRules: {
+      // required: "This field is required",
+    },
+    width: "w-full",
+    for: ["admin", "mentor"],
   },
 ];
 

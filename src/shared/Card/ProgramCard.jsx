@@ -533,11 +533,11 @@ export default function ProgramCard({
                                   }
                                 }}
                               >
-                                {/* <img
+                                <img
                                   // className={`h-[18px] w-[15px]`}
                                   src={EditIcon}
                                   alt="EditIcon"
-                                /> */}
+                                />
                               </IconButton>
                             )}
                           </div>
