@@ -39,7 +39,7 @@ import NavHead from './NavHead';
 import useWindowWidth from '../../utils/useWindowWidth';
 import { useWindowSize } from '../../utils/windowResize';
 import MobileDrawer from '../../component/MobileDrawer';
-import { useDebounce } from '../../utils';
+import { capitalizeFirstLetter, useDebounce } from '../../utils';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
@@ -263,7 +263,7 @@ export const Navbar = () => {
   };
   const getInputWidth = useWindowWidth(); // Get the dynamic width from the hook
   
-
+ 
   return (
     <div
       className='navbar-content px-4  max-md:px-2'
@@ -639,6 +639,14 @@ export const Navbar = () => {
                   />
                 </div>
               )}
+               {role==='admin' &&<div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
+                      <img
+                        src={SettingIcon}
+                        onClick={handleTooltipOpen}
+                        className='cursor-pointer'
+                      />
+                      </div>
+                     }
 
               {/* Setting Start */}
               {role === 'admin' && (
@@ -687,13 +695,13 @@ export const Navbar = () => {
                         </React.Fragment>
                       }
                     >
-                      <div className='h-[40px] w-[40px] max-sm:h-[35px] max-sm:w-[35px]'>
-                      <img
-                        src={SettingIcon}
-                        onClick={handleTooltipOpen}
-                        className='cursor-pointer'
-                      />
+                      
+                      <div className='flex flex-col pl-2 items-end '>
+                        <span className='text-[14px] font-semibold'>{profile.name}</span>
+                         <span className='text-[#1D5BBF] text-xs'>{capitalizeFirstLetter(role)}</span>
                       </div>
+                      
+                    
                       
                     </HtmlTooltip>
                   </div>

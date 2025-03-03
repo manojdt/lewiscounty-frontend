@@ -31,10 +31,15 @@ import UserIcon from "../../assets/icons/user-icon.svg";
 import { requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
 import UserInfoCard from "./UserInfoCard";
 import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
+import TopProgramsDataTable from "./Admin/TopProgramsDataTable";
+import TopMentorsDataTable from "./Admin/TopMentorsDataTable";
+import ProgramTypeChart from "./Admin/ProgramTypeChart";
+import ProgramModeChart from "./Admin/ProgramModeChart";
+import { useGetProgramMetricsQuery } from "../../features/program/programApi.services";
 export default function Admin() {
   const { width } = useWindowSize();
   const navigate = useNavigate();
-  const [searchParams,setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const categoryId = searchParams.get("category_id"); // Extract category ID
   const filterType = searchParams.get("type");
   const userInfo = useSelector((state) => state.userInfo);
@@ -45,23 +50,23 @@ export default function Admin() {
   const [programMenusList, setProgramMenusList] = useState([]);
   const [chartList, setChartList] = useState([]);
   const [membersCount, setMembersCount] = useState([]);
-  const [topPrograms, setTopPrograms] = useState([]);
+  // const [topPrograms, setTopPrograms] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
-  const [topMentotList, setTopMentorList] = useState([]);
+  // const [topMentotList, setTopMentorList] = useState([]);
   const [listActivity, setListActivity] = React.useState([]);
-
+   const {data:programMetrics} = useGetProgramMetricsQuery();
   const role = userInfo.data.role;
   const dispatch = useDispatch();
   const handleViewAllMembers = () => {
     navigate("/members")
   };
   const onItemClick = (menu) => {
-    if(menu.role===user.mentor){
+    if (menu.role === user.mentor) {
       navigate(`/members?breadcrumbsType=${requestPageBreadcrumbs.dashboardMemberMentor || ""}`);
-}else{
-  navigate(`/members?breadcrumbsType=${requestPageBreadcrumbs.dashboardMemberMentee || ""}`);
-}
-}
+    } else {
+      navigate(`/members?breadcrumbsType=${requestPageBreadcrumbs.dashboardMemberMentee || ""}`);
+    }
+  }
   // const membersList = [
   //     {
   //         name: 'Mentor Managers',
@@ -93,33 +98,32 @@ export default function Admin() {
       setLoading(false); // Set loading to false after data is fetched
     }
   };
-  const fetchTopPrograms = async () => {
-    setLoading(true); // Set loading to true while fetching
-    try {
-      const response = await protectedApi.get("/rating/top_programs");
-      console.log(response?.data?.results,"response?.data?.results")
-      setTopPrograms(response?.data?.results);
-    } catch (error) {
-      console.error("Error fetching Top programs data:", error);
-    } finally {
-      setLoading(false); // Set loading to false after data is fetched
-    }
-  };
+  // const fetchTopPrograms = async () => {
+  //   setLoading(true); // Set loading to true while fetching
+  //   try {
+  //     const response = await protectedApi.get("/rating/top_programs");
+  //     setTopPrograms(response?.data?.results);
+  //   } catch (error) {
+  //     console.error("Error fetching Top programs data:", error);
+  //   } finally {
+  //     setLoading(false); // Set loading to false after data is fetched
+  //   }
+  // };
   useEffect(() => {
     fetchMembersCount();
     dispatch(getProgramCounts());
-    getTopMentors()
+    // getTopMentors()
     getActivityListDetails();
-    fetchTopPrograms()
+    //fetchTopPrograms()
   }, []);
 
-  const getTopMentors = async () => {
-    const topMentor = await api.get("rating/top_mentor");
-    if (topMentor.status === 200 && topMentor.data?.results) {
-      setTopMentorList(topMentor.data.results);
-    }
-  };
-  
+  // const getTopMentors = async () => {
+  //   const topMentor = await api.get("rating/top_mentor");
+  //   if (topMentor.status === 200 && topMentor.data?.results) {
+  //     setTopMentorList(topMentor.data.results);
+  //   }
+  // };
+
   const getActivityListDetails = async () => {
     const listActivity = await api.get(
       "recent_activities/recent-activities?limit=5"
@@ -133,7 +137,7 @@ export default function Admin() {
   useEffect(() => {
     const totalCount = userpragrams.statusCounts;
     if (Object.keys(totalCount).length) {
-      const programMenu = [...[ {
+      const programMenu = [...[{
         name: "Programs",
         count: 0,
         page: "/programs",
@@ -142,7 +146,7 @@ export default function Admin() {
         menteeStatus: "allprogram",
         adminStatus: "all",
         status: "all",
-      },],...programMenus("dashboard")]
+      },], ...programMenus("dashboard")]
         .filter((men) => men.for.includes(role))
         .map((menu) => {
           if (menu.status === "all") {
@@ -156,7 +160,6 @@ export default function Admin() {
 
           return menu;
         });
-        console.log(programMenu,"programMenu")
       setProgramMenusList(programMenu);
     }
   }, [userpragrams]);
@@ -261,30 +264,30 @@ export default function Admin() {
     // If there's no type and no bookmark parameter, set type to planned while preserving other params
     if (!filterType) {
       const newSearchParams = new URLSearchParams(searchParams);
-      
+
       // Preserve all existing parameters
       for (const [key, value] of searchParams.entries()) {
         newSearchParams.set(key, value);
       }
-      
+
       // Add the type parameter
       newSearchParams.set("type", "yettojoin");
-      
+
       setSearchParams(newSearchParams);
     }
   }, []);
   return (
     <div className="dashboard-content px-4 sm:px-4 md:px-4 lg:px-8 xl:px-8 mt-10 py-5">
-      <div className="grid grid-cols-8 gap-4 max-md:block">
-        <div className="col-span-2">
+      <div className="grid grid-cols-10 gap-4 max-md:block">
+        <div className="col-span-4">
           <div
-            className="w-full  bg-white rounded-lg"
+            className="w-full h-[350px] bg-white rounded-lg"
             style={{
               boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
               background: "rgba(255, 255, 255, 1)",
             }}
           >
-              <UserInfoCard />
+            {/* <UserInfoCard /> */}
             {/* <div className="flex flex-col items-center pb-10 pt-14 border-b-2">
               <img
                 className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
@@ -309,20 +312,20 @@ export default function Admin() {
               </span>
             </div> */}
 
-            <ul className="flex flex-col gap-2 p-4 md:p-0 font-medium">
-            <ListCard
-              title="Overview"
-              // viewall
-              // handleViewall={handleViewAllMembers}
-              onItemClick={onItemClick}
-              items={membersCount}
-              programCount={programMenusList.map((menu, index) => {
-                if (role === "admin" && index > 0) return null;
-                return (
-                
+            <ul className="flex gap-2 p-4 md:p-0 font-medium h-full items-center justify-center">
+              <ListCard
+                title="Overview"
+                // viewall
+                // handleViewall={handleViewAllMembers}
+                onItemClick={onItemClick}
+                items={membersCount}
+                programCount={programMenusList.map((menu, index) => {
+                  if (role === "admin" && index > 0) return null;
+                  return (
+
                     <div
-                     key={index}
-                      className={`flex justify-between py-2 px-6 rounded cursor-pointer menu-content
+                      key={index}
+                      className={`flex flex-col justify-between py-2 px-4 rounded cursor-pointer menu-content
                                     ${searchParams.get("type") ===
                           menu.status ||
                           (searchParams.get("is_bookmark") ===
@@ -338,20 +341,27 @@ export default function Admin() {
                           : ""
                         }`}
                       aria-current="page"
-                      
+
                       onClick={(e) => {
                         e.preventDefault();
                         console.log("Navigating to:", menu.page);
                         navigate(menu.page);
                       }}
                     >
-                      <span className="text-sm max-lg:text-[12px]">{menu.name}</span>
-                      <span className="text-base max-lg:text-[12px]">{menu.count}</span>
+
+                      <div className="w-[140px] h-[140px] rounded-[12px] bg-[#FFF4DE] flex items-center justify-center">
+                        <span className="text-[38px] font-semibold">
+                          {menu.count}
+                        </span>
+                      </div>
+                      <span className="text-sm max-lg:text-[40px] font-semibold flex items-center justify-center p-5">
+                        {menu.name}
+                      </span>
                     </div>
-                );
-              })}
-            />
-              
+                  );
+                })}
+              />
+
             </ul>
             {/* <div className="flex justify-center mt-2 mb-2">
               <button
@@ -370,14 +380,65 @@ export default function Admin() {
           </div>
 
           <div className="mt-4">
-           
+
           </div>
-          {topPrograms&&topPrograms?.length>0&&
-          <div className="mt-4">
-            <TopProgramsCard topProgramsList={topPrograms} view={false}/>
-          </div>}
+
           {/* asdfsdfsd */}
-          <div
+
+        </div>
+
+        <div className="col-span-6">
+          <CardWrapper title="Program Status Metrics">
+            <ProgramMetrix />
+          </CardWrapper>
+
+          {/* <div className="">
+            <DashboardPrograms searchParams={searchParams} type={filterType} categoryId={categoryId} />
+          </div> */}
+          {/* <div className="grid grid-cols-10 md:grid-cols-12 gap-7 mt-3 max-md:block">
+            <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2"> 
+
+
+             <div>
+          <CardWrapper title="Recent Activities">
+            <div style={{ height: "700px" }}>
+              {listActivity?.length ? (
+                <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
+                  {listActivity?.map((recentActivity) => (                    
+                    <div className="flex items-center flex-col relative" key={recentActivity.id}>
+                                                    <div className="absolute top-0 left-full ml-4 w-max">
+                                                        <Tooltip title={recentActivity.name}>
+                                                            <p className="activity-name text-[14px]" >{recentActivity.name}</p>
+                                                        </Tooltip>
+                                                        <Tooltip title={recentActivity.action_message}>
+                                                            <h6 className="text-[10px] activity-msg" style={{ color: activityStatusColor[recentActivity.action] }}>{recentActivity.action_message}</h6>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]">{recentActivity.time_since_action}</div>
+                                                    <div
+                                                        className="w-8 h-3  mx-[-1px]  flex items-center justify-center">
+                                                        <span className="w-3 h-3  rounded-full" style={{ background: activityStatusColor[recentActivity.action] }}></span>
+                                                    </div>
+                                                    <div className="w-1 h-16 " style={{ background: 'rgba(0, 174, 189, 1)' }}></div>
+                                                </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex justify-center items-center py-5">
+                  There is no recent activities
+                </div>
+              )}
+            </div>
+          </CardWrapper>
+          </div>
+
+            </div>
+        <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
+              <MemberRequest />
+            </div>
+
+            <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
+            <div
             className="recent-request"
             style={{
               boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
@@ -395,7 +456,7 @@ export default function Admin() {
                 ></div>
                 <h4>Top Mentors</h4>
               </div>
-              {/* <div className="flex justify-center mt-2 mb-2">
+              <div className="flex justify-center mt-2 mb-2">
                   <p
                     className="text-[12px] py-2 px-2 cursor-pointer"
                     style={{
@@ -407,7 +468,7 @@ export default function Admin() {
                   >
                     View All
                   </p>
-                </div> */}
+                </div>
             </div>
 
             <div className="content flex flex-col gap-2 py-2 px-2 overflow-x-auto">
@@ -435,7 +496,7 @@ export default function Admin() {
                         <img
                           src={recentReq?.profile_image || UserIcon}
                           alt="male-icon"
-                           className="w-full h-full object-cover rounded-full"
+                          className="w-full h-full object-cover rounded-full"
                         />{" "}
                       </div>
                       <div className="flex flex-col gap-2">
@@ -479,66 +540,37 @@ export default function Admin() {
               })}
             </div>
           </div>
-        </div>
-
-        <div className="col-span-6">
-          <CardWrapper title="Program Status">
-            <ProgramMetrix />
-          </CardWrapper>
-
-          <div className="py-3">
-          <DashboardPrograms searchParams={searchParams} type={filterType} categoryId={categoryId} />
-          </div>
-          <div className="grid grid-cols-10 md:grid-cols-12 gap-7 mt-3 max-md:block">
-        {/* <div className="col-span-2 sm:col-span-2 md:col-span-5 lg:col-span-5 xl:col-span-2"> */}
-          
-
-          {/* <div>
-          <CardWrapper title="Recent Activities">
-            <div style={{ height: "700px" }}>
-              {listActivity?.length ? (
-                <div className="program-status flex items-center flex-col justify-center w-max py-4 px-4">
-                  {listActivity?.map((recentActivity) => (                    
-                    <div className="flex items-center flex-col relative" key={recentActivity.id}>
-                                                    <div className="absolute top-0 left-full ml-4 w-max">
-                                                        <Tooltip title={recentActivity.name}>
-                                                            <p className="activity-name text-[14px]" >{recentActivity.name}</p>
-                                                        </Tooltip>
-                                                        <Tooltip title={recentActivity.action_message}>
-                                                            <h6 className="text-[10px] activity-msg" style={{ color: activityStatusColor[recentActivity.action] }}>{recentActivity.action_message}</h6>
-                                                        </Tooltip>
-                                                    </div>
-                                                    <div className="timeline absolute lg:right-[-205px] md:right-[-227px] sm:right-[-200px] text-[10px]">{recentActivity.time_since_action}</div>
-                                                    <div
-                                                        className="w-8 h-3  mx-[-1px]  flex items-center justify-center">
-                                                        <span className="w-3 h-3  rounded-full" style={{ background: activityStatusColor[recentActivity.action] }}></span>
-                                                    </div>
-                                                    <div className="w-1 h-16 " style={{ background: 'rgba(0, 174, 189, 1)' }}></div>
-                                                </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex justify-center items-center py-5">
-                  There is no recent activities
-                </div>
-              )}
-            </div>
-          </CardWrapper>
+            </div> 
           </div> */}
-
-        {/* </div> */}
-        {/* <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
-          <MemberRequest />
-        </div> */}
-
-        {/* <div className="col-span-5 sm:col-span-5 md:col-span-12 lg:col-span-6 xl:col-span-6">
-          <ProgramFeeds feedsList={feeds?.results} />
-        </div> */}
-      </div>
         </div>
+        <div className="col-span-5  bg-white rounded-lg" style={{
+          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+          background: "rgba(255, 255, 255, 1)",
+        }}>
+          <TopProgramsDataTable role={role} /></div>
+        <div className="col-span-5  bg-white rounded-lg" style={{
+          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+          background: "rgba(255, 255, 255, 1)",
+        }}>
+          <TopMentorsDataTable /></div>
+        <div className="col-span-5  bg-white rounded-lg" style={{
+          boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+          background: "rgba(255, 255, 255, 1)",
+        }}>
+          <ProgramTypeChart programMetrics ={programMetrics}/>
+        </div>
+        <div className="col-span-5 bg-white rounded-lg"
+          style={{
+            boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
+            background: "rgba(255, 255, 255, 1)",
+          }}>
+
+          <ProgramModeChart programMetrics ={programMetrics} />
+        </div>
+
       </div>
 
-     
+
     </div>
   );
 }
