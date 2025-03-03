@@ -666,16 +666,18 @@ export default function CreatePrograms() {
                 // Create a base object with required fields
                 const baseItem = {
                   ...item,
-                  field_options: item?.field_options?.map(
-                    (option) =>
-                      option.title.trim() !== "" &&
-                      typeof option.title !== "boolean" &&
-                      option.title
-                  ),
+                  field_options: item?.field_options
+                    ?.filter(
+                      (option) =>
+                        typeof option.title === "string" &&
+                        option.title.trim() !== ""
+                    )
+                    .map((option) => option.title),
                 };
 
                 return baseItem;
               });
+
               bodyFormData.append(key, JSON.stringify(updatePrerequisites));
             } else if (key === "recurring_dates") {
               const updateRecurringProgram = formValues[key].map((item) => {
