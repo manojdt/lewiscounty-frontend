@@ -769,7 +769,7 @@ export const TaskDetails = () => {
                       <>
                         <div className="relative">
                           <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            Solution
+                            Solution <span className="text-red-500">*</span>
                           </label>
                           <textarea
                             id="message"
@@ -808,7 +808,7 @@ export const TaskDetails = () => {
 
                         <div className="relative mt-12">
                           <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            Upload documents
+                            Upload documents <span className="text-red-500">*</span>
                           </label>
                           <div className="flex items-center justify-center w-full">
                             <label
