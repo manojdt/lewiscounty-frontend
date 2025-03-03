@@ -39,7 +39,7 @@ import NavHead from "./NavHead";
 import useWindowWidth from "../../utils/useWindowWidth";
 import { useWindowSize } from "../../utils/windowResize";
 import MobileDrawer from "../../component/MobileDrawer";
-import { useDebounce } from "../../utils";
+import { capitalizeFirstLetter, useDebounce } from "../../utils";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
