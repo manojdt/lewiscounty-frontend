@@ -402,6 +402,7 @@ export default function CreatePrograms() {
             bodyFormData.delete("sponsor_logos");
           }
           if (params?.id && !isReopen) {
+            bodyFormData.append("status", "create");
             bodyFormData.append("program_id", params?.id);
             // for (let [key, value] of bodyFormData.entries()) {
             //   console.log(`formData: ${key}: ${value}`);
