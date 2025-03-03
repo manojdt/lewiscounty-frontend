@@ -1076,6 +1076,10 @@ export const RequestStatus = {
     key: "mentor_change_request",
     name: "Mentor Change Requests",
   },
+  menteesJoinRequest:{
+    key: "mentees_joining_request",
+    name: "Mentees Joining Request"
+  }
 };
 
 export const myRequestOverview = [
@@ -1188,6 +1192,13 @@ export const menteesRequestOverview = [
     for: ["mentor", "admin"],
      forTabs:"mentees"
   },
+  {
+    name: "Mentees Joining Request",
+    key:RequestStatus.memberJoinRequest.key,
+    count:0,
+    status:RequestStatus.memberJoinRequest.key,
+    for:[ "admin"]
+  }
   // {
   //   name: 'Resource Access Requests',
   //   key: RequestStatus.resourceAccessRequest,

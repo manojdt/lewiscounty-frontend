@@ -56,7 +56,7 @@ export const Mentee = () => {
   const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
   const currentType = searchParams.get("type");
   React.useEffect(() => {
-    if (!decoded?.category_added) {
+    if (!decoded?.category_added && userInfo?.data?.userinfo?.approve_status==='accept') {
       setOpenCategory(true);
     }
   }, []);
@@ -272,7 +272,8 @@ export const Mentee = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-        <div className="grid grid-cols-5 gap-7">
+        {  !["new", "pending"].includes(userInfo?.data?.userinfo?.approve_status) &&
+          <div className="grid grid-cols-5 gap-7">
           {/* <div className="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-1"> */}
           <div className="col-span-5 sm:col-span-5 md:col-span-5 lg:col-span-1">
             <UserInfoCard />
@@ -584,7 +585,22 @@ export const Mentee = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
+
+        {
+          ["new", "pending"].includes(userInfo?.data?.userinfo?.approve_status) &&
+          <div className="programs-list !h-[100vh]">
+            <div className="flex items-center justify-center h-full w-full flex-col gap-3">
+              <p className="text-[24px] text-font-primary-main font-bold">
+                Welcome to Mentoring Management Application
+              </p>
+              <p className="text-[18px] text-font-primary-main font-bold">
+                Waiting for Admin Approval
+              </p>
+              <Invite />
+            </div>
+          </div>
+        }
       </div>
 
       {/* category Popup */}

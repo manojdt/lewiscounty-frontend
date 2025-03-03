@@ -186,6 +186,17 @@ export const updateMenteeQuestions = createAsyncThunk(
   }
 );
 
+export const updateMenteeDocument = createAsyncThunk(
+  "updateMenteeDocument",
+  async (data) => {
+    const updateDocument = await api.post("user/documents", data);
+    if (updateDocument.status === 201 || updateDocument.status === 200) {
+      return updateDocument;
+    }
+    return updateDocument;
+  }
+);
+
 export const updateToken = createAsyncThunk('updateToken', async (data) => {
   const updateNewToken = await api.post('generate_new_token');
   if (updateNewToken.status === 201) {

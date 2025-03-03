@@ -39,7 +39,7 @@ export const LoginType = () => {
     }
 
     if (role === "mentee") {
-      navigate("/programs?type=planned");
+      navigate("/individual");
     }
   }, [userInfo]);
 
