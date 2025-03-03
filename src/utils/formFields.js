@@ -2037,7 +2037,7 @@ export const AboutProgramFields = [
   {
     type: "radio",
     name: "is_sponsored",
-    label: "Sponsor Availability:",
+    label: "Sponsor:",
     placeholder: "",
     options: [
       { key: "true", value: "Yes" },
