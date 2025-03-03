@@ -43,7 +43,7 @@ export const getPost = createAsyncThunk(
 export const getProgramPost = createAsyncThunk(
     "getProgramPost",
     async (data = {}) => {
-        let url = `post/mentee-registered-programs`;
+        let url = `post/ongoing-programs`;
         
         const params = new URLSearchParams();
         
