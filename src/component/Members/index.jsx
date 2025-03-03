@@ -651,11 +651,11 @@ const Members = () => {
               <option value="inactive">Deactive</option>
             </select>
           </div>
-          <div className="flex items-center relative">
+          <div className="flex items-center gap-2 relative">
             <img className="absolute ml-5" src={AddTicketIcon} alt="" />
             <Button
               btnType="button"
-              btnCls="w-[180px] h-12 flex items-center justify-center gap-2 whitespace-nowrap px-4"
+              btnCls="w-[180px] h-12 flex items-center justify-center gap-2 whitespace-nowrap px-4 pl-[3rem]"
               btnName={"Create New User"}
               btnCategory="primary"
               onClick={() => navigate(`/members/add?breadcrumbsType=${requestPageBreadcrumbs.createNewusers}`)}

@@ -1217,7 +1217,7 @@ export const new_user_create = () => {
   
   return [
     {
-      label: "Member",
+      label: "User",
       path: -1,
     },
     {
