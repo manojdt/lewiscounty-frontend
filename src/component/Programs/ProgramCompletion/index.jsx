@@ -232,7 +232,11 @@ export default function ProgramCompletion() {
                           className="px-6 py-4 text-white"
                           style={{ background: "rgba(29, 91, 191, 1)" }}
                         >
-                          {`${programdetails?.city_details?.name}, ${programdetails?.state_details?.abbreviation}`}
+                          {programdetails?.location_details?.city&&programdetails?.location_details?.state_name&&
+                         <>
+                         {`${programdetails?.location_details?.city}, ${programdetails?.location_details?.state_name}`}
+                         </> 
+}
                         </td>
                       </tr>
                     )}

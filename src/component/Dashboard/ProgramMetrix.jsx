@@ -106,7 +106,7 @@ export default function ProgramMetrix() {
 
     return (
         <div className="card px-8 py-6">
-            <Chart type="bar" data={chartData} options={chartOptions} />
+            <Chart type="bar" data={chartData} options={chartOptions} style={{height:'260px'}}/>
         </div>
     );
 }

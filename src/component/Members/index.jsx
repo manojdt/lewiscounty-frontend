@@ -348,7 +348,14 @@ const Members = () => {
     };
 
     const updatedColumns = [
-      ...columns,
+      // ...columns,
+      {
+        field: "full_name",
+        headerName: "Name",
+        flex: 1,
+        id: 0,
+        for: ["admin"],
+      },
       {
         field: "average_rating",
         headerName: "User Type",
@@ -379,6 +386,20 @@ const Members = () => {
             </div>
           );
         },
+      },
+      {
+        field: "phone_number",
+        headerName: "Phone Number",
+        flex: 1,
+        id: 4,
+        for: ["admin"],
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        flex: 2,
+        id: 5,
+        for: ["admin"],
       },
       // {
       //   field: "status",
@@ -413,7 +434,7 @@ const Members = () => {
         // },
         {
           field: "status",
-          headerName: "Activity",
+          headerName: "Status",
           flex: 1,
           id: 2,
           renderCell: (params) => {
@@ -631,10 +652,10 @@ const Members = () => {
             </select>
           </div>
           <div className="flex items-center relative">
-            <img className="absolute ml-5" src={AddTicketIcon} alt="" />
+            <img className="absolute ml-8" src={AddTicketIcon} alt="" />
             <Button
               btnType="button"
-              btnCls="w-[180px] h-12 flex items-center justify-center gap-2 whitespace-nowrap px-4"
+              btnCls="w-[180px] h-12 flex items-center justify-center gap-2 whitespace-nowrap px-4 pl-[3.5rem]"
               btnName={"Create New User"}
               btnCategory="primary"
               onClick={() => navigate(`/members/add?breadcrumbsType=${requestPageBreadcrumbs.createNewusers}`)}
