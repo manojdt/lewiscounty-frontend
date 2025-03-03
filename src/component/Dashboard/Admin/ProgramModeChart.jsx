@@ -17,6 +17,7 @@ const ProgramModeChart = ({programMetrics ={}}) => {
       }
       const primaryColor = '#D4E6FF';
       const secondaryColor = '#1D5BBF';
+      const colors = [primaryColor,secondaryColor]
   return (
     <div>
        <div className="title flex justify-between py-3 px-4 border-b-2">
@@ -43,7 +44,7 @@ const ProgramModeChart = ({programMetrics ={}}) => {
                 } */}
             </div>
             <div className="flex items-center justify-center">
-            <DonutChart data={data} primaryColor={primaryColor} secondaryColor={secondaryColor} centeredData={centeredData}/>
+            <DonutChart data={data} colors={colors} centeredData={centeredData}/>
             </div>
     </div>
   )

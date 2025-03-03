@@ -160,7 +160,6 @@ export default function Admin() {
 
           return menu;
         });
-      console.log(programMenu, "programMenu")
       setProgramMenusList(programMenu);
     }
   }, [userpragrams]);

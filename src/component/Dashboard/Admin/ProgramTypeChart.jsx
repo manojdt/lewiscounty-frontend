@@ -20,6 +20,7 @@ const ProgramTypeChart = ({programMetrics ={}}) => {
         title:'Total Programs',
         count:programType?.total_programs
       }
+      const colors = [primaryColor,secondaryColor]
   return (
    <div>
     <div className="title flex justify-between py-3 px-4 border-b-2">
@@ -47,7 +48,7 @@ const ProgramTypeChart = ({programMetrics ={}}) => {
                 } */}
             </div>
             <div className="flex items-center justify-center">
-            <DonutChart data={data} primaryColor={primaryColor} secondaryColor={secondaryColor} centeredData={centeredData}/>
+            <DonutChart data={data} colors={colors} centeredData={centeredData}/>
             </div>
             
    </div>

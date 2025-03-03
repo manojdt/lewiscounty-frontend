@@ -5,8 +5,8 @@ import { Chart } from "react-google-charts";
 
 
 
-const DonutChart = ({data = [],primaryColor='',secondaryColor = '',centeredData={}}) => {
-    const colors =[primaryColor||"#1954A6",secondaryColor||"#FFC21D"];
+const DonutChart = ({data = [],colors = ["#1954A6",'#FFC21D'],centeredData={}}) => {
+    //const colors =[primaryColor||"#1954A6",secondaryColor||"#FFC21D"];
     
     const options = {
         pieHole: 0.6, // Creates donut effect

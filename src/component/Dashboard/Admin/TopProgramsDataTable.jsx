@@ -18,7 +18,6 @@ const TopProgramsDataTable = ({role=''}) => {
     setLoading(true); // Set loading to true while fetching
     try {
       const response = await protectedApi.get("/rating/top_programs");
-      console.log(response?.data?.results, "response?.data?.results")
       setTopPrograms(response?.data);
     } catch (error) {
       console.error("Error fetching Top programs data:", error);
@@ -37,7 +36,6 @@ const TopProgramsDataTable = ({role=''}) => {
       id: 4,
       renderCell: (params) => {
         const onEyeIconClick = () => {
-          console.log('params',params)
           const roleparams =
               role === user.mentee ? "&topProgram=menteeprograms" : "";
           navigate(
