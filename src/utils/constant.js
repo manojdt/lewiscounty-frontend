@@ -1095,6 +1095,14 @@ export const myRequestOverview = [
     for: ["admin"],
      forTabs:"my"
   },
+  {
+    name: "Mentees Program Requests",
+    key: RequestStatus.menteeprogramRequest.key,
+    count: 0,
+    status: RequestStatus.menteeprogramRequest.key,
+    for: ["mentor", "admin"],
+     forTabs:"mentees"
+  },
   // {
   //   name: 'Resource Access Requests',
   //   key: RequestStatus.resourceAccessRequest,
@@ -1125,14 +1133,7 @@ export const myRequestOverview = [
     for: ["admin", "mentor"],
      forTabs:"my"
   },
-  {
-    name: "Mentees Program Requests",
-    key: RequestStatus.menteeprogramRequest.key,
-    count: 0,
-    status: RequestStatus.menteeprogramRequest.key,
-    for: ["mentor", "admin"],
-     forTabs:"mentees"
-  },
+  
   // {
   //   name: "Testimonial Requests",
   //   key: RequestStatus.testimonicalRequest,
