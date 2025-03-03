@@ -875,53 +875,53 @@ export const programMenus = (page = "dashboard") => {
     //   menteeStatus: "recently_joined",
     //   status: programActionStatus.yettostart,
     // },
-    {
-      name: "Ongoing Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.inprogress}`,
-      menteePage: `${pipeUrl}${programFilterUrls.ongoing}`,
-      for: ["mentor", "admin", "mentee"],
-      mentorStatus: programActionStatus.inprogress,
-      adminStatus: programActionStatus.inprogress,
-      menteeStatus: "ongoing",
-      status: programActionStatus.inprogress,
-    },
-    {
-      name: "Admin Assigned Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.programAssign}`,
-      for: ["mentor"],
-      mentorStatus: programActionStatus.program_assign,
-      adminStatus: programActionStatus.program_assign,
-      status: programActionStatus.program_assign,
-    },
-    {
-      name: "Assigned Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.programAssign}`,
-      for: ["admin"],
-      mentorStatus: programActionStatus.program_assign,
-      adminStatus: programActionStatus.program_assign,
-      status: programActionStatus.program_assign,
-    },
-    {
-      name: "Drafted Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.draft}`,
-      for: ["admin"],
-      mentorStatus: "draft",
-      menteeStatus: "",
-      status: programActionStatus.draft,
-    },
-    {
-      name: "Upcoming Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.upcoming}`,
-      for: ["mentee"],
-      mentorStatus: "",
-      menteeStatus: "upcoming",
-      status: programActionStatus.upcoming,
-    },
+    // {
+    //   name: "Ongoing Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.inprogress}`,
+    //   menteePage: `${pipeUrl}${programFilterUrls.ongoing}`,
+    //   for: ["mentor", "admin", "mentee"],
+    //   mentorStatus: programActionStatus.inprogress,
+    //   adminStatus: programActionStatus.inprogress,
+    //   menteeStatus: "ongoing",
+    //   status: programActionStatus.inprogress,
+    // },
+    // {
+    //   name: "Admin Assigned Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.programAssign}`,
+    //   for: ["mentor"],
+    //   mentorStatus: programActionStatus.program_assign,
+    //   adminStatus: programActionStatus.program_assign,
+    //   status: programActionStatus.program_assign,
+    // },
+    // {
+    //   name: "Assigned Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.programAssign}`,
+    //   for: ["admin"],
+    //   mentorStatus: programActionStatus.program_assign,
+    //   adminStatus: programActionStatus.program_assign,
+    //   status: programActionStatus.program_assign,
+    // },
+    // {
+    //   name: "Drafted Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.draft}`,
+    //   for: ["mentor"],
+    //   mentorStatus: "draft",
+    //   menteeStatus: "",
+    //   status: programActionStatus.draft,
+    // },
+    // {
+    //   name: "Upcoming Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.upcoming}`,
+    //   for: ["mentee"],
+    //   mentorStatus: "",
+    //   menteeStatus: "upcoming",
+    //   status: programActionStatus.upcoming,
+    // },
     {
       name: "Interested Programs",
       count: 0,
@@ -931,15 +931,15 @@ export const programMenus = (page = "dashboard") => {
       menteeStatus: "interest",
       status: programActionStatus.interest,
     },
-    {
-      name: "Bookmarked Programs",
-      count: 0,
-      page: `${pipeUrl}${programFilterUrls.bookmark}`,
-      for: ["mentor", "mentee", "admin"],
-      mentorStatus: programActionStatus.bookmark,
-      menteeStatus: programActionStatus.bookmark,
-      status: programActionStatus.bookmark,
-    },
+    // {
+    //   name: "Bookmarked Programs",
+    //   count: 0,
+    //   page: `${pipeUrl}${programFilterUrls.bookmark}`,
+    //   for: ["mentor", "mentee", "admin"],
+    //   mentorStatus: programActionStatus.bookmark,
+    //   menteeStatus: programActionStatus.bookmark,
+    //   status: programActionStatus.bookmark,
+    // },
     {
       name: "Rescheduled Programs",
       count: 0,
@@ -974,6 +974,11 @@ export const RequestStatusArray = [
   {
     key: "program_request",
     name: "Program Requests",
+    menteeTabName: "Mentees Program Requests",
+  },
+  {
+    key: "mentee_program_request",
+    name: "Mentees Program Requests",
     menteeTabName: "Mentees Program Requests",
   },
   {
@@ -1017,6 +1022,10 @@ export const RequestStatusArray = [
 export const RequestStatus = {
   programRequest: {
     key: "program_request",
+    name: "Program Requests",
+  },
+  menteeprogramRequest: {
+    key: "mentee_program_request",
     name: "Program Requests",
   },
   memberJoinRequest: {
@@ -1080,6 +1089,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ["admin", "mentor", "mentee"],
+    forTabs:"my"
   },
   {
     name: "Mentor Join Requests",
@@ -1087,6 +1097,15 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.memberJoinRequest.key,
     for: ["admin"],
+     forTabs:"my"
+  },
+  {
+    name: "Mentees Program Requests",
+    key: RequestStatus.menteeprogramRequest.key,
+    count: 0,
+    status: RequestStatus.menteeprogramRequest.key,
+    for: ["mentor", "admin"],
+     forTabs:"mentees"
   },
   // {
   //   name: 'Resource Access Requests',
@@ -1108,6 +1127,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.certificateRequest.key,
     for: ["admin", "mentor"],
+     forTabs:"my"
   },
   {
     name: "Report Requests",
@@ -1115,7 +1135,9 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.reportRequest.key,
     for: ["admin", "mentor"],
+     forTabs:"my"
   },
+  
   // {
   //   name: "Testimonial Requests",
   //   key: RequestStatus.testimonicalRequest,
@@ -1157,6 +1179,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.learningAccessRequests.key,
     for: ["mentee"],
+     forTabs:"my"
   },
 ];
 
@@ -1167,6 +1190,7 @@ export const menteesRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ["mentor", "admin"],
+     forTabs:"mentees"
   },
   {
     name: "Mentees Joining Request",

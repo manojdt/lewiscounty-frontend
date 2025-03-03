@@ -291,7 +291,7 @@ const ProgramSteps = ({
   }, [goalsCount, fields.length, append, remove]);
 
   React.useEffect(() => {
-    if (recurring_program && recurringFields?.length === 0 && !params?.id) {
+    if (recurring_program && recurringFields?.length === 0) {
       appendRecurringFields({
         start_date: "",
         end_date: "",
@@ -741,6 +741,7 @@ const ProgramSteps = ({
                         paginationMode={
                           field.name === "certifications" ? "client" : "server"
                         }
+                        onSearchChange={setMentorSearchValue}
                         totalRows={totalRows}
                         onPaginationChange={onPaginationChange}
                         tablesPagination={tablesPagination[field.name]}

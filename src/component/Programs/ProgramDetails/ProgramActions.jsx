@@ -731,7 +731,6 @@ const ProgramActions = ({
 
   // Render common status buttons
   const renderCommonStatus = () => {
-    // Start Program button
     if (
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
@@ -784,7 +783,7 @@ const ProgramActions = ({
     }
 
     // Cancelled status
-    if ((programdetails.status === "cancelled" && (role === "mentee" || type !== "program_cancel"))) {
+    if ((programdetails.status === "cancelled" &&!type&& (role === "mentee" || type !== "program_cancel"))) {
       return (
         <div className="flex gap-4 pt-5">
           {/* <button

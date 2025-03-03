@@ -79,6 +79,7 @@ export const requestPageBreadcrumbs = {
   dashboardRecentMembers : "dashboardRecentMembers",
   newMenteeQuestions : "newMenteeQuestions",
   createNewusers : "createNewUser",
+  topPrograms:"top_programs",
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -660,6 +661,17 @@ export const newFollowRequestMentorPage = (status) => {
     },
   ];
 };
+export const dashboardTopprograms = (status) => {
+  return [
+    {
+      label: `Dsahboard`,
+      path: -1,
+    },
+    {
+      label: `View Top Programs`,
+    },
+  ];
+};
 
 
  // Goals
@@ -1205,7 +1217,7 @@ export const new_user_create = () => {
   
   return [
     {
-      label: "Member",
+      label: "User",
       path: -1,
     },
     {

@@ -1834,7 +1834,7 @@ export const ProgramInformationFields = [
     label: "Address 1",
     placeholder: "Enter Address 1",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     for: ["admin", "mentor"],
@@ -2037,7 +2037,7 @@ export const AboutProgramFields = [
   {
     type: "radio",
     name: "is_sponsored",
-    label: "Sponsor Availability:",
+    label: "Sponsor:",
     placeholder: "",
     options: [
       { key: "true", value: "Yes" },
@@ -2796,6 +2796,7 @@ export const CreateCertificateFields = [
     inputRules: {
       required: "This field is required",
     },
+    isRequired: true,
     options: [],
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
@@ -2805,9 +2806,10 @@ export const CreateCertificateFields = [
     label: "Program Name",
     placeholder: "Select Program Name",
     inputRules: {
-      // required: "This field is required",
+      required: "This field is required",
     },
     options: [],
+    isRequired: true,
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
   },
   {
@@ -2835,7 +2837,10 @@ export const CreateCertificateFields = [
     name: "start_date",
     label: "Program Start Date and Time",
     placeholder: "Select Program Start Date and Time",
-    inputRules: {},
+    inputRules: {
+      required: "This field is required",
+    },
+  
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },
@@ -2844,7 +2849,9 @@ export const CreateCertificateFields = [
     name: "end_date",
     label: "Program End Date and Time",
     placeholder: "Select Program End Date and Time",
-    inputRules: {},
+    inputRules: {
+      required: "This field is required",
+    },
     width: "w-full lg:w-[32%] md:w-[48%] xl:w-[32%]",
     disabled: true,
   },

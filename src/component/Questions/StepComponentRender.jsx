@@ -139,6 +139,7 @@ const StepComponenRender = ({
         toast.success(response?.data?.message)
        await docUpload(allValues)
        refetch()
+       setIdProof([])
        // handleLogout()
        // reset();
       }

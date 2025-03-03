@@ -447,20 +447,20 @@ export default function ProgramCard({
                                 className={`absolute top-2 left-3 cursor-pointer  ${
                                   hoverIndex === index ? "block" : "hidden"
                                 }`}
-                                style={{
-                                  background: "#fff",
-                                  borderRadius: "50%",
-                                  padding: "13px 15px",
-                                }}
+                                // style={{
+                                //   background: "#fff",
+                                //   borderRadius: "50%",
+                                //   padding: "13px 15px",
+                                // }}
                                 onClick={() =>
                                   handleProgramImageUpdate(currentProgram)
                                 }
                               >
-                                <img
+                                {/* <img
                                   className="h-[25px] w-[22px]"
                                   src={EditIcon}
                                   alt="EditIcon"
-                                />
+                                /> */}
                               </div>
                             )}
 
@@ -533,11 +533,11 @@ export default function ProgramCard({
                                   }
                                 }}
                               >
-                                <img
+                                {/* <img
                                   // className={`h-[18px] w-[15px]`}
                                   src={EditIcon}
                                   alt="EditIcon"
-                                />
+                                /> */}
                               </IconButton>
                             )}
                           </div>

@@ -68,7 +68,7 @@ export default function CreatePrograms() {
           mentor_id: [],
         },
       ],
-      is_sponsored: false,
+      is_sponsored: true,
       prerequisites: [
         {
           question: "",
@@ -88,6 +88,7 @@ export default function CreatePrograms() {
     unregister,
     clearErrors,
     trigger,
+    getValues,
   } = methods;
   const formValues = watch();
   const [tablesPagination, setTablesPagination] = useState({
@@ -402,7 +403,9 @@ export default function CreatePrograms() {
             bodyFormData.delete("sponsor_logos");
           }
           if (params?.id && !isReopen) {
-            bodyFormData.append("status", "create");
+            if (fieldData?.status === "draft") {
+              bodyFormData.append("status", "create");
+            }
             bodyFormData.append("program_id", params?.id);
             // for (let [key, value] of bodyFormData.entries()) {
             //   console.log(`formData: ${key}: ${value}`);
@@ -499,22 +502,31 @@ export default function CreatePrograms() {
       goals_count: (detail) => detail.goals_count,
       is_sponsored: (detail) => detail.is_sponsored,
       mentor_id: (detail) => (detail.mentor_id ? [detail.mentor_id] : []),
-      goals: (detail) =>
-        detail.goals?.map((item) => ({
-          ...item,
-          start_date: item?.start_date,
-          end_date: item?.end_date,
-          mentor_id: [item?.mentor_info],
-        })),
+      goals: (detail) => {
+        // Check if goals exist and is an array
+        if (!detail.goals || !Array.isArray(detail.goals)) {
+          return [];
+        }
+
+        return detail.goals.map((item) => ({
+          id: item?.id,
+          name: item?.name,
+          description: item?.description,
+          start_date: item?.start_date ? new Date(item.start_date) : null,
+          end_date: item?.end_date ? new Date(item.end_date) : null,
+          mentor_id: item?.mentor_info ? [item.mentor_info] : [],
+          status: item?.status,
+          // Include any other fields that might be needed for goals
+        }));
+      },
       prerequisites: (detail) =>
         detail.prerequisites?.map((item) => ({
           ...item,
           field_options: item?.field_options
             ?.filter(
-              (option) =>
-                typeof option.title === "string" && option.title.trim() !== ""
+              (option) => typeof option === "string" && option.trim() !== ""
             )
-            .map((option) => option.title), // Ensure proper structure for field_options
+            .map((option) => ({ title: option })),
         })),
       recurring_dates: (detail) => {
         return detail.recurring_programs_details?.map((detail) => ({
@@ -527,15 +539,21 @@ export default function CreatePrograms() {
       },
     };
 
+    // Process all fields
     ProgramFields.flat().forEach((field) => {
       const fieldName = field.name;
-      let value;
 
+      // Skip processing if field is not defined
+      if (!fieldName) return;
+
+      let value;
       if (fieldTransformers[fieldName]) {
         value = fieldTransformers[fieldName](currentProgramDetail, fieldName);
       } else {
         value = currentProgramDetail[fieldName];
       }
+
+      // Handle location fields specially
       if (["city", "state", "zip_code"].includes(fieldName)) {
         const filteredName = fieldName === "state" ? "state_name" : fieldName;
         if (currentProgramDetail?.location_details) {
@@ -547,10 +565,16 @@ export default function CreatePrograms() {
             setValue("location", currentProgramDetail.location_details.id);
           }
         }
-      }
+      } else if (fieldName === "goals") {
+        // Special handling for goals to ensure it's properly set
+        setValue(fieldName, value);
 
-      // Set the value with validation for category field
-      if (fieldName === "category") {
+        // If goals_count exists, make sure it's updated too
+        if (value && Array.isArray(value)) {
+          setValue("goals_count", value.length);
+        }
+      } else if (fieldName === "category") {
+        // Set the value with validation for category field
         setValue(fieldName, value, {
           shouldValidate: true,
           shouldDirty: true,
@@ -559,7 +583,7 @@ export default function CreatePrograms() {
         setValue(fieldName, value);
       }
     });
-  }, [currentProgramDetail, params.id]); // Only run when currentProgramDetail or params.id changes
+  }, [currentProgramDetail, params.id, setValue, getValues]); // Only run when currentProgramDetail or params.id changes
 
   useEffect(() => {
     // If any completion state (success or error) is true, show the backdrop
@@ -870,13 +894,7 @@ export default function CreatePrograms() {
                   ? `Error ${
                       IsErrorProgramCreating ? "Creating" : "Updating"
                     } program`
-                  : `Program ${
-                      formValues?.status === "draft"
-                        ? "Drafted"
-                        : isProgramUpdated
-                        ? "Updated"
-                        : "Created"
-                    } Successfully!`}
+                  : (createResponse?.message || updateResponse?.message)}
               </span>
             </div>
           )}
@@ -937,7 +955,7 @@ export default function CreatePrograms() {
                     </MuiButton>
                   )}
                   {/* {!params?.id && currentStep === ProgramTabs.length && ( */}
-                  <MuiButton
+                  {/* <MuiButton
                     sx={{
                       background: light,
                       color: main,
@@ -946,7 +964,7 @@ export default function CreatePrograms() {
                     onClick={onDraftSubmit}
                   >
                     {"Draft"}
-                  </MuiButton>
+                  </MuiButton> */}
                   {/* )} */}
                   <MuiButton
                     type="submit"

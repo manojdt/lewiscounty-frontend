@@ -10,7 +10,11 @@ import {
   postCommentLike,
   updateFeedTrack,
   getFeedTrack,
+  getProgramFeedTrack,
   updateFeedRequest,
+  getProgramPost,
+  getRecentView,
+  createFeedbackTrack
 } from "../../services/feeds";
 import { feedStatus } from "../../utils/constant";
 
@@ -20,6 +24,7 @@ const initialState = {
   recentPosts: [],
   userPost: [],
   feedTrack: [],
+  recentViews: [],
   loading: false,
   status: "",
   error: "",
@@ -52,6 +57,29 @@ export const feedSlice = createSlice({
           error: action.error.message,
         };
       });
+    builder
+      .addCase(getProgramPost.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramPost.fulfilled, (state, action) => {
+        return {
+          ...state,
+          feeds: action.payload,
+          status: feedStatus.load,
+          loading: false,
+        };
+      })
+      .addCase(getProgramPost.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+
 
     builder
       .addCase(getPostDetails.pending, (state) => {
@@ -120,7 +148,50 @@ export const feedSlice = createSlice({
           error: action.error.message,
         };
       });
-
+      builder
+      .addCase(getRecentView.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getRecentView.fulfilled, (state, action) => {
+        return {
+          ...state,
+          recentViews: action.payload,
+          // status: feedStatus.load,
+          loading: false,
+        };
+      })
+      .addCase(getRecentView.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
+      builder
+      .addCase(createFeedbackTrack.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(createFeedbackTrack.fulfilled, (state, action) => {
+        return {
+          ...state,
+          feedTrack: { results: action.payload },
+          // status: feedStatus.load,
+          loading: false,
+        };
+      })
+      .addCase(createFeedbackTrack.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+      });
     builder
       .addCase(getFeedTrack.pending, (state) => {
         return {
@@ -143,7 +214,43 @@ export const feedSlice = createSlice({
           error: action.error.message,
         };
       });
-
+    builder
+      .addCase(getProgramFeedTrack.pending, (state) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(getProgramFeedTrack.fulfilled, (state, action) => {
+        if (action.payload && action.payload.results) {
+          return {
+            ...state,
+            feedTrack: action.payload,
+            loading: false,
+          };
+        }
+  
+        if (Array.isArray(action.payload)) {
+          return {
+            ...state,
+            feedTrack: { results: action.payload },
+            loading: false,
+          };
+        }
+        
+        return {
+          ...state,
+          feedTrack: { results: [] },
+          loading: false,
+        };
+      })
+      .addCase(getProgramFeedTrack.rejected, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          error: action.error.message,
+        };
+    });
     builder
       .addCase(updateFeedTrack.pending, (state) => {
         return {

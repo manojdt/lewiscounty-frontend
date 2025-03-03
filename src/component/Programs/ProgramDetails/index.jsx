@@ -43,6 +43,7 @@ import AbortIcon from "../../../assets/images/abort1x.png";
 import LocationIcon from "../../../assets/images/Location1x.png";
 import CalendarIcon from "../../../assets/images/calender_1x.png";
 import CertificateIcon from "../../../assets/images/certficate1x.png";
+import FeedbackIcon from "../../../assets/icons/FeedbackMenu.svg";
 import QuoteIcon from "../../../assets/images/quotes1x.png";
 import MuiModal from "../../../shared/Modal";
 import SuccessTik from "../../../assets/images/blue_tik1x.png";
@@ -121,13 +122,17 @@ import SubDetailCardWrapper from "../../../shared/Card/SubDetailCardWrapper";
 import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 import { DataGrid } from "@mui/x-data-grid";
 import { ThumbDownOffAlt } from "@mui/icons-material";
+import { postComment } from "../../../services/feeds";
+
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
   const [cancelPopup, setCancelPopup] = useState(false);
+  const [feedbackPopup, setFeedbackPopup] = useState(false);
   const [cancelPopupConfirmation, setCancelPopupConfirmation] = useState(false);
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
 
   const navigate = useNavigate();
   const [
@@ -174,6 +179,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     share: false,
     reschedule: false,
     not_interested: false,
+    feedback: false
   });
   const [openRecurringModal, setOpenRecurringModal] = useState(false);
   const [gridCellParams, setgridCellParams] = React.useState();
@@ -378,6 +384,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         }),
       });
     }
+  };
+
+  const handleOpenFeedbackPopup = () => {
+    handleClose();
+    setFeedbackPopup(true);
   };
 
   useEffect(() => {
@@ -628,6 +639,10 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         setMoreMenuModal({ ...moreMenuModal, reschedule: false, cancel: true });
         handleClose();
         break;
+        case "feedback":
+          setMoreMenuModal({ ...moreMenuModal, feedback:true });
+          handleClose();
+          break;
       case "discussion":
         break;
       case "edit":
@@ -649,7 +664,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     const decodedKey = decodeURIComponent(key);
     // Get 'type' from URL search params
     const searchParams = new URLSearchParams(window.location.search);
-    const type = searchParams.get("type");
+    const type = searchParams.get("statustype");
 
     // Define labels based on 'type'
     const typeLabels = {
@@ -724,7 +739,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   }, [breadcrumbsType, programdetails]);
 
   const handleMoreMenuClosePopup = () => {
-    setMoreMenuModal({ share: false, reschedule: false, cancel: false });
+    setMoreMenuModal({ share: false, reschedule: false, cancel: false, feedback: false });
     reset();
   };
 
@@ -794,6 +809,20 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           refetch();
         });
       }
+    }
+    if (moreMenuModal.feedback) {
+      dispatch(
+        postComment({
+          program_id: params.id,
+          content: data.feedback,
+        })
+      ).then(() => {
+        setMoreMenuModal({ ...moreMenuModal, feedback: false });
+        setFeedbackSuccess(true);
+        setTimeout(() => {
+          setFeedbackSuccess(false);
+        }, 1000);
+      });
     }
   };
 
@@ -1260,8 +1289,28 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             </p>
           </div>
         </div>
+      </Backdrop>     
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={feedbackSuccess}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Feedback Submitted Successfully
+            </p>
+          </div>
+        </div>
       </Backdrop>
-
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isAccepted}
@@ -1924,6 +1973,91 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           </p>
         </div>
       </MuiCustomModal>
+      {moreMenuModal.feedback && (
+      <MuiModal
+        modalSize="md"
+        modalOpen={moreMenuModal.feedback}
+        modalClose={() => setMoreMenuModal({ ...moreMenuModal, feedback: false })}
+        noheader
+      >
+        <div className="px-0 sm:px-0 md:px-5 lg:px-5 xl:px-5 py-5">
+          <div
+            className="flex justify-center flex-col gap-5 mt-4 mb-4"
+            style={{
+              border: "1px solid rgba(29, 91, 191, 1)",
+              borderRadius: "10px",
+            }}
+          >
+            <div
+              className="flex justify-between px-3 py-4 items-center"
+              style={{ borderBottom: "1px solid rgba(29, 91, 191, 1)" }}
+            >
+              <p
+                className="text-[18px]"
+                style={{ color: "rgba(0, 0, 0, 1)" }}
+              >
+                Program Feedback
+              </p>
+              <img
+                className="cursor-pointer"
+                onClick={() => setMoreMenuModal({ ...moreMenuModal, feedback: false })}
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
+
+            <div className="px-5">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="relative pb-8">
+                  <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Your Feedback
+                  </label>
+
+                  <div className="relative">
+                    <textarea
+                      {...register("feedback", {
+                        required: "This field is required",
+                      })}
+                      id="feedback"
+                      rows="4"
+                      className={`block p-2.5 input-bg w-full text-sm text-gray-900 border
+                                  focus-visible:outline-none focus-visible:border-none`}
+                      style={{ border: "2px solid rgba(29, 91, 191, 1)" }}
+                      placeholder={""}
+                    ></textarea>
+                    {errors["feedback"] && (
+                      <p className="error" role="alert">
+                        {errors["feedback"].message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                  <Button
+                    btnName="Cancel"
+                    btnCls="w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
+                    btnCategory="secondary"
+                    onClick={() => setMoreMenuModal({ ...moreMenuModal, feedback: false })}
+                  />
+                  <button
+                    type="submit"
+                    className="text-white py-3 px-7 w-[40%] sm:w-[40%] md:w-[20%] lg:w-[15%] xl:w-[15%]"
+                    style={{
+                      background:
+                        "linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%)",
+                      borderRadius: "3px",
+                    }}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </MuiModal>
+    )}
       {moreMenuModal.cancel && (
         <MuiModal
           modalSize="md"
@@ -2079,7 +2213,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
-                          {role === "admin" &&
+                          {/* {role === "admin" &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_assign_program &&
@@ -2097,7 +2231,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Edit
                               </MenuItem>
-                            )}
+                            )} */}
                           {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
@@ -2121,7 +2255,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Re-Open
                               </MenuItem>
                             )}
-                          {role === "mentor" &&
+                          {/* {role === "mentor" &&
                             programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
@@ -2142,7 +2276,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Edit
                               </MenuItem>
-                            )}
+                            )} */}
 
                           {!requestStatusParams &&
                             ![
@@ -2218,6 +2352,19 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                   />
                                   Complete
                                 </MenuItem>
+                              )}
+                              {programdetails?.created_by === userdetails?.data?.user_id && (
+                              <MenuItem
+                                onClick={() => handleMenu("feedback")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={FeedbackIcon}
+                                  alt="FeedbackIcon" 
+                                  className="pr-3 w-[25px]"
+                                />
+                                Feedback
+                              </MenuItem>
                               )}
                               {!("admin_assign_program" in programdetails) &&
                                 programdetails?.created_by ===
@@ -2308,6 +2455,23 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Program Notes History
                               </MenuItem>
                             )}
+                             {["cancelled", "inprogress", "completed"].includes(
+                            programdetails?.status
+                          ) &&
+                            programdetails.mentee_join_status ===
+                              programActionStatus.program_join_request_accepted && (
+                              <MenuItem
+                                onClick={() => handleMenu("feedback")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={FeedbackIcon}
+                                  alt="FeedbackIcon" 
+                                  className="pr-3 w-[25px]"
+                                />
+                                Feedback
+                              </MenuItem>
+                              )}
                         </>
                       )}
                     </Menu>
