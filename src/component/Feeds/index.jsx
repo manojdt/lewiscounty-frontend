@@ -15,7 +15,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SettingsModal from "./SettingsModal";
 import CreatePostModal from "./CreatePostModal";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, getPost } from "../../services/feeds";
+import { createPost, getPost, getProgramPost } from "../../services/feeds";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { feedStatus } from "../../utils/constant";
 import { Icon } from "@mui/material";
@@ -77,13 +77,21 @@ export default function Feeds() {
     }
   }, [feeds]);
 
+  // useEffect(() => {
+  //   let feedData = {
+  //     page: currentPage,
+  //     pageSize: 6,
+  //   };
+  //   dispatch(getPost(feedData));
+  // }, [currentPage, pageSize]);
   useEffect(() => {
     let feedData = {
       page: currentPage,
-      pageSize: 6,
+      // pageSize: 6,
     };
-    dispatch(getPost(feedData));
+    dispatch(getProgramPost());
   }, [currentPage, pageSize]);
+
 
   // // console.log("---feeds---", feeds)
   // const feedList = [
@@ -140,11 +148,19 @@ export default function Feeds() {
     setPostModal({ create: true, visibility: false });
   };
 
+  // useEffect(() => {
+  //   if (status === feedStatus.create) {
+  //     handleClose();
+  //     setTimeout(() => {
+  //       dispatch(getPost());
+  //     }, 2000);
+  //   }
+  // }, [status]);
   useEffect(() => {
     if (status === feedStatus.create) {
       handleClose();
       setTimeout(() => {
-        dispatch(getPost());
+        dispatch(getProgramPost());
       }, 2000);
     }
   }, [status]);

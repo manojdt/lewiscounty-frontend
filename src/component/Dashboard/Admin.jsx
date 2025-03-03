@@ -24,6 +24,7 @@ import {
 import MemberRequest from "./MemberRequest";
 import protectedApi from "../../services/api";
 import { getPost } from "../../services/feeds";
+import { getProgramPost } from "../../services/feeds";
 import ProgramFeeds from "../../shared/ProgramFeeds";
 import { useWindowSize } from "../../utils/windowResize";
 import api from "../../services/api";
@@ -251,13 +252,22 @@ export default function Admin() {
     }
   };
 
+  // React.useEffect(() => {
+  //   //   if (feedsList?.length === 0) {
+  //   let feedData = {
+  //     page: 1,
+  //     pageSize: 5,
+  //   };
+  //   dispatch(getPost(feedData));
+  //   //   }
+  // }, []);
   React.useEffect(() => {
     //   if (feedsList?.length === 0) {
     let feedData = {
       page: 1,
-      pageSize: 5,
+      // pageSize: 5,
     };
-    dispatch(getPost(feedData));
+    dispatch(getProgramPost(feedData));
     //   }
   }, []);
   useEffect(() => {

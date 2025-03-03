@@ -2201,7 +2201,7 @@ export const ProgramTestimonialsFields = [
   {
     type: "popup-input",
     name: "members",
-    label: "Users",
+    label: "Members",
     placeholder: "Add request for testimonials",
     fieldtype: "text",
     inputRules: {
