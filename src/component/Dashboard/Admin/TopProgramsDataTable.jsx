@@ -45,7 +45,7 @@ const TopProgramsDataTable = ({role=''}) => {
       }
       
           return <>
-              <div className='cursor-pointer flex items-center justify-center h-full relative' onClick={onEyeIconClick}>
+              <div className='cursor-pointer flex items-center justify-start h-full relative' onClick={onEyeIconClick}>
 
                   <img src={EyeIcon} alt='EyeIcon'></img>
               </div>
