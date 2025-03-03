@@ -312,7 +312,7 @@ const ProgramSteps = ({
   // Initialize prerequisites if empty
   React.useEffect(() => {
     // Initialize with one prerequisite item if none exists
-    if (prerequisiteFields?.length === 0 && !params?.id) {
+    if (prerequisiteFields?.length === 0) {
       appendPrerequisiteField({
         question: "",
         field_type: "",
@@ -416,12 +416,9 @@ const ProgramSteps = ({
   };
 
   // Determine if fields should be disabled
-  const disablePopupField = params?.id && !isReopen;
-  const disableRecurringProgram = params?.id && !isReopen;
-  const disableDateFields = (fieldName) =>
-    params?.id &&
-    (fieldName === "start_date" || fieldName === "end_date") &&
-    !isReopen;
+  const disablePopupField = false;
+  const disableRecurringProgram = false;
+  const disableDateFields = (fieldName) => false;
 
   return (
     <div>
@@ -449,13 +446,10 @@ const ProgramSteps = ({
             return null;
           }
 
-          const disableFields = params?.id && field.name === "program_name";
+          const disableFields = false;
 
           const disableSelectFields =
-            params?.id &&
-            (field.name === "course_level" ||
-              field.name === "category" ||
-              field.name === "type");
+            false;
 
           const onFilteredDataChange = (programInfo) => {
             ["zip_code", "state", "city"].map((item) => {
@@ -565,7 +559,6 @@ const ProgramSteps = ({
                 <Controller
                   name={field.name}
                   control={control}
-                  defaultValue={false}
                   rules={field.inputRules}
                   render={({ field: controllerField }) => (
                     <FormControl
@@ -577,7 +570,7 @@ const ProgramSteps = ({
                         {...controllerField}
                         row
                         aria-labelledby="radio-buttons-group"
-                        value={controllerField.value?.toString()}
+                        value={controllerField.value}
                         onChange={(e) => {
                           const Value =
                             field.name === "reminder_type"
@@ -720,6 +713,9 @@ const ProgramSteps = ({
 
                     return (
                       <PopupTableInput
+                        loading={
+                          field.name !== "certifications" ? isFetching : false
+                        }
                         disabled={disablePopupField}
                         fieldName={field.name}
                         toolBarComponent={
@@ -742,7 +738,9 @@ const ProgramSteps = ({
                         columns={MODAL_CONFIG[actionModal]?.columns}
                         placeholder={MODAL_CONFIG[actionModal]?.modalTitle}
                         onFieldClick={() => handleAction(field.name)}
-                        paginationMode={"client"}
+                        paginationMode={
+                          field.name === "certifications" ? "client" : "server"
+                        }
                         totalRows={totalRows}
                         onPaginationChange={onPaginationChange}
                         tablesPagination={tablesPagination[field.name]}

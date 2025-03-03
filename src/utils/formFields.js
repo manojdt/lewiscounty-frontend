@@ -2020,19 +2020,19 @@ export const ProgramInformationFields = [
 ];
 
 export const AboutProgramFields = [
-  {
-    type: "popup-input",
-    name: "certifications",
-    label: "Program Certificates",
-    fieldtype: "text",
-    placeholder: "Add Certificates",
-    inputRules: {
-      // required: "This field is required",
-    },
-    width: "w-full",
-    icon: "add",
-    for: ["admin", "mentor"],
-  },
+  // {
+  //   type: "popup-input",
+  //   name: "certifications",
+  //   label: "Program Certificates",
+  //   fieldtype: "text",
+  //   placeholder: "Add Certificates",
+  //   inputRules: {
+  //     // required: "This field is required",
+  //   },
+  //   width: "w-full",
+  //   icon: "add",
+  //   for: ["admin", "mentor"],
+  // },
 
   {
     type: "radio",

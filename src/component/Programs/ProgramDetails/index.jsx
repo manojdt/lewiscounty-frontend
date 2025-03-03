@@ -53,7 +53,11 @@ import CancelIcon from "../../../assets/images/cancel1x.png";
 import CompleteIcon from "../../../assets/images/completed1x.png";
 import { Button } from "../../../shared";
 import { Button as MuiButton } from "@mui/material";
-import { convertDateFormat, formatDateTimeISO, formatTableNullValues } from "../../../utils";
+import {
+  convertDateFormat,
+  formatDateTimeISO,
+  formatTableNullValues,
+} from "../../../utils";
 import "./program-details.css";
 import Ratings from "../Ratings";
 import { getUserProfile } from "../../../services/profile";
@@ -202,7 +206,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       isSuccess: isAdminProgramUpdated,
       isError: IsErrorAdminProgramUpdating,
       error: errorUpdateAdminProgramMessage,
-      reset: resetAdminProgramStatus
+      reset: resetAdminProgramStatus,
     },
   ] = useUpdateAdminProgramStatusMutation();
   const {
@@ -250,13 +254,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     (state) => state.profileInfo
   );
   const { programMentees } = useSelector((state) => state.programInfo);
-  const [formattedProgramMentees, setFormattedProgramMentees] = React.useState([])
-  React.useMemo(()=>{
-    if(programMentees){
-      const formattedRowData = formatTableNullValues(programMentees)
-      setFormattedProgramMentees(formattedRowData)
+  const [formattedProgramMentees, setFormattedProgramMentees] = React.useState(
+    []
+  );
+  React.useMemo(() => {
+    if (programMentees) {
+      const formattedRowData = formatTableNullValues(programMentees);
+      setFormattedProgramMentees(formattedRowData);
     }
-  },[programMentees])
+  }, [programMentees]);
   const { menteeJoined, status } = useSelector((state) => state.userPrograms);
   const {
     loading: requestLoading,
@@ -405,7 +411,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     }
     if (IsErrorProgramUpdating || IsErrorAdminProgramUpdating) {
       toast.error(
-        role === "admin"&& programdetails?.admin_assign_program
+        role === "admin" && programdetails?.admin_assign_program
           ? errorUpdateAdminProgramMessage?.data?.errors?.[0]
           : errorUpdateProgramMessage?.data?.error
       );
@@ -426,7 +432,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
   const handleJoinProgram = async (request_type) => {
     if (role === "mentee" && !userdetails?.data?.is_registered) {
-      navigate(`/questions?program_id=${programdetails.id}&breadcrumbsType=${requestPageBreadcrumbs.newMenteeQuestions}`);
+      navigate(
+        `/questions?program_id=${programdetails.id}&breadcrumbsType=${requestPageBreadcrumbs.newMenteeQuestions}`
+      );
     } else if (role === "mentee" && !userdetails?.data?.document_upload) {
       navigate(`/mentee-doc-upload/${programdetails.id}`);
     } else {
@@ -587,7 +595,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
               alignItems: "center",
               borderRadius: "3px",
             }}
-            onClick={() => navigate(`/mentee-details/${params.row?.id}?breadcrumbsType=${requestPageBreadcrumbs.menteesProfileCounts}`)}
+            onClick={() =>
+              navigate(
+                `/mentee-details/${params.row?.id}?breadcrumbsType=${requestPageBreadcrumbs.menteesProfileCounts}`
+              )
+            }
           >
             {" "}
             View Profile{" "}
@@ -622,7 +634,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         navigate(`/update-program/${params?.id}`);
         break;
       case "editadmin":
-        navigate(`/update-program/${params?.id}?program_create_type=admin_program`);
+        navigate(
+          `/update-program/${params?.id}?program_create_type=admin_program`
+        );
         break;
       case "not_interested":
         setMoreMenuModal({ ...moreMenuModal, not_interested: true });
@@ -832,7 +846,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       if (
         role === "mentee" &&
         programdetails.status === "completed" &&
-        !programdetails.mentee_program_rating&&!topProgram
+        !programdetails.mentee_program_rating &&
+        !topProgram
       ) {
         setRatingModal({ modal: true, success: false });
       }
@@ -1621,7 +1636,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           <div className="flex justify-center items-center flex-col gap-8 py-10 px-20 mt-5">
             <div>{programdetails?.program_name}</div>
             <input
-        className="input-bg text-xs 
+              className="input-bg text-xs 
           h-12 sm:h-14 md:h-[60px]
           w-full sm:w-80 md:w-96
           px-4 sm:px-5
@@ -1631,12 +1646,12 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           overflow-hidden
           disabled:bg-gray-100
           disabled:text-gray-700"
-        disabled
-        value={url}
-        style={{
-          textOverflow: 'ellipsis'
-        }}
-      />
+              disabled
+              value={url}
+              style={{
+                textOverflow: "ellipsis",
+              }}
+            />
             <div className="flex gap-7">
               <img
                 className="cursor-pointer"
@@ -1682,7 +1697,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="px-4 py-7">
                 <div className="flex flex-wrap gap-4">
-                  <div className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}>
+                  <div
+                    className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}
+                  >
                     <label
                       className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor={"Reschedule Date"}
@@ -1744,7 +1761,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     )}
                   </div>
 
-                  <div className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}>
+                  <div
+                    className={`relative mb-6 w-full sm:w-full md:w-[48%] lg:w-[48%] xl:w-[48%]`}
+                  >
                     <label
                       className="block tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor={"Reschedule Date"}
@@ -2023,13 +2042,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                       "program_cancel",
                     ].includes(typeParams)) ||
                   (role === "mentee" &&
-                    (
-                    programdetails.mentee_join_status ===
-                        programActionStatus.program_join_request_accepted ||[
-                          "yettoapprove",
-                          "yettojoin",
-                        ].includes(programdetails?.status)
-                      ) &&
+                    (programdetails.mentee_join_status ===
+                      programActionStatus.program_join_request_accepted ||
+                      ["yettoapprove", "yettojoin"].includes(
+                        programdetails?.status
+                      )) &&
                     !["program_join", "program_cancel"].includes(
                       typeParams
                     ))) && (
@@ -2062,11 +2079,13 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
-                          {role==="admin"&&
+                          {role === "admin" &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_assign_program &&
-                           programdetails?.sub_programs.every((val)=>val.status==="yettoapprove") && (
+                            programdetails?.sub_programs.every(
+                              (val) => val.status === "yettoapprove"
+                            ) && (
                               <MenuItem
                                 onClick={() => handleMenu("editadmin")}
                                 className="!text-[12px]"
@@ -2102,7 +2121,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Re-Open
                               </MenuItem>
                             )}
-                           {role==="mentor"&&programdetails.participated_mentees_count === 0 &&
+                          {role === "mentor" &&
+                            programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_program === null &&
@@ -2123,8 +2143,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Edit
                               </MenuItem>
                             )}
-                          
-                           {!requestStatusParams &&
+
+                          {!requestStatusParams &&
                             ![
                               "yettoapprove",
                               "cancelled",
@@ -2151,7 +2171,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               </MenuItem>
                             )}
 
-                           {
+                          {
                             !requestStatusParams &&
                               ![
                                 "yettoapprove",
@@ -2178,7 +2198,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               )
                             // )
                           }
-                          
+
                           {[
                             programActionStatus.inprogress,
                             programActionStatus.assigned,
@@ -2350,14 +2370,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   <div className="text-[12px]">
                     {programdetails.description}
                   </div>
-                  {programdetails?.prerequisites && (
-                    <div className="text-[12px] my-3">
-                      <span className="font-semibold text-background-primary-main">
-                        Prerequisites:{" "}
-                      </span>
-                      {programdetails.prerequisites}
-                    </div>
-                  )}
+                  {!Array.isArray(programdetails?.prerequisites) &&
+                    programdetails?.prerequisites && (
+                      <div className="text-[12px] my-3">
+                        <span className="font-semibold text-background-primary-main">
+                          Prerequisites:{" "}
+                        </span>
+                        {programdetails.prerequisites}
+                      </div>
+                    )}
                   {programdetails?.session_details && (
                     <div className="text-[12px] my-3">
                       <span className="font-semibold text-background-primary-main">
@@ -2879,8 +2900,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 ((role === "mentee" &&
                   programdetails.mentee_join_status ===
                     programActionStatus.program_join_request_accepted) ||
-                  programdetails?.created_by === userdetails?.data?.user_id) && !programdetails?.mentee_program_exit &&
-                (
+                  programdetails?.created_by === userdetails?.data?.user_id) &&
+                !programdetails?.mentee_program_exit && (
                   <Box>
                     <Accordian
                       title={"Program Notes:"}
@@ -2976,8 +2997,8 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     }
                   />
                 )}
-               {/* Detail Section */}
-               <div
+              {/* Detail Section */}
+              <div
                 className="details-section px-0 sm:px-0 md:px-3 lg:px-6 xl:px-6 py-11 mb-10"
                 style={{
                   background: "rgba(249, 249, 249, 1)",
@@ -3105,39 +3126,42 @@ export default function ProgramDetails({ setProgramDetailsId }) {
 
                       {participatedTabs.map((participatedTab) => (
                         <div
-                        className={`certificate-tab-content relative 
-                          ${participatedTab.key === certificateActiveTab ? "block" : "hidden"}
+                          className={`certificate-tab-content relative 
+                          ${
+                            participatedTab.key === certificateActiveTab
+                              ? "block"
+                              : "hidden"
+                          }
                           flex flex-col md:flex-row items-center justify-between
                           p-4 sm:p-6 md:p-8`}
-                        key={participatedTab.key}
-                      >
-                        {/* Text Content */}
-                        <div className="w-full md:w-4/6 space-y-4 
+                          key={participatedTab.key}
+                        >
+                          {/* Text Content */}
+                          <div
+                            className="w-full md:w-4/6 space-y-4 
                           px-4 sm:px-6 md:px-9 
                           py-8 sm:py-12 md:py-16 
                           text-sm sm:text-base 
                           leading-5 sm:leading-6"
-                        >
-                          {participatedTab.key === "participated" && (
-                            "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."
-                          )}
-                  
-                          {participatedTab.key === "completed" && (
-                            "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."
-                          )}
-                        </div>
-                  
-                        {/* Certificate Image */}
-                        <div className="relative w-full md:w-2/6 flex justify-center md:justify-end">
-                          <img
-                            className="w-48 sm:w-56 md:w-auto 
+                          >
+                            {participatedTab.key === "participated" &&
+                              "The ability for members to earn badges and receive certifications is another essential feature of our Mentoring Management program. It helps in creating engaging and impactful relationships between mentors and mentees."}
+
+                            {participatedTab.key === "completed" &&
+                              "All the badges and certifications are secured through a blockchain system to ensure authenticity and traceability. This innovative approach not only enhances motivation but also provides tangible recognition of achievements, encouraging continuous growth and engagement."}
+                          </div>
+
+                          {/* Certificate Image */}
+                          <div className="relative w-full md:w-2/6 flex justify-center md:justify-end">
+                            <img
+                              className="w-48 sm:w-56 md:w-auto 
                               mt-4 md:mt-0
                               static md:relative md:right-0"
-                            src={CertificateIcon}
-                            alt="CertificateIcon"
-                          />
+                              src={CertificateIcon}
+                              alt="CertificateIcon"
+                            />
+                          </div>
                         </div>
-                      </div>
                       ))}
                     </div>
                   </div>
@@ -3210,7 +3234,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     // onViewAll={() =>
                     //   navigate("/programs?type=upcoming&filter_by=month")
                     // }
-
                   >
                     <ProgramCard
                       title="Active Programs"
@@ -3221,7 +3244,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     />
                   </SubDetailCardWrapper>
                 </div>
-               )} 
+              )}
             </div>
           </div>
         </div>

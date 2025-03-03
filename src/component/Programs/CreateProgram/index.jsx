@@ -124,6 +124,7 @@ export default function CreatePrograms() {
       isLoading: isProgramCreating,
       isSuccess: isProgramCreated,
       isError: IsErrorProgramCreating,
+      data: createResponse,
     },
   ] = useCreateProgramMutation();
   const [
@@ -132,9 +133,11 @@ export default function CreatePrograms() {
       isLoading: isProgramUpdating,
       isSuccess: isProgramUpdated,
       isError: IsErrorProgramUpdating,
+      data: updateResponse,
     },
   ] = useUpdateProgramMutation();
-
+  console.log("createResponse", createResponse);
+  console.log("updateResponse", updateResponse);
   const [validateProgramName] = useValidateProgramNameMutation();
 
   const [stepData, setStepData] = useState({});
@@ -190,14 +193,6 @@ export default function CreatePrograms() {
     // }
   };
 
-  // const arrayHasEmptyElements = (arrayOfObjects) => {
-  //   const hasEmptyValue = arrayOfObjects.some((obj) => {
-  //     return Object.values(obj).some(
-  //       (value) => value === "" || value === null || value === undefined
-  //     );
-  //   });
-  //   return hasEmptyValue;
-  // };
   const handleNextStep = async (data) => {
     // Get the current step's allowed fields
     let currentStepField = ProgramFields[currentStep - 1];
@@ -285,62 +280,62 @@ export default function CreatePrograms() {
           ];
 
           jsonFields.forEach((field) => {
-            if (fieldData[field]) {
-              if (field === "goals") {
-                const updateGoals = fieldData[field].map((item) => {
-                  // Create a base object with required fields
-                  const baseItem = {
-                    series: item?.series,
-                    name: item?.name,
-                    description: item?.description,
-                    start_date: item?.start_date,
-                    end_date: item?.end_date,
-                    mentor_id: item?.mentor_id
-                      ? item?.mentor_id?.map((mentor) =>
+            if (
+              jsonFields.includes(field) &&
+              Array.isArray(formValues[field])
+            ) {
+              // Specific handling for mentor_id and assign_mentees
+              if (field === "mentor_id" || field === "assign_mentees") {
+                const ids = formValues[field]
+                  .map((item) => item.id)
+                  .filter((id) => id); // Extract ids
+                if (ids.length > 0) {
+                  if (field === "mentor_id") {
+                    bodyFormData.append(field, JSON.stringify(ids?.[0]));
+                  } else {
+                    bodyFormData.append(field, JSON.stringify(ids));
+                  }
+                }
+              }
+              // Handle goals
+              else if (field === "goals") {
+                const goalEntries = formValues[field].map((goal) => {
+                  return {
+                    ...goal,
+                    mentor_id: goal?.mentor_id
+                      ? goal?.mentor_id?.map((mentor) =>
                           mentor?.hasOwnProperty("mentor_id")
                             ? mentor?.mentor_id
                             : mentor?.id
                         )?.[0]
-                      : [], // Safely access the first element of mentor_id
+                      : [],
                   };
-
-                  return baseItem;
                 });
-                const hasEmptyValue = updateGoals.some((obj) => {
-                  return Object.values(obj).some(
-                    (value) =>
-                      value === "" || value === null || value === undefined
-                  );
-                });
-                if (!hasEmptyValue) {
-                  bodyFormData.append(field, JSON.stringify(updateGoals));
+                if (goalEntries.length > 0) {
+                  bodyFormData.append(field, JSON.stringify(goalEntries));
                 }
-              } else if (field === "prerequisites") {
+              }
+              // Handle prerequisites
+              else if (field === "prerequisites") {
                 const updatePrerequisites = fieldData[field].map((item) => {
                   // Create a base object with required fields
                   const baseItem = {
                     ...item,
-                    field_options: item?.field_options?.map(
-                      (option) => option.title !== "" && option.title
-                    ),
+                    field_options: item?.field_options
+                      ?.filter(
+                        (option) =>
+                          typeof option.title === "string" &&
+                          option.title.trim() !== ""
+                      )
+                      .map((option) => option.title),
                   };
 
                   return baseItem;
                 });
-                const hasEmptyValue = updatePrerequisites.some((obj) => {
-                  return Object.values(obj).some(
-                    (value) =>
-                      value === "" || value === null || value === undefined
-                  );
-                });
-                if (!hasEmptyValue) {
-                  bodyFormData.append(
-                    field,
-                    JSON.stringify(updatePrerequisites)
-                  );
-                }
+
+                bodyFormData.append(field, JSON.stringify(updatePrerequisites));
               } else if (field === "recurring_dates") {
-                const updateRecurringProgram = fieldData[field].map((item) => {
+                const updateRecurringProgram = formValues[field].map((item) => {
                   // Create a base object with required fields
                   const baseItem = {
                     start_date: item?.start_date,
@@ -358,15 +353,24 @@ export default function CreatePrograms() {
                   field,
                   JSON.stringify(updateRecurringProgram)
                 );
-              } else {
-                let selectedIds;
-                if (field === "mentor_id") {
-                  selectedIds = fieldData[field].map((item) => item.id)?.[0];
-                } else {
-                  selectedIds = fieldData[field].map((item) => item.id);
+              }
+              // Handle other json fields normally
+              else {
+                // Check if the array contains valid objects with values
+                const isValidArray = formValues[field].some((item) => {
+                  if (Array.isArray(item)) {
+                    return item.length > 0; // Ensure item is not an empty array
+                  }
+                  return Object.values(item).some(
+                    (value) =>
+                      value !== "" && value !== null && value !== undefined
+                  );
+                });
+
+                // If the array contains valid objects, stringify and append to FormData
+                if (isValidArray) {
+                  bodyFormData.append(field, JSON.stringify(formValues[field]));
                 }
-                // For other fields, just stringify the array
-                bodyFormData.append(field, JSON.stringify(selectedIds));
               }
             }
           });
@@ -394,9 +398,6 @@ export default function CreatePrograms() {
           }
           bodyFormData.append("program_admin", userInfo.data?.user_id);
 
-          if (fieldData?.status === "draft") {
-            bodyFormData.append("status", "create");
-          }
           if (typeof fieldData?.sponsor_logos === "string" && isReopen) {
             bodyFormData.delete("sponsor_logos");
           }
@@ -410,9 +411,9 @@ export default function CreatePrograms() {
               bodyFormData,
             });
           } else {
-            for (let [key, value] of bodyFormData.entries()) {
-              console.log(`formData: ${key}: ${value}`);
-            }
+            // for (let [key, value] of bodyFormData.entries()) {
+            //   console.log(`formData: ${key}: ${value}`);
+            // }
             if (isReopen) {
               bodyFormData.append("reopen_program_id", params?.id);
             }
@@ -496,6 +497,7 @@ export default function CreatePrograms() {
       zip_code: (detail) => detail.location_details?.zip_code,
       goals_count: (detail) => detail.goals_count,
       is_sponsored: (detail) => detail.is_sponsored,
+      mentor_id: (detail) => (detail.mentor_id ? [detail.mentor_id] : []),
       goals: (detail) =>
         detail.goals?.map((item) => ({
           ...item,
@@ -506,9 +508,12 @@ export default function CreatePrograms() {
       prerequisites: (detail) =>
         detail.prerequisites?.map((item) => ({
           ...item,
-          field_options: item.field_options?.map((option) =>
-            typeof option === "string" ? { title: option } : option
-          ), // Ensure proper structure for field_options
+          field_options: item?.field_options
+            ?.filter(
+              (option) =>
+                typeof option.title === "string" && option.title.trim() !== ""
+            )
+            .map((option) => option.title), // Ensure proper structure for field_options
         })),
       recurring_dates: (detail) => {
         return detail.recurring_programs_details?.map((detail) => ({
@@ -592,13 +597,153 @@ export default function CreatePrograms() {
     clearErrors();
     let isValid = true;
     const mandatoryFields = ["category", "program_name"];
+
+    // Check for mandatory fields
     for (const fields of mandatoryFields) {
       if (!formValues?.[fields]) {
         isValid = await trigger(fields);
       }
     }
+
     if (isValid) {
-      await onSubmit({ ...formValues, status: "draft" });
+      let bodyFormData = new FormData();
+
+      // Define jsonFields that need special handling
+      const jsonFields = [
+        "prerequisites",
+        "certifications",
+        "goals",
+        "recurring_dates",
+        "mentor_id",
+        "assign_mentees",
+      ];
+
+      // Iterate through the data object
+      for (let key in formValues) {
+        // Check if the key exists and the value is not empty, null, or undefined
+        if (
+          formValues.hasOwnProperty(key) &&
+          formValues[key] !== "" &&
+          formValues[key] !== null &&
+          formValues[key] !== undefined
+        ) {
+          // Handle jsonFields (arrays of objects)
+          if (jsonFields.includes(key) && Array.isArray(formValues[key])) {
+            // Specific handling for mentor_id and assign_mentees
+            if (key === "mentor_id" || key === "assign_mentees") {
+              const ids = formValues[key]
+                .map((item) => item.id)
+                .filter((id) => id); // Extract ids
+              if (ids.length > 0) {
+                if (key === "mentor_id") {
+                  bodyFormData.append(key, JSON.stringify(ids?.[0]));
+                } else {
+                  bodyFormData.append(key, JSON.stringify(ids));
+                }
+              }
+            }
+            // Handle goals
+            else if (key === "goals") {
+              const goalEntries = formValues[key].map((goal) => {
+                return {
+                  ...goal,
+                  mentor_id: goal?.mentor_id
+                    ? goal?.mentor_id?.map((mentor) =>
+                        mentor?.hasOwnProperty("mentor_id")
+                          ? mentor?.mentor_id
+                          : mentor?.id
+                      )?.[0]
+                    : [],
+                };
+              });
+              if (goalEntries.length > 0) {
+                bodyFormData.append(key, JSON.stringify(goalEntries));
+              }
+            }
+            // Handle prerequisites
+            else if (key === "prerequisites") {
+              const updatePrerequisites = formValues[key].map((item) => {
+                // Create a base object with required fields
+                const baseItem = {
+                  ...item,
+                  field_options: item?.field_options?.map(
+                    (option) =>
+                      option.title.trim() !== "" &&
+                      typeof option.title !== "boolean" &&
+                      option.title
+                  ),
+                };
+
+                return baseItem;
+              });
+              bodyFormData.append(key, JSON.stringify(updatePrerequisites));
+            } else if (key === "recurring_dates") {
+              const updateRecurringProgram = formValues[key].map((item) => {
+                // Create a base object with required fields
+                const baseItem = {
+                  start_date: item?.start_date,
+                  end_date: item?.end_date,
+                  reminder_type: item?.reminder_type,
+                  ...(item?.day_numbers && {
+                    day_numbers: item.day_numbers?.join(","),
+                  }),
+                  ...(item?.byday && { byday: item.byday?.join(",") }),
+                };
+
+                return baseItem;
+              });
+              bodyFormData.append(key, JSON.stringify(updateRecurringProgram));
+            }
+            // Handle other json fields normally
+            else {
+              // Check if the array contains valid objects with values
+              const isValidArray = formValues[key].some((item) => {
+                if (Array.isArray(item)) {
+                  return item.length > 0; // Ensure item is not an empty array
+                }
+                return Object.values(item).some(
+                  (value) =>
+                    value !== "" && value !== null && value !== undefined
+                );
+              });
+
+              // If the array contains valid objects, stringify and append to FormData
+              if (isValidArray) {
+                bodyFormData.append(key, JSON.stringify(formValues[key]));
+              }
+            }
+          }
+          // Handle special cases for files and dates
+          else if (
+            key === "sponsor_logos" &&
+            formValues[key]?.[0] instanceof File
+          ) {
+            bodyFormData.append(key, formValues[key][0]);
+          } else if (["start_date", "end_date"].includes(key)) {
+            bodyFormData.append(key, new Date(formValues[key]).toISOString());
+          } else if (key === "day_numbers" || key === "byday") {
+            bodyFormData.append(key, formValues[key]?.join(","));
+          }
+          // Handle all other fields
+          else {
+            bodyFormData.append(key, formValues[key]);
+          }
+        }
+      }
+
+      // Append additional fields
+      bodyFormData.append("program_admin", userInfo.data?.user_id);
+      bodyFormData.append("status", "draft");
+
+      if (params?.id) {
+        bodyFormData.append("program_id", params?.id);
+        await updateProgram({
+          program_id: params?.id,
+          bodyFormData,
+        });
+      } else {
+        await createProgram(bodyFormData);
+      }
     }
   };
 
@@ -661,11 +806,8 @@ export default function CreatePrograms() {
   }, [watch]);
 
   const handleCancelClick = () => {
-    if (!params?.id) {
-      setCurrentStep(DEFAULT_VALUE);
-    } else {
-      navigate("/programs");
-    }
+    navigate("/programs");
+
     reset();
   };
   return (
@@ -726,7 +868,7 @@ export default function CreatePrograms() {
                       IsErrorProgramCreating ? "Creating" : "Updating"
                     } program`
                   : `Program ${
-                      currentProgramDetail?.status === "draft"
+                      formValues?.status === "draft"
                         ? "Drafted"
                         : isProgramUpdated
                         ? "Updated"
@@ -791,22 +933,18 @@ export default function CreatePrograms() {
                       {"Back"}
                     </MuiButton>
                   )}
-                  {!params?.id && currentStep === ProgramTabs.length && (
-                    <MuiButton
-                      sx={{
-                        background: light,
-                        color: main,
-                        border: "none",
-                      }}
-                      onClick={onDraftSubmit}
-                    >
-                      {"Draft"}
-                    </MuiButton>
-                  )}
-                  {/* {(currentStep !== '' &&
-                            (!Object.keys(programDetails).length)) || (Object.keys(programDetails).length && programDetails.status === 'draft') ? <Button btnType="button" onClick={handleDraft} btnStyle={{ background: 'rgba(197, 197, 197, 1)', color: '#000' }}
-                                btnCls="w-[150px]" btnName={'Save as Draft'} btnCategory="primary" /> : null} */}
-
+                  {/* {!params?.id && currentStep === ProgramTabs.length && ( */}
+                  <MuiButton
+                    sx={{
+                      background: light,
+                      color: main,
+                      border: "none",
+                    }}
+                    onClick={onDraftSubmit}
+                  >
+                    {"Draft"}
+                  </MuiButton>
+                  {/* )} */}
                   <MuiButton
                     type="submit"
                     id={"program-submit"}

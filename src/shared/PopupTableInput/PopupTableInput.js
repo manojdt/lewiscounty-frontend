@@ -108,7 +108,7 @@ const PopupTableInput = ({
       }
     }
   };
-
+console.log('selectedItems', selectedItems)
   const handleRowSelection = (selection) => {
     if (disabled) return;
 
