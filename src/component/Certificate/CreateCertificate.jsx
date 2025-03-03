@@ -58,7 +58,6 @@ export default function CreateCertificate() {
     loading: reportsLoading,
     programDetails,
   } = useSelector((state) => state.reports);
-  console.log(programDetails, "programDetails");
   const { status } = useSelector((state) => state.certificates);
   const [certificateFields, setCertificateFields] = useState(
     CreateCertificateFields
