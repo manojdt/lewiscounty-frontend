@@ -68,7 +68,7 @@ export default function CreatePrograms() {
           mentor_id: [],
         },
       ],
-      is_sponsored: false,
+      is_sponsored: true,
       prerequisites: [
         {
           question: "",
@@ -955,7 +955,7 @@ export default function CreatePrograms() {
                     </MuiButton>
                   )}
                   {/* {!params?.id && currentStep === ProgramTabs.length && ( */}
-                  <MuiButton
+                  {/* <MuiButton
                     sx={{
                       background: light,
                       color: main,
@@ -964,7 +964,7 @@ export default function CreatePrograms() {
                     onClick={onDraftSubmit}
                   >
                     {"Draft"}
-                  </MuiButton>
+                  </MuiButton> */}
                   {/* )} */}
                   <MuiButton
                     type="submit"

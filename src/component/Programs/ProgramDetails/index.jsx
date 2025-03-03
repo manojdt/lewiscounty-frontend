@@ -2079,7 +2079,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             />
                             Share
                           </MenuItem>
-                          {role === "admin" &&
+                          {/* {role === "admin" &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
                             programdetails?.admin_assign_program &&
@@ -2097,7 +2097,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Edit
                               </MenuItem>
-                            )}
+                            )} */}
                           {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
@@ -2121,7 +2121,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Re-Open
                               </MenuItem>
                             )}
-                          {role === "mentor" &&
+                          {/* {role === "mentor" &&
                             programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
                               userdetails?.data?.user_id &&
@@ -2142,7 +2142,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Edit
                               </MenuItem>
-                            )}
+                            )} */}
 
                           {!requestStatusParams &&
                             ![
