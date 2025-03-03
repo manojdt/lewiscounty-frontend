@@ -28,7 +28,7 @@ const TopMentorsDataTable = () => {
     const fields = [...topMentorListcolumns,
     {
         field: 'action',
-        headerName: 'Action',
+        headerName: 'View',
         flex: 1,
         id: 4,
         renderCell: (params) => {

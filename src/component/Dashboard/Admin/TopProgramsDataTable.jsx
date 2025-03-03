@@ -31,7 +31,7 @@ const TopProgramsDataTable = ({role=''}) => {
   const fields = [...topProgramListColumns,
     {
       field: 'action',
-      headerName: 'Action',
+      headerName: 'View',
       flex: 1,
       id: 4,
       renderCell: (params) => {
