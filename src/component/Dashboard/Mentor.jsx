@@ -83,7 +83,7 @@ export const Mentor = () => {
       let queryParams = [];
   
       if (type) {
-        queryParams.push(`type=${type}`);
+        queryParams.push(`statustype=${type}`);
       }
   
       if (programdetails?.admin_program_request_id) {

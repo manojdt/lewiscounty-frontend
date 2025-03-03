@@ -977,6 +977,11 @@ export const RequestStatusArray = [
     menteeTabName: "Mentees Program Requests",
   },
   {
+    key: "mentee_program_request",
+    name: "Mentees Program Requests",
+    menteeTabName: "Mentees Program Requests",
+  },
+  {
     key: "member_join_request",
     name: "Member Join Requests",
   },
@@ -1017,6 +1022,10 @@ export const RequestStatusArray = [
 export const RequestStatus = {
   programRequest: {
     key: "program_request",
+    name: "Program Requests",
+  },
+  menteeprogramRequest: {
+    key: "mentee_program_request",
     name: "Program Requests",
   },
   memberJoinRequest: {
@@ -1076,6 +1085,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ["admin", "mentor", "mentee"],
+    forTabs:"my"
   },
   {
     name: "Mentor Join Requests",
@@ -1083,6 +1093,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.memberJoinRequest.key,
     for: ["admin"],
+     forTabs:"my"
   },
   // {
   //   name: 'Resource Access Requests',
@@ -1104,6 +1115,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.certificateRequest.key,
     for: ["admin", "mentor"],
+     forTabs:"my"
   },
   {
     name: "Report Requests",
@@ -1111,6 +1123,15 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.reportRequest.key,
     for: ["admin", "mentor"],
+     forTabs:"my"
+  },
+  {
+    name: "Mentees Program Requests",
+    key: RequestStatus.menteeprogramRequest.key,
+    count: 0,
+    status: RequestStatus.menteeprogramRequest.key,
+    for: ["mentor", "admin"],
+     forTabs:"mentees"
   },
   // {
   //   name: "Testimonial Requests",
@@ -1153,6 +1174,7 @@ export const myRequestOverview = [
     count: 0,
     status: RequestStatus.learningAccessRequests.key,
     for: ["mentee"],
+     forTabs:"my"
   },
 ];
 
@@ -1163,6 +1185,7 @@ export const menteesRequestOverview = [
     count: 0,
     status: RequestStatus.programRequest.key,
     for: ["mentor", "admin"],
+     forTabs:"mentees"
   },
   // {
   //   name: 'Resource Access Requests',

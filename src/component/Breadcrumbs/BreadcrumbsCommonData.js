@@ -79,6 +79,7 @@ export const requestPageBreadcrumbs = {
   dashboardRecentMembers : "dashboardRecentMembers",
   newMenteeQuestions : "newMenteeQuestions",
   createNewusers : "createNewUser",
+  topPrograms:"top_programs",
   // navbarProfile : 'navbarProfile',
 };
 export const programStatusBreadcrumbs=[
@@ -657,6 +658,17 @@ export const newFollowRequestMentorPage = (status) => {
     },
     {
       label: `View Mentor Profile`,
+    },
+  ];
+};
+export const dashboardTopprograms = (status) => {
+  return [
+    {
+      label: `Dsahboard`,
+      path: -1,
+    },
+    {
+      label: `View Top Programs`,
     },
   ];
 };

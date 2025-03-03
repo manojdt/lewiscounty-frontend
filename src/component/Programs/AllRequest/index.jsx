@@ -136,6 +136,7 @@ export default function AllRequest() {
   const [filter, setFilter] = useState({ search: "", filter_by: "" });
   const open = Boolean(anchorEl);
   const selectedRequestedtype = searchParams.get("type");
+  const selectedTabData = searchParams.get("selectedTab");
   const selectedRequestedTab = searchParams.get("tabType");
   const selectedMainRequestedTab = searchParams.get("mainTab");
   const [actionTab, setActiveTab] = useState(currentTab);
@@ -373,7 +374,7 @@ export default function AllRequest() {
 
   // Confirm Accept Popup
   const handleConfirmPopup = () => {
-    if (confirmPopup.requestType === "program_request") {
+    if (confirmPopup.requestType === "program_request"||confirmPopup.requestType === "mentee_program_request") {
       handleAcceptProgramApiRequest();
     }
 
@@ -511,7 +512,7 @@ export default function AllRequest() {
   const handleCancelReasonPopupSubmit = (data) => {
     if (data.cancel_reason !== "") {
       if (cancelPopup.show) {
-        if (cancelPopup.page === "program_request") {
+        if (cancelPopup.page === "program_request"||cancelPopup.page === "mentee_program_request") {
           if (role === "admin") {
             dispatch(
               updateProgramRequest({
@@ -613,6 +614,7 @@ export default function AllRequest() {
 
   // Program Dropwdowm Accept
   const handleAcceptProgramRequest = () => {
+    console.log(currentRequestTab,"currentRequestTab")
     handleOpenConfirmPopup(
       "Program Request",
       currentRequestTab.key,
@@ -1004,7 +1006,7 @@ export default function AllRequest() {
                   )}
                 {/* mentee Cancel Request */}
 
-                {["new", "pending"].includes(seletedItem.status) &&
+                {/* {["new", "pending"].includes(seletedItem.status) &&
                   role === "mentee" &&
                   (actionTab === "program_cancel" ||
                     actionTab === "program_join") && (
@@ -1026,7 +1028,7 @@ export default function AllRequest() {
                       />
                       Cancel Request
                     </MenuItem>
-                  )}
+                  )} */}
 
                 <MenuItem
                   className="!text-[12px]"
@@ -2053,7 +2055,7 @@ export default function AllRequest() {
   );
 
   const handleClick = (menu) => {
-    navigate(`/all-request?type=${menu.status}`);
+    navigate(`/all-request?type=${menu.status}&selectedTab=${menu?.forTabs}`);
     handleStatus("all");
     setFilter({ search: "", filter_by: "" });
     if (menu?.status === "goal_request") {
@@ -2342,6 +2344,25 @@ export default function AllRequest() {
           }
 
           break;
+        case RequestStatus.menteeprogramRequest.key:
+          let programInfoTabc = programRequestTab;
+          tableDetails = { column: programRequestColumn, data: [] };
+          actionFilter = programInfoTabc;
+          activeTabName =
+            selectedTab === "my" && role === "mentee"
+              ? "program_join"
+              : selectedTab === "mentees" && role === "mentor"
+              ? "program_join"
+              : selectedTab === "my"
+              ? "program_new"
+              : selectedTab === "mentees"
+              ? "program_join"
+              : "program_request";
+          if (actionTab !== "program_join" && actionTab !== "program_new") {
+            activeTabName = actionTab;
+          }
+
+          break;
         case RequestStatus.memberJoinRequest.key:
           tableDetails = { column: memberMentorRequestColumns, data: [] };
           // actionFilter = memberJoinRequestTab;
@@ -2516,7 +2537,7 @@ export default function AllRequest() {
   }, [status]);
 
   useEffect(() => {
-    if (selectedRequestedtype === "program_request" || !selectedRequestedtype) {
+    if (selectedRequestedtype === "program_request" ||selectedRequestedtype === "mentee_program_request" || !selectedRequestedtype) {
       let programRequestFilteredColumn = !actionTab
         ? programRequestColumn
         : programRequestColumn?.filter((request) =>
@@ -2641,7 +2662,7 @@ export default function AllRequest() {
     if (role !== "") {
       if (
         !selectedRequestedtype ||
-        selectedRequestedtype === "program_request"
+        selectedRequestedtype === "program_request"||selectedRequestedtype === "mentee_program_request" 
       ) {
         getProgramRequestApi();
       }
@@ -2763,7 +2784,7 @@ export default function AllRequest() {
               : "program_new";
           break;
         case "mentees":
-          currentOveriew = menteesRequestOverview;
+          currentOveriew = myRequestOverview;
           currentTab =
             (role === "admin" || role === "mentor") &&
             selectedRequestedtype === "goal_request"
@@ -2772,7 +2793,7 @@ export default function AllRequest() {
           break;
         case "admin":
           currentOveriew = adminRequestOverview;
-          currentTab = "program_request";
+          currentTab = "program_request"||"mentee_program_request";
           break;
 
         default:
@@ -2836,21 +2857,25 @@ export default function AllRequest() {
       All Request
     </Typography>,
   ];
-  useEffect(() => {
-    if (selectedMainRequestedTab === requestPageBreadcrumbs.main_mentee_tab) {
-      setSelectedTab("mentees");
-    } else if (
-      selectedMainRequestedTab === requestPageBreadcrumbs.main_admin_test_tab
-    ) {
-      setSelectedTab("admin");
-    }
-  }, [selectedMainRequestedTab]);
+  // useEffect(() => {
+  //   if (selectedMainRequestedTab === requestPageBreadcrumbs.main_mentee_tab) {
+  //     setSelectedTab("mentees");
+  //   } else if (
+  //     selectedMainRequestedTab === requestPageBreadcrumbs.main_admin_test_tab
+  //   ) {
+  //     setSelectedTab("admin");
+  //   }
+  // }, [selectedMainRequestedTab]);
   useEffect(() => {
     if (selectedRequestedTab) {
       setActiveTab(selectedRequestedTab);
     }
   }, [selectedRequestedTab, selectedTab]);
-
+  useEffect(() => {
+    if (selectedTabData) {
+      setSelectedTab(selectedTabData);
+    } 
+  }, [selectedTabData]);
   const handleCopy = () => {
     navigator.clipboard
       .writeText(shareUrl)
@@ -2871,7 +2896,7 @@ export default function AllRequest() {
 
   return (
     <div className="program-request px-2 sm:px-2 md:px-4 lg:px-8 mt-10">
-      {role === "mentor" && (
+      {/* {role === "mentor" && (
         <div className="flex gap-x-4 mb-6">
           {requestActionTab.map((action) => {
             return (
@@ -2883,9 +2908,9 @@ export default function AllRequest() {
             );
           })}
         </div>
-      )}
+      )} */}
 
-      {role === "admin" && (
+      {/* {role === "admin" && (
         // requestAdminActionTab
         <div className="flex gap-x-2 sm:gap-x-2 md:gap-x-4 lg:gap-x-4 mb-6 overflow-x-auto">
           {requestAdminActionTab.map((action) => {
@@ -2898,7 +2923,7 @@ export default function AllRequest() {
             );
           })}
         </div>
-      )}
+      )} */}
       <div
         className=""
         style={{

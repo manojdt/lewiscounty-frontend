@@ -732,6 +732,43 @@ const ProgramActions = ({
   // Render common status buttons
   const renderCommonStatus = () => {
     // Start Program button
+    console.log({
+      programStatus: programdetails?.status,
+      expectedStatus: programActionStatus.yettostart,
+      statusMatch: programdetails?.status === programActionStatus.yettostart,
+      requestId: requestId,
+      hasRequestId: !!requestId,
+      role: role,
+      isRoleValid: (role === "mentor" || role === "admin"),
+      type: type,
+      isAdminAssign: type === "admin_assign_program",
+      createdBy: programdetails?.created_by,
+      userId: userInfo?.data?.user_id,
+      creatorMatch: programdetails?.created_by === userInfo?.data?.user_id
+    });
+    
+    // Log each main part of the condition
+    const part1 = (
+      programdetails.status === programActionStatus.yettostart &&
+      !requestId &&
+      (role === "mentor" || role === "admin")
+    );
+    
+    const part2 = (
+      type === "admin_assign_program" &&
+      requestId &&
+      programdetails.status === programActionStatus.yettostart &&
+      (role === "mentor" || role === "admin")
+    );
+    
+    const part3 = programdetails?.created_by === userInfo?.data?.user_id;
+    
+    console.log({
+      "First condition part": part1,
+      "Second condition part": part2,
+      "Creator match part": part3,
+      "Final result": (part1 || part2) && part3
+    });
     if (
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
