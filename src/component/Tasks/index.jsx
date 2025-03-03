@@ -112,7 +112,7 @@ export const Tasks = () => {
       key: 'rejected',
     },
     {
-        name: 'Drafted',
+        name: 'Drafts',
         key: 'draft'
     },
   ];
