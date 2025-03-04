@@ -75,7 +75,6 @@ export const updateProgramRequest = createAsyncThunk(
                 rejection_reason: data?.reason ?? ''
             }
         }
-        console.log("data ==>", data, "payload ===>", payload)
         const updateProgramReq = await api.patch(`request/${data?.id}/`, payload);
         if (updateProgramReq.status === 200 && updateProgramReq.data) {
             return updateProgramReq.data;
@@ -333,5 +332,28 @@ export const getTestimonialView = createAsyncThunk(
             return getTestimonialView.data;
         }
         return getTestimonialView;
+    }
+);
+
+export const getRequestData = createAsyncThunk(
+    "getRequestData",
+    async (id) => {
+        const getRequestData = await api.get(`request/${id}`);
+        if (getRequestData.status === 200 && getRequestData.data) {
+            return getRequestData.data;
+        }
+        return getRequestData;
+    }
+);
+
+export const updateAcceptRejectProgram = createAsyncThunk(
+    "updateAcceptRejectProgram",
+    async (data) => {
+
+        const updateAcceptRejectProgram = await api.patch(`request/${data?.id}/`,data?.payload);
+        if (updateAcceptRejectProgram.status === 200 && updateAcceptRejectProgram.data) {
+            return updateAcceptRejectProgram.data;
+        }
+        return updateAcceptRejectProgram;
     }
 );

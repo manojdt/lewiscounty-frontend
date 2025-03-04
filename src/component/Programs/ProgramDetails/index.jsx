@@ -31,8 +31,10 @@ import {
 } from "../../../utils/constant";
 import { getMenteeJoinedInProgram } from "../../../services/userprograms";
 import {
+  getRequestData,
   programCancelRequest,
   programRescheduleRequest,
+  updateAcceptRejectProgram,
   updateLocalRequest,
   updateProgramMenteeRequest,
   updateProgramRequest,
@@ -127,7 +129,7 @@ import { CustomModal } from "../../../shared/CustomModal/CustomModal";
 import { DataGrid } from "@mui/x-data-grid";
 import { ThumbDownOffAlt } from "@mui/icons-material";
 import { postComment } from "../../../services/feeds";
-import CloseCircleIcon from "../../../assets/icons/closeCircle.svg"
+import RejectCloseIcon from "../../../assets/icons/rejectCloseIcon.svg"
 import FilterIcon from "../../../assets/icons/filterIcon.svg";
 import LanguageIcon from '@mui/icons-material/Language';
 import StatusIndicator from "../../../shared/StatusIndicator/StatusIndicator";
@@ -183,6 +185,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const from = searchParams.get("from");
   const topProgram = searchParams.get("topProgram");
   const userdetails = useSelector((state) => state.userInfo);
+  const { requestData } = useSelector((state) => state.requestList)
   const role = userdetails.data.role || "";
   const reqRole = requestId && userdetails.data.role === "admin";
   const [loading, setLoading] = useState({ initial: true, join: false });
@@ -930,6 +933,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       }
 
       setLoading({ ...loading, initial: false });
+      getRequestDataAgainstProgram(programdetails?.request_id)
     }
   }, [programdetails, menteeJoined]);
 
@@ -1347,7 +1351,6 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   };
 
   const handleRoleFilterSubmit = () => {
-    console.log("ab")
     setFilterPopup({
       ...filterPopup,
       show: false
@@ -1369,6 +1372,45 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       });
     }
   };
+
+  const getRequestDataAgainstProgram = (request_id) => {
+    dispatch(getRequestData(request_id))
+  }
+
+  const handleUpdateAcceptRejectProgram = (type = "", reason = "") => {
+    let payload = {
+      program: programdetails?.id,
+      request_type: role === "mentor" ? "mentor_program_assign" : "mentee_program_assign",
+      status: type === "reject" ? "rejected" : "approved"
+    }
+    if (type === "reject") {
+      payload = {
+        ...payload,
+        rejection_reason: reason
+      }
+    }
+    dispatch(updateAcceptRejectProgram({ id: programdetails?.request_id, payload: payload })).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        setAcceptPopup({
+          bool: false,
+          activity: true,
+          reject: false,
+          activity_message: type === "reject" ? "Program join rejected" : "Program Joined"
+        })
+        refetch();
+        getRequestDataAgainstProgram(programdetails?.request_id)
+        setTimeout(() => {
+          setAcceptPopup({
+            bool: false,
+            activity: false,
+            reject: false,
+            activity_message: ""
+          })          
+        }, 3000);
+
+      }
+    })
+  }
 
   return (
     <div className="px-4 sm:px-4 md:px-6 lg:px-9 xl:px-9 my-6 md:grid lg:grid xl:grid">
@@ -2381,8 +2423,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           "aria-labelledby": "basic-button",
                         }}
                       >
-                        {/* {
-                          (role === "mentor" || role === "mentee") && (
+                        {
+                          (requestData?.status === "new" &&
+                            (role === "mentor" || role === "mentee")) && (
                             <MenuItem
                               onClick={() => {
                                 handleClose();
@@ -2394,11 +2437,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               }}
                               className="!text-[12px]"
                             >
-                              <img src={CloseCircleIcon} alt="CloseCircleIcon" className="h-[20px] w-[20px] mr-1" />
+                              <img src={RejectCloseIcon} alt="RejectCloseIcon" className="mr-2" />
                               <p>Reject</p>
                             </MenuItem>
                           )
-                        } */}
+                        }
                         {(role === "mentor" || role === "admin") && (
                           <>
                             <MenuItem
@@ -2412,35 +2455,35 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               />
                               Share
                             </MenuItem>
-                            {role==="admin"&&
+                            {role === "admin" &&
                               // programdetails?.created_by ===
                               // userdetails?.data?.user_id &&
                               // programdetails?.admin_assign_program &&
                               // programdetails?.sub_programs.every((val)=>val.status==="yettoapprove") &&
                               !programdetails?.admin_assign_program &&
-                            programdetails.program_edit &&
-                            ![
-                              "yettoapprove",
-                              "draft",
-                              "cancelled",
-                              "completed",
-                            ].includes(
-                              programdetails.status
-                            ) &&
-                            programdetails.participated_mentees_count === 0 &&
-                               (
-                              <MenuItem
-                                onClick={() => handleMenu("editadmin")}
-                                className="!text-[12px]"
-                              >
-                                <img
-                                  src={EditSVGIcon}
-                                  alt="EditSVGIcon"
-                                  className="pr-3 w-[25px]"
-                                />
-                                Edit
-                              </MenuItem>
-                            )}
+                              programdetails.program_edit &&
+                              ![
+                                "yettoapprove",
+                                "draft",
+                                "cancelled",
+                                "completed",
+                              ].includes(
+                                programdetails.status
+                              ) &&
+                              programdetails.participated_mentees_count === 0 &&
+                              (
+                                <MenuItem
+                                  onClick={() => handleMenu("editadmin")}
+                                  className="!text-[12px]"
+                                >
+                                  <img
+                                    src={EditSVGIcon}
+                                    alt="EditSVGIcon"
+                                    className="pr-3 w-[25px]"
+                                  />
+                                  Edit
+                                </MenuItem>
+                              )}
                             {/* {!("admin_assign_program" in programdetails) &&
                               (programdetails.status === "cancelled" ||
                                 programdetails.status ===
@@ -2994,6 +3037,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     markingInterest={markingInterest}
                     from={from}
                     handleOpenAcceptProgram={handleOpenAcceptProgram}
+                    requestData={requestData}
                   />
                 </div>
 
@@ -3272,6 +3316,21 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 requestId={requestId}
                 programActionStatus={programActionStatus}
               />
+
+              {requestData?.rejection_reason && <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7]">
+                <Typography
+                  className="text-[#E0382D] !text-[14px] border border-b-[#E0382D] !font-semibold"
+                  p={"12px 20px"}
+                >
+                  Program Rejected Reason
+                </Typography>
+                <Typography
+                  className="text-[#18283D] !text-[12px]"
+                  p={"12px 20px"}
+                >
+                  {requestData?.rejection_reason ?? ""}
+                </Typography>
+              </div>}
 
               {/* <div className="flex gap-3 flex-col">
                 <p className="text-[14px] font-semibold text-font-secondary-black">User Status</p>
@@ -3746,7 +3805,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   btnName={"Yes"}
                   btnCategory="primary"
                   onClick={() => {
-                    handleAcceptProgram(programdetails);
+                    handleUpdateAcceptRejectProgram("approve");
                   }}
                 />
               </div>
@@ -3756,7 +3815,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       </Backdrop>
 
       <CancelPopup header="Reject Program Reason" open={acceptPopup?.reject}
-        handleSubmit={() => false} handleClosePopup={() => handleCloseAcceptProgram()} />
+        handleSubmit={(reason) => handleUpdateAcceptRejectProgram("reject", reason)} handleClosePopup={() => handleCloseAcceptProgram()} />
 
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -3827,8 +3886,11 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           </div>
         </div>
       </Backdrop>
-      
-      {/* <SelectMentor /> */}
+      <SuccessGradientMessage
+        message={acceptPopup?.activity_message}
+        isBackdropOpen={acceptPopup?.activity}
+        setIsBackdropOpen={() => handleCloseAcceptProgram()} />
+      <SelectMentor />
     </div>
   );
 }

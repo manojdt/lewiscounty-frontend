@@ -10,6 +10,8 @@ export const SelectMentor = () => {
         page: 0,
         pageSize: 10,
     });
+    const [selectedMentees, setSelectedMentees] = React.useState([])
+
 
     const selectedMenteeColumns = [
         {
@@ -19,7 +21,7 @@ export const SelectMentor = () => {
             id: 0,
             renderCell: (params) => {
                 return (
-                    <Checkbox checked={true} onChange={() => console.log("abcd")} />
+                    <Checkbox checked={true} onChange={() => handleSelectMentee(params?.rows)} />
                 )
             }
         },
@@ -53,10 +55,20 @@ export const SelectMentor = () => {
         setSearch(searchText)
     }
 
+    const handleSelectMentee = (mentee) => {
+        if (selectedMentees.includes(mentee?.id)) {
+            const constructedList = selectedMentees?.filter((i) => i?.id !== mentee?.id)
+            setSelectedMentees(constructedList)
+        } else {
+            setSelectedMentees([...selectedMentees, mentee])
+        }
+    }
+
+
     return (
         <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={true}
+            open={false}
         >
             <div className="py-3 px-4 bg-white" style={{ borderRadius: "3px" }}>
                 <div className="flex justify-end px-3 mb-4">

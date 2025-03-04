@@ -61,7 +61,8 @@ const ProgramActions = ({
   setOpenPopup,
   setCancelPopup,
   from = "",
-  handleOpenAcceptProgram = () => false
+  handleOpenAcceptProgram = () => false,
+  requestData = ""
 }) => {
   const userInfo = useSelector((state) => state.userInfo);
 
@@ -331,62 +332,62 @@ const ProgramActions = ({
     }
 
     // Program approval stage
-    if (
-      programApprovalStage[programdetails.status] &&
-      !programdetails?.admin_program &&
-      !type
-    ) {
-      return (
-        <div className="space-y-4 pt-10">
-          {searchParams.get("type") !== "program_new" && (
-            <button
-              className="py-3 px-[0px] text-[15px] flex items-center font-semibold"
-              style={{
-                ...buttonStyles.base,
-                ...buttonStyles.danger,
-                border: "none !important",
-                cursor: "text",
-                padding: "12px 0px !important"
-              }}
-              onClick={() => undefined}
-            >
-              {programApprovalStage[programdetails.status].type ===
-                "waiting" && (
-                  <i className="pi pi-clock" style={{ color: "red" }}></i>
-                )}
-              {programApprovalStage[programdetails.status].type ===
-                "reject" && (
-                  <i className="pi pi-ban" style={{ color: "red" }}></i>
-                )}
-              <span className="pl-3">
-                {programApprovalStage[programdetails.status]?.text}
-              </span>
-            </button>
-          )}
+    // if (
+    //   programApprovalStage[programdetails.status] &&
+    //   !programdetails?.admin_program &&
+    //   !type
+    // ) {
+    //   return (
+    //     <div className="space-y-4 pt-10">
+    //       {searchParams.get("type") !== "program_new" && (
+    //         <button
+    //           className="py-3 px-[0px] text-[15px] flex items-center font-semibold"
+    //           style={{
+    //             ...buttonStyles.base,
+    //             ...buttonStyles.danger,
+    //             border: "none !important",
+    //             cursor: "text",
+    //             padding: "12px 0px !important"
+    //           }}
+    //           onClick={() => undefined}
+    //         >
+    //           {programApprovalStage[programdetails.status].type ===
+    //             "waiting" && (
+    //               <i className="pi pi-clock" style={{ color: "red" }}></i>
+    //             )}
+    //           {programApprovalStage[programdetails.status].type ===
+    //             "reject" && (
+    //               <i className="pi pi-ban" style={{ color: "red" }}></i>
+    //             )}
+    //           <span className="pl-3">
+    //             {programApprovalStage[programdetails.status]?.text}
+    //           </span>
+    //         </button>
+    //       )}
 
-          {["new", "pending"].includes(programdetails?.request_data?.status) &&
-            type !== "program_reschedule" && (
-              <div className="flex items-center justify-start gap-6">
-                <button
-                  onClick={() => setCancelPopup(true)}
-                  className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
-                >
-                  Cancel Request
-                </button>
-                <Button
-                  btnType="button"
-                  btnCls="w-[110px] h-11"
-                  btnName={"Edit"}
-                  btnCategory="primary"
-                  onClick={() =>
-                    navigate(`/update-program/${programdetails?.id}`)
-                  }
-                />
-              </div>
-            )}
-        </div>
-      );
-    }
+    //       {["new", "pending"].includes(programdetails?.request_data?.status) &&
+    //         type !== "program_reschedule" && (
+    //           <div className="flex items-center justify-start gap-6">
+    //             <button
+    //               onClick={() => setCancelPopup(true)}
+    //               className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
+    //             >
+    //               Cancel Request
+    //             </button>
+    //             <Button
+    //               btnType="button"
+    //               btnCls="w-[110px] h-11"
+    //               btnName={"Edit"}
+    //               btnCategory="primary"
+    //               onClick={() =>
+    //                 navigate(`/update-program/${programdetails?.id}`)
+    //               }
+    //             />
+    //           </div>
+    //         )}
+    //     </div>
+    //   );
+    // }
 
     // Draft status
     if (programdetails.status === "draft") {
@@ -434,25 +435,25 @@ const ProgramActions = ({
       );
     }
     if (programdetails?.status === programActionStatus.yettojoin) {
-      if (!programdetails?.program_interest) {
-        return (
-          <MuiButton
-            className="!my-4"
-            onClick={() => !markingInterest && handleMarkInterestClick(true)}
-          >
-            {markingInterest ? (
-              "Loading..."
-            ) : (
-              <>
-                <ThumbUpOffAlt />
-                <span className="pl-2">
-                  I'm Interested
-                </span>
-              </>
-            )}
-          </MuiButton>
-        );
-      }
+      // if (!programdetails?.program_interest) {
+      //   return (
+      //     <MuiButton
+      //       className="!my-4"
+      //       onClick={() => !markingInterest && handleMarkInterestClick(true)}
+      //     >
+      //       {markingInterest ? (
+      //         "Loading..."
+      //       ) : (
+      //         <>
+      //           <ThumbUpOffAlt />
+      //           <span className="pl-2">
+      //             I'm Interested
+      //           </span>
+      //         </>
+      //       )}
+      //     </MuiButton>
+      //   );
+      // }
       if (programdetails?.program_interest) {
         return (
           <div className="mt-6">
@@ -729,17 +730,22 @@ const ProgramActions = ({
 
     return null;
   };
-const programAccept = false
+
   // Render common status buttons
   const renderCommonStatus = () => {
-    // if (programAccept && ["mentor", "mentee"].includes(role)) {
-    //   return(
-    //     <Button btnName="Accept Program"
-    //     btnCls="w-[200px]"
-    //     onClick={() => handleOpenAcceptProgram()}
-    //   />
-    //   )
-    // }
+    if (requestData?.status === "new" && ["mentor", "mentee"].includes(role)) {
+      return (
+        <>
+          {role === "mentee" ? <br /> : ""}
+          <div className="!ml-[-12px]">
+            <Button btnName="Join this program"
+              btnCls="w-[200px]"
+              onClick={() => handleOpenAcceptProgram()}
+            />
+          </div>
+        </>
+      )
+    }
     if (
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&

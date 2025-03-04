@@ -29,7 +29,9 @@ import {
     getReopenRequest,
     updateTestimonial,
     getTestimonialView,
-    reviewMemberRequest
+    reviewMemberRequest,
+    getRequestData,
+    updateAcceptRejectProgram
 } from "../../services/request";
 
 const initialState = {
@@ -48,6 +50,7 @@ const initialState = {
     testimonialRequest: [],
     reopenRequest: [],
     testimonialData: {},
+    requestData: [],
     loading: false,
     status: "",
     error: "",
@@ -614,7 +617,49 @@ export const requestSlice = createSlice({
                     error: action.error.message,
                 };
             });
-            // getTestimonialView
+            
+            builder
+            .addCase(getRequestData.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(getRequestData.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    requestData: action.payload,
+                    loading: false,
+                };
+            })
+            .addCase(getRequestData.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });   
+            
+            builder
+            .addCase(updateAcceptRejectProgram.pending, (state) => {
+                return {
+                    ...state,
+                    loading: true,
+                };
+            })
+            .addCase(updateAcceptRejectProgram.fulfilled, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                };
+            })
+            .addCase(updateAcceptRejectProgram.rejected, (state, action) => {
+                return {
+                    ...state,
+                    loading: false,
+                    error: action.error.message,
+                };
+            });
     },
 });
 

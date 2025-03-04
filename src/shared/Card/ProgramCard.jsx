@@ -437,7 +437,8 @@ export default function ProgramCard({
                               </div>
                             </div>
                           )}
-                          {!currentProgram?.admin_assign_program &&
+                          {role === "admin" &&
+                          !currentProgram?.admin_assign_program &&
                             currentProgram.program_edit &&
                             !programImageRestirct.includes(
                               currentProgram.status
