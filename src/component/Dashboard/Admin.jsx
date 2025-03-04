@@ -324,7 +324,7 @@ export default function Admin() {
 
                     <div
                       key={index}
-                      className={`flex flex-col justify-between py-2 px-4 rounded cursor-pointer menu-content
+                      className={`flex flex-col justify-between p-4 rounded cursor-pointer menu-content
                                     ${searchParams.get("type") ===
                           menu.status ||
                           (searchParams.get("is_bookmark") ===

@@ -649,6 +649,12 @@ export const Navbar = () => {
                   </div>
                 </ClickAwayListener>
               )}
+              {
+                role === 'mentor' &&  <div className='flex flex-col pl-2 items-end '>
+                <span className='text-[14px] font-semibold'>{profile.name}</span>
+                 <span className='text-[#1D5BBF] text-xs'>{capitalizeFirstLetter(role)}</span>
+              </div>
+              }
 
               {/* Setting end */}
 

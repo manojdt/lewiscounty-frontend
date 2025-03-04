@@ -2019,6 +2019,9 @@ export const memberMenteeRequestColumns = [
     flex: 1,
     id: 6,
     for: ["mentor"],
+    renderCell:(params)=>{
+      return formatRenderCellDateValues(params?.row?.requested_date);
+    }
   },
 ];
 

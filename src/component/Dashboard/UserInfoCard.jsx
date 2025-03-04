@@ -29,10 +29,14 @@ export default function UserInfoCard() {
 
                 if (menu.status === 'all') {
                     return { ...menu, count: role === 'mentor' ? userprograms.totalPrograms : totalCount?.allprogram }
-                }
+                }              
                 // Mentor Response Count
                 if (role === 'mentor' && statusAction.includes(menu.status)) {
+                    if(menu.status === 'reschedule'){
+                        return {...menu,page:"/programs?type=reschedule", count: totalCount[menu.mentorStatus]}
+                    }else{
                     return { ...menu, count: totalCount[menu.mentorStatus] }
+                    }
                 }
 
                 // Mentee Response Count
