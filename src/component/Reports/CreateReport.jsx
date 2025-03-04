@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, MenuItem, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ReportFields } from "../../utils/formFields";
@@ -431,15 +431,10 @@ export default function CreateReport() {
                         </>
                       ) : field.type === "dropdown" ? (
                         <>
-                          <select
-                            {...register(field.name, field.inputRules)}
-                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg  
-                                                                                focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                            placeholder={field.placeholder}
-                            style={{
-                              color: "#232323",
-                              borderRadius: "3px",
-                            }}
+                          <TextField
+                            select
+                            {...register(field.name, field.inputRules)}                            
+                            placeholder={field.placeholder}                           
                             disabled={field.disabled}
                             onChange={(e) => {
                               dropdownField.onChange(e);
@@ -450,23 +445,23 @@ export default function CreateReport() {
                               handleInputChange(field.name);
                             }}
                           >
-                            <option value="">Select</option>
+                            <MenuItem value=""><em>Select</em></MenuItem>
                             {field.options.map((option, index) => {
                               let opt = { name: option.name || "" };
                               if (field.name === "program") {
                                 opt = { name: option.program_name };
                               }
                               return (
-                                <option
+                                <MenuItem
                                   value={option.id}
                                   key={index}
                                   selected={getValues(field.name) === option.id}
                                 >
                                   {opt.name}
-                                </option>
+                                </MenuItem>
                               );
                             })}
-                          </select>
+                          </TextField>
                           {errors[field.name] && (
                             <p className="error" role="alert">
                               {errors[field.name].message}

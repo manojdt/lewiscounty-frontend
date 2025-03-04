@@ -31,7 +31,13 @@ p,
 .defaultTextColor {
   color: #3e3e3e;
 }
-
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
 .logoColor {
   color: rgba(29, 91, 191, 1);
   font-weight: 600;

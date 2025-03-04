@@ -8,6 +8,7 @@ import {
 import { user, view } from '../../../utils/constant';
 import { Calendar } from 'primereact/calendar';
 import { useSelector } from 'react-redux';
+import { MenuItem, TextField } from '@mui/material';
 // import CalendarIcon from '../../../assets/images/calender_1x.png';
 
 const MenteePersonalDevelopmentSection = ({ type }) => {
@@ -210,7 +211,8 @@ const MenteePersonalDevelopmentSection = ({ type }) => {
                 >
                   {field.label}
                 </label>
-                <select
+                <TextField
+                  select
                   {...register(field.name, field.inputRules)}
                   className='w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg 
                        focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]'
@@ -220,13 +222,13 @@ const MenteePersonalDevelopmentSection = ({ type }) => {
                     borderRight: '16px solid transparent',
                   }}
                 >
-                  <option value=''>Select</option>
+                  <MenuItem value=''><em>Select</em></MenuItem>
                   {field.options.map((option, index) => (
-                    <option value={option.key} key={index}>
+                    <MenuItem value={option.key} key={index}>
                       {option.value}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
+                </TextField>
                 {errors[field.name] && (
                   <p className='error' role='alert'>
                     {errors[field.name].message}

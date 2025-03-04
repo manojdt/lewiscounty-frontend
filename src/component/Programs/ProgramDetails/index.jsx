@@ -2725,7 +2725,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                     <div className="flex gap-3 items-center">
                       <img src={CalendarIcon} alt="CalendarIcon" />
                       <span className="text-[12px]">
-                        {formatDateTimeISO(programdetails?.start_date)}
+                        {moment(programdetails?.start_date).format('[Begins] MMM D [at] h:mm A')}
                       </span>
                     </div>
                     <div

@@ -1,41 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, MenuItem, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   CourseLevelOptions,
   CreateCertificateFields,
-  ReportFields,
 } from "../../utils/formFields";
 import CalendarIcon from "../../assets/images/calender_1x.png";
-import HTMLIcon from "../../assets/images/html1x.png";
-import TextIcon from "../../assets/images/text1x.png";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import CancelIcon from "../../assets/images/cancel1x.png";
 
 import { Button } from "../../shared";
 
-import { MenteeAssignColumns } from "../../mock";
 import { getAllCategories } from "../../services/programInfo";
 
 import {
   certificateStatus,
-  pipeUrls,
-  programActionStatus,
-  reportsStatus,
   user,
 } from "../../utils/constant";
 import {
-  createReport,
   getCompletedProgramsByCategoryId,
-  getProgramsByCategoryId,
   getReportProgramDetails,
   updateReportLocalState,
 } from "../../services/reportsInfo";
 import ToastNotification from "../../shared/Toast";
-import { dateTimeFormat } from "../../utils";
 import { createCertificate } from "../../services/certificate";
 import { Calendar } from "primereact/calendar";
 
@@ -363,15 +353,10 @@ export default function CreateCertificate() {
                         </>
                       ) : field.type === "dropdown" ? (
                         <>
-                          <select
-                            {...register(field.name, field.inputRules)}
-                            className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg  
-                                                                                focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                            placeholder={field.placeholder}
-                            style={{
-                              color: "#232323",
-                              borderRadius: "3px",
-                            }}
+                          <TextField
+                          select
+                            {...register(field.name, field.inputRules)}                            
+                            placeholder={field.placeholder}                           
                             disabled={field.disabled}
                             onChange={(e) => {
                               dropdownField.onChange(e);
@@ -381,23 +366,23 @@ export default function CreateCertificate() {
                                 handleProgramData(e.target.value);
                             }}
                           >
-                            <option value="">Select</option>
+                            <MenuItem value=""><em>Select</em></MenuItem>
                             {field.options.map((option, index) => {
                               let opt = { name: option.name || "" };
                               if (field.name === "program") {
                                 opt = { name: option.program_name };
                               }
                               return (
-                                <option
+                                <MenuItem
                                   value={option.id}
                                   key={index}
                                   selected={getValues(field.name) === option.id}
                                 >
                                   {opt.name}
-                                </option>
+                                </MenuItem>
                               );
                             })}
-                          </select>
+                          </TextField>
                           {errors[field.name] && (
                             <p className="error" role="alert">
                               {errors[field.name].message}
