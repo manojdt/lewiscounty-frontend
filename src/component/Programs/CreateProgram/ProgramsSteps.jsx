@@ -28,6 +28,7 @@ import { WeekdaySelector } from "../../../shared/CustomWeekdaySelector/WeekdaySe
 import DynamicFieldsComponent from "./DynamicFieldsComponent"; // Import the new component
 import { useGetAllMentorsQuery } from "../../../features/program/programApi.services";
 import { useDebounce } from "../../../utils";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const ProgramSteps = ({
   stepFields,

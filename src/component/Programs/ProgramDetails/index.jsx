@@ -250,6 +250,24 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     cancel: false,
     programId: "",
   });
+  const [acceptPopup, setAcceptPopup] = React.useState({
+    bool: true,
+    activity: false
+  })
+
+  const handleOpenAccept  = () =>{
+    setAcceptPopup({
+      ...acceptPopup,
+      bool: true
+    })
+  }
+
+  const handleCloseAcceptProgram = () => {
+    setAcceptPopup({
+      bool: false,
+      activity: false
+    })
+  }
 
   React.useEffect(() => {
     if (!moreMenuModal.not_interested) {
@@ -3481,6 +3499,59 @@ export default function ProgramDetails({ setProgramDetailsId }) {
           </Box>
         }
       />
+
+      {/* Accept program popups */}
+
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={false}
+      >
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+          <div className="h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+            {/* <div
+              className="absolute top-[12px] right-[12px] cursor-pointer"
+              onClick={() => setOpenPopup(false)}
+            >
+              <img src={CloseIcon} alt="ConfirmIcon" />
+            </div> */}
+            <img src={ConfirmIcon} alt="ConfirmIcon" />
+
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure you want to Accept this Program?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="No"
+                  btnCategory="secondary"
+                  btnCls="border !border-[#1D5BBF] !text-[#1D5BBF] w-[120px]"
+                  onClick={() => setOpenPopup(false)}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[120px]"
+                  btnName={"Yes"}
+                  btnCategory="primary"
+                  onClick={() => {
+                    handleAcceptProgram(programdetails);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
     </div>
   );
 }
