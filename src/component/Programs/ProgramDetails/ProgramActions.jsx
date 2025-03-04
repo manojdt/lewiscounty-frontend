@@ -120,7 +120,7 @@ const ProgramActions = ({
     return (
       <>{
         !type && <div className="py-9">
-        {/* <button
+          {/* <button
           className="py-3 px-10 text-white text-[14px] flex justify-center items-center"
           style={{
             ...buttonStyles.base,
@@ -131,11 +131,11 @@ const ProgramActions = ({
           Program Completed
         </button> */}
 
-        <div className="flex flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
-          <VerifiedIcon />
-          <p>Program Completed</p>
-        </div>
-      </div>}
+          <div className="flex flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
+            <VerifiedIcon />
+            <p>Program Completed</p>
+          </div>
+        </div>}
       </>
     );
   };
@@ -144,8 +144,8 @@ const ProgramActions = ({
   const renderMentorActions = () => {
     if (role !== "mentor") return null;
 
-    if(programdetails?.request_data?.status === "approved"&&programdetails?.request_data?.request_type !== "program_assign"){
-      return(
+    if (programdetails?.request_data?.status === "approved" && programdetails?.request_data?.request_type !== "program_assign") {
+      return (
         <ApprovedTag />
       )
     }
@@ -219,10 +219,10 @@ const ProgramActions = ({
           <RejectedTag />
         );
       }
-      
-      
+
+
     }
-    
+
     // const showRequestButtons =
     //   (programdetails?.status === "inprogress" ||
     //     programdetails?.status === "yettostart") &&
@@ -281,7 +281,7 @@ const ProgramActions = ({
               }
             >
               {searchParams.has("type") &&
-              searchParams.get("type") === "program_cancel"
+                searchParams.get("type") === "program_cancel"
                 ? "Continue"
                 : "Reject Request"}
             </button>
@@ -351,12 +351,12 @@ const ProgramActions = ({
             >
               {programApprovalStage[programdetails.status].type ===
                 "waiting" && (
-                <i className="pi pi-clock" style={{ color: "red" }}></i>
-              )}
+                  <i className="pi pi-clock" style={{ color: "red" }}></i>
+                )}
               {programApprovalStage[programdetails.status].type ===
                 "reject" && (
-                <i className="pi pi-ban" style={{ color: "red" }}></i>
-              )}
+                  <i className="pi pi-ban" style={{ color: "red" }}></i>
+                )}
               <span className="pl-3">
                 {programApprovalStage[programdetails.status]?.text}
               </span>
@@ -417,14 +417,14 @@ const ProgramActions = ({
     )
       return null;
 
-    if(type === "program_cancel" && programdetails?.request_data?.status === "approved"){
-      return(
+    if (type === "program_cancel" && programdetails?.request_data?.status === "approved") {
+      return (
         <ApprovedTag />
       )
     }
     if (programdetails?.mentee_program_exit && !requestId) {
       return (
-        <div className="flex gap-4 pt-10">          
+        <div className="flex gap-4 pt-10">
           <div className="flex flex-row gap-1 text-[#E0382D] text-[15px] font-semibold">
             <ExitToApp />
             <p>{"Program Exited by Mentee"}</p>
@@ -443,10 +443,10 @@ const ProgramActions = ({
               "Loading..."
             ) : (
               <>
-                <ThumbUpOffAlt  />
-               <span className="pl-2">
-                I'm Interested
-                </span> 
+                <ThumbUpOffAlt />
+                <span className="pl-2">
+                  I'm Interested
+                </span>
               </>
             )}
           </MuiButton>
@@ -471,9 +471,9 @@ const ProgramActions = ({
         );
       }
     }
-   const isSubProgramAccepted = programdetails?.sub_programs?.every(
+    const isSubProgramAccepted = programdetails?.sub_programs?.every(
       (program) =>
-        ["inprogress", "yettostart"].includes(program?.status) 
+        ["inprogress", "yettostart"].includes(program?.status)
     );
 
     if (
@@ -516,47 +516,47 @@ const ProgramActions = ({
             {["new", "pending"].includes(
               programdetails?.request_data?.status
             ) && (
-              <button
-                onClick={() => setCancelPopup(true)}
-                className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
-              >
-                Cancel Request
-              </button>
-            )}
+                <button
+                  onClick={() => setCancelPopup(true)}
+                  className="!border-none bg-red-500 rounded-[3px] text-[#fff] px-6 py-3 font-regular text-sm flex items-center"
+                >
+                  Cancel Request
+                </button>
+              )}
             {programdetails.mentee_join_status !==
               menteeProgramStatus.program_join_request_accepted.status && (
-              <div className="space-y-4">
-                {searchParams.get("type") !== "program_join" &&
-                  !programdetails?.admin_assign_program && (
-                    <button
-                      className="py-3 px-[0px] text-[15px] flex items-center font-semibold mt-3"
-                      style={{
-                        ...buttonStyles.base,
-                        ...buttonStyles.danger,
-                        border: "none !important",
-                        cursor: "text",
-                        padding: "12px 0px !important"
-                      }}
-                      onClick={() => undefined}
-                    >
-                      {menteeProgramStatus[programdetails.mentee_join_status]
-                        .type === "waiting" && (
-                        <i className="pi pi-clock" style={{ color: "red" }}></i>
-                      )}
-                      {menteeProgramStatus[programdetails.mentee_join_status]
-                        .type === "reject" && (
-                        <i className="pi pi-ban" style={{ color: "red" }}></i>
-                      )}
-                      <span className="pl-3">
-                        {
-                          menteeProgramStatus[programdetails.mentee_join_status]
-                            ?.text
-                        }
-                      </span>
-                    </button>
-                  )}
-              </div>
-            )}
+                <div className="space-y-4">
+                  {searchParams.get("type") !== "program_join" &&
+                    !programdetails?.admin_assign_program && (
+                      <button
+                        className="py-3 px-[0px] text-[15px] flex items-center font-semibold mt-3"
+                        style={{
+                          ...buttonStyles.base,
+                          ...buttonStyles.danger,
+                          border: "none !important",
+                          cursor: "text",
+                          padding: "12px 0px !important"
+                        }}
+                        onClick={() => undefined}
+                      >
+                        {menteeProgramStatus[programdetails.mentee_join_status]
+                          .type === "waiting" && (
+                            <i className="pi pi-clock" style={{ color: "red" }}></i>
+                          )}
+                        {menteeProgramStatus[programdetails.mentee_join_status]
+                          .type === "reject" && (
+                            <i className="pi pi-ban" style={{ color: "red" }}></i>
+                          )}
+                        <span className="pl-3">
+                          {
+                            menteeProgramStatus[programdetails.mentee_join_status]
+                              ?.text
+                          }
+                        </span>
+                      </button>
+                    )}
+                </div>
+              )}
           </>
         ) : (
           !menteeNotJoinCondition.includes(programdetails.status) &&
@@ -621,7 +621,7 @@ const ProgramActions = ({
               }
             >
               {searchParams.has("type") &&
-              searchParams.get("type") === "program_cancel"
+                searchParams.get("type") === "program_cancel"
                 ? "Continue"
                 : "Reject Request"}
             </button>
@@ -728,9 +728,17 @@ const ProgramActions = ({
 
     return null;
   };
-
+const programAccept = false
   // Render common status buttons
   const renderCommonStatus = () => {
+    if (programAccept) {
+      return(
+        <Button btnName="Accept Program"
+        btnCls="w-[200px]"
+        onClick={() => { }}
+      />
+      )
+    }
     if (
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
@@ -783,7 +791,7 @@ const ProgramActions = ({
     }
 
     // Cancelled status
-    if ((programdetails.status === "cancelled" &&!type&& (role === "mentee" || type !== "program_cancel"))) {
+    if ((programdetails.status === "cancelled" && !type && (role === "mentee" || type !== "program_cancel"))) {
       return (
         <div className="flex gap-4 pt-5">
           {/* <button

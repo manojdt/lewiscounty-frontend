@@ -1501,7 +1501,7 @@ export const SessionCounts = () => {
 //   },
 // ];
 
-export const ProgramInformationFields = [
+export const ProgramInformationFields = [  
   {
     type: "input",
     name: "program_name",
@@ -1917,6 +1917,19 @@ export const ProgramInformationFields = [
     width: "w-full lg:w-full md:w-[48%] xl:w-full",
     icon: "add",
     for: ["admin"],
+  },
+  {
+    type: "file",
+    name: "program_image",
+    label: "Program Image",
+    fieldtype: "text",
+    placeholder: "Multiple Skills added",
+    inputRules: {
+      // required: 'This field is required',
+    },
+    width: "w-full",
+    for: ["mentor"],
+    is_image: true,
   },
   {
     type: "radio",
