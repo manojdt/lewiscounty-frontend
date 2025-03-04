@@ -1017,6 +1017,10 @@ export const RequestStatusArray = [
     key: "new_goals_request",
     name: "Goal Requests",
   },
+  {
+    key: "mentees_joining_request",
+    name: "Mentees Join Request"
+  }
 ];
 
 export const RequestStatus = {
@@ -1098,6 +1102,15 @@ export const myRequestOverview = [
     status: RequestStatus.memberJoinRequest.key,
     for: ["admin"],
      forTabs:"my"
+  },
+ 
+  {
+    name:'Mentees Join Requests',
+    key:RequestStatus.menteesJoinRequest.key,
+    count:0,
+    status:RequestStatus.menteesJoinRequest.key,
+    for:["admin"],
+    forTabs:"mentees"
   },
   {
     name: "Mentees Program Requests",
