@@ -61,6 +61,7 @@ const ProgramActions = ({
   setOpenPopup,
   setCancelPopup,
   from = "",
+  handleOpenAcceptProgram = () => false
 }) => {
   const userInfo = useSelector((state) => state.userInfo);
 
@@ -728,14 +729,14 @@ const ProgramActions = ({
 
     return null;
   };
-const programAccept = false
+const programAccept = true
   // Render common status buttons
   const renderCommonStatus = () => {
-    if (programAccept) {
+    if (programAccept && ["mentor", "mentee"].includes(role)) {
       return(
         <Button btnName="Accept Program"
         btnCls="w-[200px]"
-        onClick={() => { }}
+        onClick={() => handleOpenAcceptProgram()}
       />
       )
     }
