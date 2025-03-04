@@ -155,6 +155,7 @@ export default function Programs() {
   const [programFilter, setProgramFilter] = useState({
     search: "",
     filter_by: "",
+    formatted_date: "",
   });
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -166,15 +167,11 @@ export default function Programs() {
   const filterType = searchParams.get("type");
   const filterSearch = searchParams.get("search");
   const filterDate = searchParams.get("filter_by");
+  const filterDateFormat = searchParams.get("date");
   const isBookmark = searchParams.get("is_bookmark");
   const programListView = searchParams.get("programView");
   const categoryFilter = searchParams.get("category_id");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [currentView, setCurrentView] = useState("all");
-  const [formattedDate, setFormattedDate] = useState("");
-  console.log("currentView", currentView);
-  console.log("selectedDate", selectedDate);
-  console.log("formattedDate", formattedDate);
   const { data, isLoading, refetch, isFetching } = useGetAllProgramsQuery(
     {
       limit:
@@ -194,52 +191,27 @@ export default function Programs() {
             : filterType,
       }),
       ...(filterDate && { filter_by: filterDate }),
-      // ...(isBookmark && { is_bookmark: isBookmark }),
+      ...(filterDateFormat && { date: filterDateFormat }),
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(categoryFilter && { category_id: categoryFilter }),
     },
     {
       refetchOnMountOrArgChange: true,
-      // skip:
-      //   role === "admin" && filterType === programActionStatus.program_assign,
+      // skip: !(filterDate && filterDateFormat),
     }
   );
 
-  const customViews = [
-    { value: "all", label: "All" },
-    { value: "day", label: "Day" },
-    { value: "month", label: "Monthly" },
-    { value: "year", label: "Yearly" }
-  ];
-
   // Handler that receives date, view mode, and formatted date
   const handleDateChange = (date, viewMode, formatted) => {
-    console.log('formatted', formatted)
     setSelectedDate(date);
-    setCurrentView(viewMode);
-    setFormattedDate(formatted);
-    
-    // Example of API request parameters
-    const apiParams = {
-      viewType: viewMode,
-      formattedDate: formatted,
-      // For 'all', you might not send a date parameter
-      ...(viewMode !== 'all' && { date: date })
-    };
-    
-    console.log('API params:', apiParams);
+    setProgramFilter({
+      ...programFilter,
+      formatted_date: formatted,
+      filter_by: viewMode === "all" ? "" : viewMode,
+    });   
   };
 
   // Separate view change handler
-  const handleDateViewChange = (viewMode) => {
-    setCurrentView(viewMode);
-    // If switching to "all", you might want to clear the date
-    if (viewMode === 'all') {
-      setSelectedDate(null);
-      setFormattedDate('');
-    }
-  };
-
 
   const [openCategory, setOpenCategory] = React.useState(false);
   const token = localStorage.getItem("access_token");
@@ -547,7 +519,13 @@ export default function Programs() {
         query.type = getDefaultType();
       } else if (filterType !== "") {
         query.type = filterType;
-      }
+      } else if (programFilter.filter_by !== "")
+        query.filter_by = programFilter.filter_by;
+      else if (
+        programFilter.formatted_date !== "" &&
+        programFilter.filter_by !== ""
+      )
+        query.date = programFilter.formatted_date;
     }
     if (categoryFilter && categoryFilter !== "") {
       query = { ...query, category_id: categoryFilter };
@@ -558,6 +536,8 @@ export default function Programs() {
     if (programFilter.search !== "") query.search = programFilter.search;
     if (programFilter.filter_by !== "")
       query.filter_by = programFilter.filter_by;
+    if (programFilter.formatted_date !== "" && programFilter.filter_by !== "")
+      query.date = programFilter.formatted_date;
     return query;
   };
 
@@ -576,9 +556,9 @@ export default function Programs() {
     };
   }, [programFilter.search]);
 
-  const handleDateFilter = (e) => {
-    setProgramFilter({ ...programFilter, filter_by: e.target.value });
-  };
+  // const handleDateFilter = (e) => {
+  //   setProgramFilter({ ...programFilter, filter_by: e.target.value });
+  // };
 
   const menuNavigate = () => {
     if (programView === "list") {
@@ -877,7 +857,7 @@ export default function Programs() {
                     />
                   </div>
                 </div>
-                <p
+                {/* <p
                   className="text-[12px] py-2 pl-5 pr-4 flex gap-4 !border !border-border-black rounded-[5px]"
                   // style={{
                   //   background: "rgba(223, 237, 255, 1)",
@@ -899,19 +879,14 @@ export default function Programs() {
                     <option value="month">Month</option>
                     <option value="year">Year</option>
                   </select>
-                </p>
-                {/* <DateFilterComponent
+                </p> */}
+                <DateFilterComponent
                   label="Select Date"
                   selectLabel="Filter By"
                   value={selectedDate}
                   onChange={handleDateChange}
-                  onViewChange={handleDateViewChange}
                   defaultView="all"
-                  availableViews={customViews}
-                  datePickerProps={{
-                    disableFuture: true,
-                  }}
-                /> */}
+                />
                 <div className="lg:hidden">
                   <ProgramMobileDropDown
                     // cardTitle={"Program Types"}

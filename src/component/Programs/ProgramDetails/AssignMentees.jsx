@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { Calendar } from "primereact/calendar";
 import { useForm } from "react-hook-form";
-import { Backdrop, CircularProgress, Stack, Typography } from "@mui/material";
+import { Backdrop, CircularProgress, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetProgramNameQuery } from "../../../features/program/programApi.services";
 import { AssignMenteesFields } from "../../../utils/formFields";
@@ -731,20 +731,15 @@ export default function AssignMentees() {
                           </>
                         ) : field.type === "dropdown" ? (
                           <>
-                            <select
+                            <TextField
+                              select
                               {...register(field.name, field.inputRules)}
-                              className="w-full border-none px-3 py-[0.32rem] leading-[2.15] input-bg  
-                                                                                focus:border-none focus-visible:border-none focus-visible:outline-none text-[14px] h-[60px]"
-                              placeholder={field.placeholder}
-                              style={{
-                                color: "#232323",
-                                borderRadius: "3px",
-                              }}
+                              placeholder={field.placeholder}                              
                               disabled={field.disabled}
                             >
-                              <option value="">Select</option>
+                              <MenuItem value=""><em>Select</em></MenuItem>
                               {field?.options.map((option, index) => (
-                                <option
+                                <MenuItem
                                   value={option.id}
                                   key={index}
                                   selected={getValues(field.name) === option.id}
@@ -752,9 +747,9 @@ export default function AssignMentees() {
                                   {field.name === "goal_id"
                                     ? option.goal_name
                                     : option.name}
-                                </option>
+                                </MenuItem>
                               ))}
-                            </select>
+                            </TextField>
                             {errors[field.name] && (
                               <p className="error" role="alert">
                                 {errors[field.name].message}

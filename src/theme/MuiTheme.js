@@ -63,6 +63,45 @@ let MuiTheme = createTheme({
         dense: true,
       },
     },
+    MuiRadio:{
+      defaultProps:{
+        icon:(
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              border: "2px solid #C5C5C5",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+          ),
+        checkedIcon:(
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              border: "2px solid #3B54CB",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                backgroundColor: "#3B54CB",
+              }}
+            />
+          </div>
+        )
+      }
+    },
     MuiDataGrid: {
       defaultProps: {
         sx: {

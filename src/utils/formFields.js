@@ -2319,7 +2319,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49%]",
     disabled: bool,
   },
   {
@@ -2331,7 +2331,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49%]",
     disabled: bool,
   },
 
