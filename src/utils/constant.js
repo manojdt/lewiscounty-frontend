@@ -905,7 +905,7 @@ export const programMenus = (page = "dashboard") => {
     //   status: programActionStatus.program_assign,
     // },
     {
-      name: "Drafted Programs",
+      name: "Saved Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.draft}`,
       for: ["admin"],
