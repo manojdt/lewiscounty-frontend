@@ -38,7 +38,7 @@ const TopMentorsDataTable = () => {
             return <>
                 <div className='cursor-pointer flex items-center justify-start h-full relative' onClick={onEyeIconClick}>
 
-                    <img src={EyeIcon} alt='EyeIcon'></img>
+                    <img className='w-[18px] h-[18px]' src={EyeIcon} alt='EyeIcon'></img>
                 </div>
             </>
         }
