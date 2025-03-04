@@ -576,12 +576,15 @@ const Members = () => {
     if (filterInfo.status !== "" && filterInfo.status !== "all") {
       payload = { ...payload, status: filterInfo.status };
     }
-
+    
     if (filterInfo.search !== "") {
       payload = { ...payload, search: filterInfo.search };
     }
     if (filterInfo.role) {
       payload = { ...payload, role: filterInfo.role };
+    }
+    if(breadcrumbsType==='dashboardMemberMentor' && filterInfo?.role!=='mentor'){
+      payload ={...payload, role:'mentor'}
     }
     dispatch(getMembersList(payload));
   }, [actionTab, paginationModel, filterInfo.status, filterInfo.search]);

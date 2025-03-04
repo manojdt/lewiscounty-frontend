@@ -311,7 +311,7 @@ export default function Admin() {
               </span>
             </div> */}
 
-            <ul className="flex gap-2 p-4 md:p-0 font-medium h-full items-center justify-center">
+            <ul className="flex gap-2 p-4 md:p-0 font-medium h-full">
               <ListCard
                 title="Overview"
                 // viewall

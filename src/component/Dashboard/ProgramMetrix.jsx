@@ -53,7 +53,12 @@ export default function ProgramMetrix() {
                     plugins: {
                         legend: {
                             labels: {
+                                usePointStyle: true, // Use a circular point style instead of the default rectangle
+                                pointStyle: 'circle',
                                 fontColor: textColor,
+                                boxWidth: 7, // Adjust the size of the circle
+                                boxHeight: 7, // Optional: Adjust height if needed
+                                padding: 10, 
                             }
                         }
                     },
