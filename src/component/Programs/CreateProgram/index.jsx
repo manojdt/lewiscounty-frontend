@@ -402,7 +402,7 @@ export default function CreatePrograms() {
     }
 
     if (params?.id && !isReopen) {
-      if (fieldData?.status === "draft") {
+      if (currentProgramDetail?.status === "draft") {
         bodyFormData.append("status", "create");
       }
       bodyFormData.append("program_id", params?.id);
