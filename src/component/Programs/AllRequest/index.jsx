@@ -1325,7 +1325,7 @@ export default function AllRequest() {
                           alt="AcceptIcon"
                           className="pr-3 w-[27px]"
                         />
-                        Review
+                        In-review
                       </MenuItem>}
                       <MenuItem
                         onClick={handleMemberAcceptRequest}

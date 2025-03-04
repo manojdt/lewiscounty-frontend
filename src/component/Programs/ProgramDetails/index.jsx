@@ -2412,25 +2412,35 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               />
                               Share
                             </MenuItem>
-                            {role === "admin" &&
-                              programdetails?.created_by ===
-                              userdetails?.data?.user_id &&
-                              programdetails?.admin_assign_program &&
-                              programdetails?.sub_programs.every(
-                                (val) => val.status === "yettoapprove"
-                              ) && (
-                                <MenuItem
-                                  onClick={() => handleMenu("editadmin")}
-                                  className="!text-[12px]"
-                                >
-                                  <img
-                                    src={EditSVGIcon}
-                                    alt="EditSVGIcon"
-                                    className="pr-3 w-[25px]"
-                                  />
-                                  Edit
-                                </MenuItem>
-                              )}
+                            {role==="admin"&&
+                              // programdetails?.created_by ===
+                              // userdetails?.data?.user_id &&
+                              // programdetails?.admin_assign_program &&
+                              // programdetails?.sub_programs.every((val)=>val.status==="yettoapprove") &&
+                              !programdetails?.admin_assign_program &&
+                            programdetails.program_edit &&
+                            ![
+                              "yettoapprove",
+                              "draft",
+                              "cancelled",
+                              "completed",
+                            ].includes(
+                              programdetails.status
+                            ) &&
+                            programdetails.participated_mentees_count === 0 &&
+                               (
+                              <MenuItem
+                                onClick={() => handleMenu("editadmin")}
+                                className="!text-[12px]"
+                              >
+                                <img
+                                  src={EditSVGIcon}
+                                  alt="EditSVGIcon"
+                                  className="pr-3 w-[25px]"
+                                />
+                                Edit
+                              </MenuItem>
+                            )}
                             {/* {!("admin_assign_program" in programdetails) &&
                               (programdetails.status === "cancelled" ||
                                 programdetails.status ===
