@@ -101,6 +101,7 @@ export default function CreatePrograms() {
   const {
     data: currentProgramDetail,
     isLoading: isDetailFetching,
+    isFetching,
   } = useGetSpecificProgramDetailsQuery(
     { id: params?.id },
     { skip: !params?.id, refetchOnMountOrArgChange: true }
@@ -447,7 +448,13 @@ export default function CreatePrograms() {
 
   useEffect(() => {
     // Guard clause for required data
-    if (!currentProgramDetail?.id || !params.id) return;
+    if (
+      !currentProgramDetail?.id ||
+      !params.id ||
+      isDetailFetching ||
+      isFetching
+    )
+      return;
 
     // Field value transformers
     const fieldTransformers = {
@@ -485,36 +492,39 @@ export default function CreatePrograms() {
       },
       prerequisites: (detail) => {
         if (!detail.prerequisites || !Array.isArray(detail.prerequisites)) {
-          return [
-            {
-              question: "",
-              field_type: "",
-              mandatory: false,
-              field_options: [{ title: "" }],
-            },
-          ];
+          return [];
         }
 
         return detail.prerequisites.map((item) => {
-          // Create a base object with required fields
-          const baseItem = {
-            ...item,
-            field_options: Array.isArray(item?.field_options)
-              ? item.field_options
-                  .filter(
-                    (option) =>
-                      typeof option === "string" && option.trim() !== ""
-                  )
-                  .map((option) => ({ title: option }))
-              : [{ title: "" }], // Always ensure at least one empty field_option
-          };
+          // Strictly check field_options and ensure it's properly formatted
+          let options = [];
 
-          // If there are no valid field_options after filtering, add an empty one
-          if (!baseItem.field_options.length) {
-            baseItem.field_options = [{ title: "" }];
+          // If field_options exists and is an array
+          if (item.field_options && Array.isArray(item.field_options)) {
+            // Convert each option to {title: value} format if needed
+            options = item.field_options.map((option) => {
+              // If already an object with title property, use it
+              if (
+                typeof option === "object" &&
+                option !== null &&
+                "title" in option
+              ) {
+                return option;
+              }
+              // Otherwise convert string to {title: string}
+              return { title: String(option || "") };
+            });
           }
 
-          return baseItem;
+          // Always ensure at least one option exists
+          if (options.length === 0) {
+            options = [{ title: "" }];
+          }
+
+          return {
+            ...item,
+            field_options: options,
+          };
         });
       },
       recurring_dates: (detail) => {
@@ -572,7 +582,14 @@ export default function CreatePrograms() {
         setValue(fieldName, value);
       }
     });
-  }, [currentProgramDetail, params.id, setValue, getValues]); // Only run when currentProgramDetail or params.id changes
+  }, [
+    currentProgramDetail,
+    params.id,
+    setValue,
+    getValues,
+    isDetailFetching,
+    isFetching,
+  ]); // Only run when currentProgramDetail or params.id changes
 
   useEffect(() => {
     // If any completion state (success or error) is true, show the backdrop
