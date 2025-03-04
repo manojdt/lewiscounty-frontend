@@ -31,7 +31,8 @@ import { useDebounce } from "../../../utils";
 
 const ProgramSteps = ({
   stepFields,
-  // stepData,
+  isDetailFetching,
+  currentProgramDetail,
   handleProgramCheck,
   certificate,
   setViewDetailsInfo,
@@ -291,22 +292,35 @@ const ProgramSteps = ({
   }, [goalsCount, fields.length, append, remove]);
 
   React.useEffect(() => {
-    if (recurring_program && recurringFields?.length === 0) {
+    // Only run this effect when we have stable conditions
+    if (isDetailFetching) {
+      return; // Don't do anything while loading
+    }
+       
+    
+    // Only for new programs or explicit toggling
+    if (recurring_program && recurringFields.length === 0) {
+      // Add a single empty field
       appendRecurringFields({
         start_date: "",
         end_date: "",
+        reminder_type: "daily"
       });
-    } else if (!recurring_program && recurringFields?.length > 0) {
-      // Clear recurring fields when recurring_program becomes false
-      recurringFields.forEach((_, index) => {
-        removeRecurringFields(index);
-      });
+    } else if (!recurring_program && recurringFields.length > 0) {
+      // Clear all recurring fields when toggled off
+      // Use this approach instead of forEach to avoid issues
+      for (let i = recurringFields.length - 1; i >= 0; i--) {
+        removeRecurringFields(i);
+      }
     }
   }, [
     recurring_program,
-    recurringFields?.length,
+    recurringFields,
     appendRecurringFields,
     removeRecurringFields,
+    params?.id,
+    currentProgramDetail?.id,
+    isDetailFetching
   ]);
 
   // Initialize prerequisites if empty
@@ -448,8 +462,7 @@ const ProgramSteps = ({
 
           const disableFields = false;
 
-          const disableSelectFields =
-            false;
+          const disableSelectFields = false;
 
           const onFilteredDataChange = (programInfo) => {
             ["zip_code", "state", "city"].map((item) => {
