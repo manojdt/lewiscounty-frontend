@@ -771,7 +771,7 @@ const Members = () => {
                 }}
               >
                 {filterPopup.options.map((option, index) => (
-                  <li key={index} className="flex gap-7">
+                  <li key={index} className="flex gap-7 items-center">
                     <input
                       type="checkbox"
                       className="w-[20px]"

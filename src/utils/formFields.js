@@ -1501,7 +1501,7 @@ export const SessionCounts = () => {
 //   },
 // ];
 
-export const ProgramInformationFields = [
+export const ProgramInformationFields = [  
   {
     type: "input",
     name: "program_name",
@@ -1919,6 +1919,19 @@ export const ProgramInformationFields = [
     for: ["admin"],
   },
   {
+    type: "file",
+    name: "program_image",
+    label: "Program Image",
+    fieldtype: "text",
+    placeholder: "Multiple Skills added",
+    inputRules: {
+      // required: 'This field is required',
+    },
+    width: "w-full",
+    for: ["mentor"],
+    is_image: true,
+  },
+  {
     type: "radio",
     name: "recurring_program",
     label: "Do you want this recurring program?",
@@ -2306,7 +2319,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49%]",
     disabled: bool,
   },
   {
@@ -2318,7 +2331,7 @@ export const ReportFields = (bool = false) => [
       required: "This field is required",
     },
     options: [],
-    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49.4%]",
+    width: "w-full lg:w-[48%] md:w-[48%] xl:w-[49%]",
     disabled: bool,
   },
 

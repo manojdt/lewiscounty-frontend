@@ -905,7 +905,7 @@ export const programMenus = (page = "dashboard") => {
     //   status: programActionStatus.program_assign,
     // },
     {
-      name: "Drafted Programs",
+      name: "Saved Programs",
       count: 0,
       page: `${pipeUrl}${programFilterUrls.draft}`,
       for: ["admin"],
@@ -931,15 +931,15 @@ export const programMenus = (page = "dashboard") => {
       menteeStatus: "interest",
       status: programActionStatus.interest,
     },
-    // {
-    //   name: "Bookmarked Programs",
-    //   count: 0,
-    //   page: `${pipeUrl}${programFilterUrls.bookmark}`,
-    //   for: ["mentor", "mentee", "admin"],
-    //   mentorStatus: programActionStatus.bookmark,
-    //   menteeStatus: programActionStatus.bookmark,
-    //   status: programActionStatus.bookmark,
-    // },
+    {
+      name: "Bookmarked Programs",
+      count: 0,
+      page: `${pipeUrl}${programFilterUrls.bookmark}`,
+      for: ["mentor", "mentee", "admin"],
+      mentorStatus: programActionStatus.bookmark,
+      menteeStatus: programActionStatus.bookmark,
+      status: programActionStatus.bookmark,
+    },
     {
       name: "Rescheduled Programs",
       count: 0,

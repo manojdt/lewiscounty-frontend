@@ -46,7 +46,7 @@ const Login = () => {
     formState: { errors },
     setError,
     reset,
-    clearErrors
+    clearErrors,
   } = useForm();
 
   const [userAccountLogin, { data: loginData }] = useUserAccountLoginMutation();
@@ -185,9 +185,13 @@ const Login = () => {
         } else if (user_data?.role === "fresher") {
           navigate("/login-type");
         } else if (user_data?.is_registered) {
-          if(user_data?.userinfo?.is_questions_completed||user_data.role==="admin"||user_data.role==="mentee"){
+          if (
+            user_data?.userinfo?.is_questions_completed ||
+            user_data.role === "admin" ||
+            user_data.role === "mentee"
+          ) {
             navigate(redirectPath);
-          }else{
+          } else {
             navigate("/questions");
           }
         } else if (user_data?.role === "mentee" && !user_data?.is_registered) {
@@ -319,7 +323,10 @@ const Login = () => {
                         : field.fieldtype
                       : field.fieldtype
                   }
-                    autoComplete="off"
+                  autoComplete="off"
+                  data-lpignore="true" // LastPass ignore
+                  // Safari-specific attribute
+                  webkit-autocomplete="off"
                   className={`w-full rounded px-3 py-[0.32rem] text-[14px] leading-[2.15] h-[60px] ${
                     errors[field.name]
                       ? "focus:border-teal focus:outline-none focus:ring-0"
@@ -405,17 +412,17 @@ const Login = () => {
           dialogTitle={"Message"}
         >
           <div className="flex justify-center items-center flex-col gap-y-4">
-          <Avatar src={modal_tick_icon} />
-          <div className="flex justify-center items-center flex-col gap-2">
-            <p className="text-[22px] text-font-primary-main font-bold">
-              Thank You!
-            </p>
-            <p className="text-[16px] text-font-primary-main font-semibold text-center mt-8">
-              Please verify your email address. A verification link has been{" "}
-              <br /> sent to your registered email address.
-            </p>
+            <Avatar src={modal_tick_icon} />
+            <div className="flex justify-center items-center flex-col gap-2">
+              <p className="text-[22px] text-font-primary-main font-bold">
+                Thank You!
+              </p>
+              <p className="text-[16px] text-font-primary-main font-semibold text-center mt-8">
+                Please verify your email address. A verification link has been{" "}
+                <br /> sent to your registered email address.
+              </p>
+            </div>
           </div>
-        </div>
         </MuiCustomModal>
       </div>
     </React.Fragment>

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem, Stack, Box } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { format } from "date-fns";
 
-// Available view options with "All" as default
 const VIEW_OPTIONS = [
   { value: "all", label: "All" },
   { value: "day", label: "Day" },
@@ -34,13 +32,53 @@ const DateFilterComponent = ({
     }
   }, [value]);
 
+  /**
+   * Format date based on view mode
+   * day - MM-DD-YYYY
+   * month - MM-YYYY
+   * year - YYYY
+   */
+  const formatDateByViewMode = (date, mode) => {
+    if (!date) return "";
+
+    try {
+      // Ensure we're working with a Date object
+      const dateObj = new Date(date);
+
+      if (isNaN(dateObj.getTime())) {
+        console.error("Invalid date provided:", date);
+        return "";
+      }
+
+      // Manual formatting without relying on date-fns
+      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObj.getDate()).padStart(2, "0");
+      const year = dateObj.getFullYear();
+
+      switch (mode) {
+        case "day":
+          return `${year}-${month}-${day}`;
+        case "month":
+          return `${year}-${month}`;
+        case "year":
+          return `${year}`;
+        default:
+          return "";
+      }
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "";
+    }
+  };
+
   // Handle date change
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     if (onChange) {
       // Format date based on view mode before sending to parent
-      const formattedDate = formatDateByViewMode(newDate, viewMode);
-      onChange(newDate, viewMode, formattedDate);
+      const formattedDateStr = formatDateByViewMode(newDate, viewMode);
+      console.log("Date changed:", newDate, "Formatted:", formattedDateStr);
+      onChange(newDate, viewMode, formattedDateStr);
     }
   };
 
@@ -56,34 +94,9 @@ const DateFilterComponent = ({
 
     // Also call the main onChange with current date and new view mode
     if (onChange && selectedDate) {
-      const formattedDate = formatDateByViewMode(selectedDate, newViewMode);
-      onChange(selectedDate, newViewMode, formattedDate);
-    }
-  };
-
-  /**
-   * Format date based on view mode
-   * day - MM-DD-YYYY
-   * month - MM-YYYY
-   * year - YYYY
-   */
-  const formatDateByViewMode = (date, mode) => {
-    if (!date) return "";
-
-    try {
-      switch (mode) {
-        case "day":
-          return format(date, "mm-dd-yyyy");
-        case "month":
-          return format(date, "mm-yyyy");
-        case "year":
-          return format(date, "yyyy");
-        default:
-          return "";
-      }
-    } catch (error) {
-      console.error("Date formatting error:", error);
-      return "";
+      const formattedDateStr = formatDateByViewMode(selectedDate, newViewMode);
+      console.log("View changed:", newViewMode, "Formatted:", formattedDateStr);
+      onChange(selectedDate, newViewMode, formattedDateStr);
     }
   };
 
@@ -98,7 +111,7 @@ const DateFilterComponent = ({
       case "month":
         views = ["month", "year"];
         openTo = "month";
-        inputFormat = "MM/yyyy";
+        inputFormat = "yyyy/MM";
         break;
       case "year":
         views = ["year"];
@@ -106,12 +119,12 @@ const DateFilterComponent = ({
         inputFormat = "yyyy";
         break;
       case "day":
-        views = ["day", "month", "year"];
+        views = ['year', 'month', 'day'];
         openTo = "day";
         inputFormat = "MM/dd/yyyy";
         break;
       default:
-        views = ["day", "month", "year"];
+        views = ['year', 'month', 'day'];
         openTo = "day";
         inputFormat = "MM/dd/yyyy";
         break;
@@ -150,7 +163,7 @@ const DateFilterComponent = ({
           value={viewMode}
           placeholder={selectLabel}
           onChange={handleViewChange}
-          size="medium"
+          size="small"
         >
           {availableViews.map((option) => (
             <MenuItem key={option.value} value={option.value}>

@@ -20,6 +20,7 @@ import PopupTableInput from "../../../shared/PopupTableInput/PopupTableInput";
 import { WeekdaySelector } from "../../../shared/CustomWeekdaySelector/WeekdaySelector";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CloseIcon from "@mui/icons-material/Close";
 // Helper component to handle prerequisite options for a single prerequisite
 const PrerequisiteOptions = ({ index, fieldType }) => {
   const {
@@ -43,6 +44,18 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
 
   const selectedFieldType = watch(`${fieldType}.${index}.field_type`);
   const previousFieldType = React.useRef(selectedFieldType);
+
+  const handleAddOptions = () => {
+    if (selectedFieldType === "radio" || selectedFieldType === "checkbox") {
+      appendOption({ title: "" });
+    }
+  };
+
+  const handleCloseOption = (option) => {
+    console.log("option ===>", option);
+    const clearedOptions = optionFields?.filter((i) => i?.id !== option?.id);
+    replaceOptions(clearedOptions);
+  };
 
   // Reset field_options when field_type changes
   useEffect(() => {
@@ -100,44 +113,68 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
 
   // For radio and checkbox types, render multiple options with better alignment
   return (
-    <div>
-      {optionFields.map((option, optionIndex) => (
-        <div key={option.id} className={`flex items-center gap-2 w-[50%] mt-4`}>
-          {selectedFieldType === "radio" ? (
-            <RadioButtonUncheckedIcon />
-          ) : (
-            <CheckBoxOutlineBlankIcon />
-          )}
-          <TextField
-            variant="standard"
-            fullWidth
-            placeholder={`Option ${optionIndex + 1}`}
-            {...register(
-              `${fieldType}.${index}.field_options.${optionIndex}.title`
-            )}
-            error={
-              !!errors?.[fieldType]?.[index]?.field_options?.[optionIndex]
-                ?.title
-            }
-            helperText={
-              errors?.[fieldType]?.[index]?.field_options?.[optionIndex]?.title
-                ?.message
-            }
-            onBlur={(e) => {
-              // Only add a new option if this is the last one and it's not empty
-              if (
-                e.target.value &&
-                optionIndex === optionFields.length - 1 &&
-                (selectedFieldType === "radio" ||
-                  selectedFieldType === "checkbox")
-              ) {
-                appendOption({ title: "" });
-              }
-            }}
-            sx={{ bgcolor: "transparent" }}
-          />
-        </div>
-      ))}
+    <div
+    // className="flex flex-row justify-between"
+    >
+      <div>
+        {optionFields.map((option, optionIndex) => (
+          <div className="flex flex-row gap-2 items-center">
+            <div
+              key={option.id}
+              className={`flex items-center gap-2 w-[50%] mt-4`}
+            >
+              {selectedFieldType === "radio" ? (
+                <RadioButtonUncheckedIcon />
+              ) : (
+                <CheckBoxOutlineBlankIcon />
+              )}
+              <TextField
+                variant="standard"
+                fullWidth
+                placeholder={`Option ${optionIndex + 1}`}
+                {...register(
+                  `${fieldType}.${index}.field_options.${optionIndex}.title`
+                )}
+                error={
+                  !!errors?.[fieldType]?.[index]?.field_options?.[optionIndex]
+                    ?.title
+                }
+                helperText={
+                  errors?.[fieldType]?.[index]?.field_options?.[optionIndex]
+                    ?.title?.message
+                }
+                // onBlur={(e) => {
+                //   // Only add a new option if this is the last one and it's not empty
+                //   if (
+                //     e.target.value &&
+                //     optionIndex === optionFields.length - 1 &&
+                //     (selectedFieldType === "radio" ||
+                //       selectedFieldType === "checkbox")
+                //   ) {
+                //     appendOption({ title: "" });
+                //   }
+                // }}
+                sx={{ bgcolor: "transparent" }}
+              />
+            </div>
+            <div className="!bg-background-error-light p-1 rounded-full mt-4">
+              <CloseIcon
+                onClick={() => handleCloseOption(option)}
+                className="!text-font-error-main cursor-pointer"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-start">
+        <MuiButton
+          variant="text"
+          onClick={() => handleAddOptions()}
+          className="py-2 px-4 bg-background-primary-main text-white rounded !mt-2"
+        >
+          Add +
+        </MuiButton>
+      </div>
     </div>
   );
 };
@@ -235,7 +272,14 @@ const DynamicFieldsComponent = ({
         className={nestedField.width || "w-full"}
       >
         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
-          {nestedField.label}
+          {nestedField.label}{" "}
+          {nestedField?.name === "mentor_id" ? (
+            <span className="!text-font-secondary-gray !text-[12px]">
+              {"(Optional)"}
+            </span>
+          ) : (
+            ""
+          )}
           <span style={{ color: "red" }}>
             {nestedField?.inputRules?.required ? "*" : ""}
           </span>
@@ -483,7 +527,8 @@ const DynamicFieldsComponent = ({
                   SelectProps={{
                     multiple: nestedField.name === "day_numbers",
                     renderValue: (selected) => {
-                      if (nestedField.name === "day_numbers") return selected.join(', ');
+                      if (nestedField.name === "day_numbers")
+                        return selected.join(", ");
                       return selected || "";
                     },
                   }}

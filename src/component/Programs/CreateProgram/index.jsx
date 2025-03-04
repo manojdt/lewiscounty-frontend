@@ -9,7 +9,6 @@ import {
   ProgramFields,
   ProgramInformationFields,
 } from "../../../utils/formFields";
-import { getProgramNameValidate } from "../../../services/programInfo";
 import MuiModal from "../../../shared/Modal";
 import Tooltip from "../../../shared/Tooltip";
 import CancelIcon from "../../../assets/icons/closeIcon.svg";
@@ -25,10 +24,8 @@ import {
   useGetSpecificProgramDetailsQuery,
   useGetAllCategoriesQuery,
   useGetCertificatesQuery,
-  useGetAllMentorsQuery,
   useValidateProgramNameMutation,
 } from "../../../features/program/programApi.services";
-import { useDebounce } from "../../../utils";
 
 const DEFAULT_VALUE = 1;
 
@@ -39,7 +36,6 @@ export default function CreatePrograms() {
     },
   } = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
   const params = useParams();
   const [currentStep, setCurrentStep] = useState(DEFAULT_VALUE);
@@ -102,11 +98,14 @@ export default function CreatePrograms() {
     assign_mentees: { page: 0, pageSize: 10 },
   });
 
-  const { data: currentProgramDetail, isLoading: isDetailFetching } =
-    useGetSpecificProgramDetailsQuery(
-      { id: params?.id },
-      { skip: !params?.id, refetchOnMountOrArgChange: true }
-    );
+  const {
+    data: currentProgramDetail,
+    isLoading: isDetailFetching,
+    isFetching,
+  } = useGetSpecificProgramDetailsQuery(
+    { id: params?.id },
+    { skip: !params?.id, refetchOnMountOrArgChange: true }
+  );
 
   const { data: category } = useGetAllCategoriesQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -191,20 +190,9 @@ export default function CreatePrograms() {
       });
   };
 
-  const handleTab = (key) => {
-    // scrollToTop();
-    const tabIndex = ProgramTabs.findIndex((tab) => tab.key === key);
-    // if (stepWiseData.hasOwnProperty(tabIndex + 1) || stepWiseData.hasOwnProperty(tabIndex)) {
-    const nextIndex = tabIndex + 1;
-    setCurrentStep(nextIndex);
-    setTabActionInfo({ ...tabActionInfo, activeTab: key });
-    // }
-  };
-
   const handleNextStep = async (data) => {
     // Get the current step's allowed fields
-    let currentStepField = ProgramFields[currentStep - 1];
-  
+
     // Get allowed field names for current step
     const allowedFields = ProgramInformationFields.map((field) => field.name);
     // Filter the incoming data to only include allowed fields
@@ -214,7 +202,7 @@ export default function CreatePrograms() {
         obj[key] = data[key];
         return obj;
       }, {});
-  
+
     // Filter stepData to remove fields from current step
     const filteredStepData = Object.keys(data)
       .filter((key) => !allowedFields.includes(key))
@@ -222,14 +210,14 @@ export default function CreatePrograms() {
         obj[key] = data[key];
         return obj;
       }, {});
-  
+
     // Combine filtered previous step data with current step data
     let fieldData = {
       ...filteredStepData,
       ...currentStepData,
       location: data.location ? data.location : null,
     };
-  
+
     // Remove specific fields based on is_sponsored condition
     if (fieldData.is_sponsored === true) {
       delete fieldData.enrollment_fees;
@@ -246,13 +234,12 @@ export default function CreatePrograms() {
         return obj;
       }, {});
     // setStepData(fieldData);
-    const totalSteps = ProgramTabs.length;
     if (!params?.id) {
       // Validate program name before proceeding with form submission
       try {
         const res = await validateProgramName(data).unwrap();
         console.log("res", res);
-        
+
         // Check if the program name is available
         if (res?.meta?.requestStatus === "fulfilled") {
           if (res?.is_available) {
@@ -264,7 +251,7 @@ export default function CreatePrograms() {
             });
             // Exit the function early without proceeding to formData logic
             return;
-          } 
+          }
         }
         // If we get here, either res.is_available is false or we didn't get a fulfilled status
         // In either case, proceed with form submission
@@ -282,11 +269,11 @@ export default function CreatePrograms() {
       await processFormData(fieldData, formValues);
     }
   };
-  
+
   // Helper function to process and submit form data
   const processFormData = async (fieldData, formValues) => {
     let bodyFormData = new FormData();
-  
+
     const jsonFields = [
       "prerequisites",
       "certifications",
@@ -295,7 +282,7 @@ export default function CreatePrograms() {
       "mentor_id",
       "assign_mentees",
     ];
-  
+
     jsonFields.forEach((field) => {
       if (jsonFields.includes(field) && Array.isArray(formValues[field])) {
         // Specific handling for mentor_id and assign_mentees
@@ -343,10 +330,10 @@ export default function CreatePrograms() {
                 )
                 .map((option) => option.title),
             };
-  
+
             return baseItem;
           });
-  
+
           bodyFormData.append(field, JSON.stringify(updatePrerequisites));
         } else if (field === "recurring_dates") {
           const updateRecurringProgram = formValues[field].map((item) => {
@@ -360,7 +347,7 @@ export default function CreatePrograms() {
               }),
               ...(item?.byday && { byday: item.byday?.join(",") }),
             };
-  
+
             return baseItem;
           });
           bodyFormData.append(field, JSON.stringify(updateRecurringProgram));
@@ -376,7 +363,7 @@ export default function CreatePrograms() {
               (value) => value !== "" && value !== null && value !== undefined
             );
           });
-  
+
           // If the array contains valid objects, stringify and append to FormData
           if (isValidArray) {
             bodyFormData.append(field, JSON.stringify(formValues[field]));
@@ -384,7 +371,7 @@ export default function CreatePrograms() {
         }
       }
     });
-    
+
     // Remove fields based on is_sponsored before creating FormData
     if (fieldData.is_sponsored === true) {
       delete fieldData.enrollment_fees;
@@ -392,9 +379,9 @@ export default function CreatePrograms() {
     if (fieldData.is_sponsored === false) {
       delete fieldData.sponsor_logos;
     }
-    
+
     for (let key in fieldData) {
-      if (key === "sponsor_logos") {
+      if (key === "sponsor_logos" || key === "program_image") {
         if (fieldData[key]?.[0] instanceof File) {
           bodyFormData.append(key, fieldData[key][0]);
         } else if (key === "day_numbers" || key === "byday") {
@@ -408,15 +395,15 @@ export default function CreatePrograms() {
         bodyFormData.append(key, fieldData[key]);
       }
     }
-    
+
     bodyFormData.append("program_admin", userInfo.data?.user_id);
-  
+
     if (typeof fieldData?.sponsor_logos === "string" && isReopen) {
       bodyFormData.delete("sponsor_logos");
     }
-    
+
     if (params?.id && !isReopen) {
-      if (fieldData?.status === "draft") {
+      if (currentProgramDetail?.status === "draft") {
         bodyFormData.append("status", "create");
       }
       bodyFormData.append("program_id", params?.id);
@@ -436,15 +423,6 @@ export default function CreatePrograms() {
       }
       await createProgram(bodyFormData);
     }
-  };
-
-  const handlePreviousStep = () => {
-    setCurrentStep(currentStep - 1);
-    setTabActionInfo({
-      ...tabActionInfo,
-      activeTab: ProgramTabs[currentStep - 2].key,
-    });
-    // scrollToTop();
   };
 
   const handleClose = () => {
@@ -467,19 +445,16 @@ export default function CreatePrograms() {
         return field;
     }
   });
-  useEffect(() => {
-    // This effect should only handle field structure updates based on role and step
-    let currentStepField = ProgramFields[currentStep - 1];
-
-    // Update fields with dynamic options
-
-    // Update program fields structure
-    // setProgramAllFields((prevFields) => ({ ...prevFields, updatedFields }));
-  }, [category?.length]); // Removed currentProgramDetail?.id and params.id from dependencies
 
   useEffect(() => {
     // Guard clause for required data
-    if (!currentProgramDetail?.id || !params.id) return;
+    if (
+      !currentProgramDetail?.id ||
+      !params.id ||
+      isDetailFetching ||
+      isFetching
+    )
+      return;
 
     // Field value transformers
     const fieldTransformers = {
@@ -515,15 +490,43 @@ export default function CreatePrograms() {
           // Include any other fields that might be needed for goals
         }));
       },
-      prerequisites: (detail) =>
-        detail.prerequisites?.map((item) => ({
-          ...item,
-          field_options: item?.field_options
-            ?.filter(
-              (option) => typeof option === "string" && option.trim() !== ""
-            )
-            .map((option) => ({ title: option })),
-        })),
+      prerequisites: (detail) => {
+        if (!detail.prerequisites || !Array.isArray(detail.prerequisites)) {
+          return [];
+        }
+
+        return detail.prerequisites.map((item) => {
+          // Strictly check field_options and ensure it's properly formatted
+          let options = [];
+
+          // If field_options exists and is an array
+          if (item.field_options && Array.isArray(item.field_options)) {
+            // Convert each option to {title: value} format if needed
+            options = item.field_options.map((option) => {
+              // If already an object with title property, use it
+              if (
+                typeof option === "object" &&
+                option !== null &&
+                "title" in option
+              ) {
+                return option;
+              }
+              // Otherwise convert string to {title: string}
+              return { title: String(option || "") };
+            });
+          }
+
+          // Always ensure at least one option exists
+          if (options.length === 0) {
+            options = [{ title: "" }];
+          }
+
+          return {
+            ...item,
+            field_options: options,
+          };
+        });
+      },
       recurring_dates: (detail) => {
         return detail.recurring_programs_details?.map((detail) => ({
           ...detail,
@@ -579,7 +582,14 @@ export default function CreatePrograms() {
         setValue(fieldName, value);
       }
     });
-  }, [currentProgramDetail, params.id, setValue, getValues]); // Only run when currentProgramDetail or params.id changes
+  }, [
+    currentProgramDetail,
+    params.id,
+    setValue,
+    getValues,
+    isDetailFetching,
+    isFetching,
+  ]); // Only run when currentProgramDetail or params.id changes
 
   useEffect(() => {
     // If any completion state (success or error) is true, show the backdrop
@@ -735,7 +745,7 @@ export default function CreatePrograms() {
             }
           }
           // Handle special cases for files and dates
-          else if (key === "sponsor_logos" && data[key]?.[0] instanceof File) {
+          else if ((key === "sponsor_logos" || key === "program_image") && data[key]?.[0] instanceof File) {
             bodyFormData.append(key, data[key][0]);
           } else if (["start_date", "end_date"].includes(key)) {
             bodyFormData.append(key, new Date(data[key]).toISOString());
@@ -785,6 +795,13 @@ export default function CreatePrograms() {
   useEffect(() => {
     scrollToTop();
   }, [currentStep]);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function that runs when component unmounts
+      reset(); // Reset the entire form when navigating away
+    };
+  }, [reset]);
 
   const location = useLocation(); // Get query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -915,7 +932,8 @@ export default function CreatePrograms() {
                   <ProgramSteps
                     setViewDetailsInfo={setViewDetailsInfo}
                     handleProgramCheck={handleProgramCheck}
-                    // stepData={stepData}
+                    currentProgramDetail={currentProgramDetail}
+                    isDetailFetching={isDetailFetching}
                     stepFields={updatedFields}
                     certificate={certificate}
                     setViewDetails={setViewDetails}
@@ -949,13 +967,16 @@ export default function CreatePrograms() {
                     // && currentProgramDetail?.status === "draft"
                     <MuiButton
                       sx={{
-                        background: light,
+                        background: "#4d84dc85",
                         color: main,
                         border: "none",
+                        "&:hover": {
+                          color: "#fff"
+                        }
                       }}
                       onClick={onDraftSubmit}
                     >
-                      {"Draft"}
+                      {"Save"}
                     </MuiButton>
                   )}
                   <MuiButton type="submit" autoFocus={false}>
