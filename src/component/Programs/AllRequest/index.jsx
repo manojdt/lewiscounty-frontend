@@ -569,7 +569,7 @@ export default function AllRequest() {
             }
           });
         }
-        if (cancelPopup.page === "member_join_request") {
+        if (cancelPopup.page === "member_join_request" || cancelPopup.page === RequestStatus.menteesJoinRequest.key) {
           if(cancelPopup.type==="review"){
             dispatch(
               reviewMemberRequest({
@@ -732,6 +732,7 @@ export default function AllRequest() {
       };
       dispatch(updateGoalRequest(payload));
     }
+  
 
     if (categoryPopup.page === "member_join_request") {
       const categoryId = [];
@@ -741,6 +742,17 @@ export default function AllRequest() {
       const payload = {
         member_id: seletedItem.id,
         categories_id: selectedCategory,
+      };
+      dispatch(updateMemberRequest(payload));
+    }
+    if (categoryPopup.page === "mentees_joining_request") {
+      const categoryId = [];
+      data.selectedItem.forEach((selected) =>
+        categoryId.push(selected.categories_id)
+      );
+      const payload = {
+        member_id: seletedItem.id,
+        categories_id: [selectedCategory],
       };
       dispatch(updateMemberRequest(payload));
     }
@@ -2375,6 +2387,12 @@ export default function AllRequest() {
           // actionFilter = memberJoinRequestTab;
           activeTabName = "mentor";
           break;
+
+        case RequestStatus.menteesJoinRequest.key:
+          tableDetails = { column: memberMentorRequestColumns, data: [] };
+          // actionFilter = memberJoinRequestTab;
+          activeTabName = "mentee";
+          break;
         case RequestStatus.goalRequest.key:
           tableDetails = { column: goalColumns, data: [] };
           // actionFilter = goalsRequestTab;
@@ -2562,7 +2580,7 @@ export default function AllRequest() {
       });
     }
 
-    if (selectedRequestedtype === "member_join_request") {
+    if (["member_join_request",RequestStatus.menteesJoinRequest.key].includes(selectedRequestedtype)) {
       setActiveTableDetails({
         column:
           actionTab === "mentor"
@@ -2677,7 +2695,7 @@ export default function AllRequest() {
       if (selectedRequestedtype === "learning_access_requests") {
         getLearningAccessApi();
       }
-      if (selectedRequestedtype === "member_join_request") {
+      if (selectedRequestedtype === "member_join_request" || selectedRequestedtype===RequestStatus.menteesJoinRequest.key) {
         getMembersRequestApi();
       }
 
