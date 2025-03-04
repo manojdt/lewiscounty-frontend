@@ -2247,13 +2247,13 @@ export default function AllRequest() {
 
   let payload  ={
     ...(filterStatus !== "all" && { status: filterStatus }),
-    user: actionTab === "program_new" ? "mentor" : actionTab,
+    user:  ["program_new","program_join"].includes(actionTab)? "mentor" : actionTab,
     page: paginationModel?.page + 1,
     limit: paginationModel?.pageSize,
     ...(filter.search !== "" && { search: filter.search }),
     ...(filter.filter_by !== "" ? { filter_by: filter.filter_by } : {}),
   }
-    if (role === "admin" && selectedTab === "mentees") {
+    if (role === "admin" && selectedRequestedtype==='mentees_joining_request') {
     payload = {
         ...payload,
         user: "mentee",
