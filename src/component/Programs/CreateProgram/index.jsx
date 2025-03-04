@@ -179,15 +179,15 @@ export default function CreatePrograms() {
     validateProgramName(data)
       .unwrap()
       .then((res) => {
-        // if (res?.meta?.requestStatus === "fulfilled") {
-        if (res?.is_available) {
-          setTabActionInfo({
-            ...tabActionInfo,
-            error: true,
-            message: res?.message,
-          });
+        if (res?.meta?.requestStatus === "fulfilled") {
+          if (res?.is_available) {
+            setTabActionInfo({
+              ...tabActionInfo,
+              error: true,
+              message: res?.message,
+            });
+          }
         }
-        // }
       });
   };
 
@@ -204,7 +204,7 @@ export default function CreatePrograms() {
   const handleNextStep = async (data) => {
     // Get the current step's allowed fields
     let currentStepField = ProgramFields[currentStep - 1];
-
+  
     // Get allowed field names for current step
     const allowedFields = ProgramInformationFields.map((field) => field.name);
     // Filter the incoming data to only include allowed fields
@@ -214,7 +214,7 @@ export default function CreatePrograms() {
         obj[key] = data[key];
         return obj;
       }, {});
-
+  
     // Filter stepData to remove fields from current step
     const filteredStepData = Object.keys(data)
       .filter((key) => !allowedFields.includes(key))
@@ -222,14 +222,14 @@ export default function CreatePrograms() {
         obj[key] = data[key];
         return obj;
       }, {});
-
+  
     // Combine filtered previous step data with current step data
     let fieldData = {
       ...filteredStepData,
       ...currentStepData,
       location: data.location ? data.location : null,
     };
-
+  
     // Remove specific fields based on is_sponsored condition
     if (fieldData.is_sponsored === true) {
       delete fieldData.enrollment_fees;
@@ -248,196 +248,193 @@ export default function CreatePrograms() {
     // setStepData(fieldData);
     const totalSteps = ProgramTabs.length;
     if (!params?.id) {
-      dispatch(getProgramNameValidate(data?.program_name)).then((res) => {
+      // Validate program name before proceeding with form submission
+      try {
+        const res = await validateProgramName(data).unwrap();
+        console.log("res", res);
+        
+        // Check if the program name is available
         if (res?.meta?.requestStatus === "fulfilled") {
-          if (!res?.payload?.is_available) {
-            //   {
-            //   setCurrentStep((prevStep) => {
-            //     const nextStep = prevStep + 1;
-            //     setTabActionInfo({
-            //       ...tabActionInfo,
-            //       activeTab: ProgramTabs[nextStep - 1]?.key || "",
-            //     });
-            //     return nextStep;
-            //   });
-            // } else
+          if (res?.is_available) {
+            // If program name is not available (is_available is true), show error and don't proceed
             setTabActionInfo({
               ...tabActionInfo,
               error: true,
-              message: "Program name already exists",
+              message: res?.message,
             });
-          }
+            // Exit the function early without proceeding to formData logic
+            return;
+          } 
         }
-      });
+        // If we get here, either res.is_available is false or we didn't get a fulfilled status
+        // In either case, proceed with form submission
+        await processFormData(fieldData, formValues);
+      } catch (error) {
+        console.error("Error validating program name:", error);
+        setTabActionInfo({
+          ...tabActionInfo,
+          error: true,
+          message: "Error validating program name",
+        });
+      }
     } else {
-      // if (currentStep >= totalSteps) {
-      const answeredSteps = Object.keys(stepWiseData).length;
-      // if (
-      //   (answeredSteps === currentStep - 1 &&
-      //     !stepWiseData.hasOwnProperty(currentStep)) ||
-      //   answeredSteps === totalSteps
-      // ) {
-      let bodyFormData = new FormData();
-
-      const jsonFields = [
-        "prerequisites",
-        "certifications",
-        "goals",
-        "recurring_dates",
-        "mentor_id",
-        "assign_mentees",
-      ];
-
-      jsonFields.forEach((field) => {
-        if (jsonFields.includes(field) && Array.isArray(formValues[field])) {
-          // Specific handling for mentor_id and assign_mentees
-          if (field === "mentor_id" || field === "assign_mentees") {
-            const ids = formValues[field]
-              .map((item) => item.id)
-              .filter((id) => id); // Extract ids
-            if (ids.length > 0) {
-              if (field === "mentor_id") {
-                bodyFormData.append(field, JSON.stringify(ids?.[0]));
-              } else {
-                bodyFormData.append(field, JSON.stringify(ids));
-              }
-            }
-          }
-          // Handle goals
-          else if (field === "goals") {
-            const goalEntries = formValues[field].map((goal) => {
-              return {
-                ...goal,
-                mentor_id: goal?.mentor_id
-                  ? goal?.mentor_id?.map((mentor) =>
-                      mentor?.hasOwnProperty("mentor_id")
-                        ? mentor?.mentor_id
-                        : mentor?.id
-                    )?.[0]
-                  : [],
-              };
-            });
-            if (goalEntries.length > 0) {
-              bodyFormData.append(field, JSON.stringify(goalEntries));
-            }
-          }
-          // Handle prerequisites
-          else if (field === "prerequisites") {
-            const updatePrerequisites = fieldData[field].map((item) => {
-              // Create a base object with required fields
-              const baseItem = {
-                ...item,
-                field_options: item?.field_options
-                  ?.filter(
-                    (option) =>
-                      typeof option.title === "string" &&
-                      option.title.trim() !== ""
-                  )
-                  .map((option) => option.title),
-              };
-
-              return baseItem;
-            });
-
-            bodyFormData.append(field, JSON.stringify(updatePrerequisites));
-          } else if (field === "recurring_dates") {
-            const updateRecurringProgram = formValues[field].map((item) => {
-              // Create a base object with required fields
-              const baseItem = {
-                start_date: item?.start_date,
-                end_date: item?.end_date,
-                reminder_type: item?.reminder_type,
-                ...(item?.day_numbers && {
-                  day_numbers: item.day_numbers?.join(","),
-                }),
-                ...(item?.byday && { byday: item.byday?.join(",") }),
-              };
-
-              return baseItem;
-            });
-            bodyFormData.append(field, JSON.stringify(updateRecurringProgram));
-          }
-          // Handle other json fields normally
-          else {
-            // Check if the array contains valid objects with values
-            const isValidArray = formValues[field].some((item) => {
-              if (Array.isArray(item)) {
-                return item.length > 0; // Ensure item is not an empty array
-              }
-              return Object.values(item).some(
-                (value) => value !== "" && value !== null && value !== undefined
-              );
-            });
-
-            // If the array contains valid objects, stringify and append to FormData
-            if (isValidArray) {
-              bodyFormData.append(field, JSON.stringify(formValues[field]));
+      // For existing programs (with ID), skip validation and proceed directly
+      await processFormData(fieldData, formValues);
+    }
+  };
+  
+  // Helper function to process and submit form data
+  const processFormData = async (fieldData, formValues) => {
+    let bodyFormData = new FormData();
+  
+    const jsonFields = [
+      "prerequisites",
+      "certifications",
+      "goals",
+      "recurring_dates",
+      "mentor_id",
+      "assign_mentees",
+    ];
+  
+    jsonFields.forEach((field) => {
+      if (jsonFields.includes(field) && Array.isArray(formValues[field])) {
+        // Specific handling for mentor_id and assign_mentees
+        if (field === "mentor_id" || field === "assign_mentees") {
+          const ids = formValues[field]
+            .map((item) => item.id)
+            .filter((id) => id); // Extract ids
+          if (ids.length > 0) {
+            if (field === "mentor_id") {
+              bodyFormData.append(field, JSON.stringify(ids?.[0]));
+            } else {
+              bodyFormData.append(field, JSON.stringify(ids));
             }
           }
         }
-      });
-      // Remove fields based on is_sponsored before creating FormData
-      if (fieldData.is_sponsored === true) {
-        delete fieldData.enrollment_fees;
-      }
-      if (fieldData.is_sponsored === false) {
-        delete fieldData.sponsor_logos;
-      }
-      for (let key in fieldData) {
-        if (key === "sponsor_logos") {
-          if (fieldData[key]?.[0] instanceof File) {
-            bodyFormData.append(key, fieldData[key][0]);
-          } else if (key === "day_numbers" || key === "byday") {
-            bodyFormData.append(key, fieldData[key]?.join(","));
-          } else {
-            bodyFormData.append(key, fieldData[key]);
+        // Handle goals
+        else if (field === "goals") {
+          const goalEntries = formValues[field].map((goal) => {
+            return {
+              ...goal,
+              mentor_id: goal?.mentor_id
+                ? goal?.mentor_id?.map((mentor) =>
+                    mentor?.hasOwnProperty("mentor_id")
+                      ? mentor?.mentor_id
+                      : mentor?.id
+                  )?.[0]
+                : [],
+            };
+          });
+          if (goalEntries.length > 0) {
+            bodyFormData.append(field, JSON.stringify(goalEntries));
           }
-        } else if (["start_date", "end_date"].includes(key)) {
-          bodyFormData.append(key, new Date(fieldData[key]).toISOString());
-        } else if (!jsonFields.includes(key)) {
+        }
+        // Handle prerequisites
+        else if (field === "prerequisites") {
+          const updatePrerequisites = fieldData[field].map((item) => {
+            // Create a base object with required fields
+            const baseItem = {
+              ...item,
+              field_options: item?.field_options
+                ?.filter(
+                  (option) =>
+                    typeof option.title === "string" &&
+                    option.title.trim() !== ""
+                )
+                .map((option) => option.title),
+            };
+  
+            return baseItem;
+          });
+  
+          bodyFormData.append(field, JSON.stringify(updatePrerequisites));
+        } else if (field === "recurring_dates") {
+          const updateRecurringProgram = formValues[field].map((item) => {
+            // Create a base object with required fields
+            const baseItem = {
+              start_date: item?.start_date,
+              end_date: item?.end_date,
+              reminder_type: item?.reminder_type,
+              ...(item?.day_numbers && {
+                day_numbers: item.day_numbers?.join(","),
+              }),
+              ...(item?.byday && { byday: item.byday?.join(",") }),
+            };
+  
+            return baseItem;
+          });
+          bodyFormData.append(field, JSON.stringify(updateRecurringProgram));
+        }
+        // Handle other json fields normally
+        else {
+          // Check if the array contains valid objects with values
+          const isValidArray = formValues[field].some((item) => {
+            if (Array.isArray(item)) {
+              return item.length > 0; // Ensure item is not an empty array
+            }
+            return Object.values(item).some(
+              (value) => value !== "" && value !== null && value !== undefined
+            );
+          });
+  
+          // If the array contains valid objects, stringify and append to FormData
+          if (isValidArray) {
+            bodyFormData.append(field, JSON.stringify(formValues[field]));
+          }
+        }
+      }
+    });
+    
+    // Remove fields based on is_sponsored before creating FormData
+    if (fieldData.is_sponsored === true) {
+      delete fieldData.enrollment_fees;
+    }
+    if (fieldData.is_sponsored === false) {
+      delete fieldData.sponsor_logos;
+    }
+    
+    for (let key in fieldData) {
+      if (key === "sponsor_logos") {
+        if (fieldData[key]?.[0] instanceof File) {
+          bodyFormData.append(key, fieldData[key][0]);
+        } else if (key === "day_numbers" || key === "byday") {
+          bodyFormData.append(key, fieldData[key]?.join(","));
+        } else {
           bodyFormData.append(key, fieldData[key]);
         }
+      } else if (["start_date", "end_date"].includes(key)) {
+        bodyFormData.append(key, new Date(fieldData[key]).toISOString());
+      } else if (!jsonFields.includes(key)) {
+        bodyFormData.append(key, fieldData[key]);
       }
-      bodyFormData.append("program_admin", userInfo.data?.user_id);
-
-      if (typeof fieldData?.sponsor_logos === "string" && isReopen) {
-        bodyFormData.delete("sponsor_logos");
+    }
+    
+    bodyFormData.append("program_admin", userInfo.data?.user_id);
+  
+    if (typeof fieldData?.sponsor_logos === "string" && isReopen) {
+      bodyFormData.delete("sponsor_logos");
+    }
+    
+    if (params?.id && !isReopen) {
+      if (fieldData?.status === "draft") {
+        bodyFormData.append("status", "create");
       }
-      if (params?.id && !isReopen) {
-        if (fieldData?.status === "draft") {
-          bodyFormData.append("status", "create");
-        }
-        bodyFormData.append("program_id", params?.id);
-        // for (let [key, value] of bodyFormData.entries()) {
-        //   console.log(`formData: ${key}: ${value}`);
-        // }
-        await updateProgram({
-          program_id: params?.id,
-          bodyFormData,
-        });
-      } else {
-        // for (let [key, value] of bodyFormData.entries()) {
-        //   console.log(`formData: ${key}: ${value}`);
-        // }
-        if (isReopen) {
-          bodyFormData.append("reopen_program_id", params?.id);
-        }
-        await createProgram(bodyFormData);
-      }
-      // } else {
-      //   setTabActionInfo({ ...tabActionInfo, error: true, message: "" });
+      bodyFormData.append("program_id", params?.id);
+      // for (let [key, value] of bodyFormData.entries()) {
+      //   console.log(`formData: ${key}: ${value}`);
       // }
-      // } else {
-      //   setCurrentStep((prevStep) => {
-      //     const nextStep = prevStep < totalSteps ? prevStep + 1 : totalSteps;
-      //     setTabActionInfo({
-      //       ...tabActionInfo,
-      //       activeTab: ProgramTabs[nextStep - 1]?.key || "",
-      //     });
-      //     // scrollToTop();
-      //     return nextStep;
-      //   });
+      await updateProgram({
+        program_id: params?.id,
+        bodyFormData,
+      });
+    } else {
+      // for (let [key, value] of bodyFormData.entries()) {
+      //   console.log(`formData: ${key}: ${value}`);
       // }
+      if (isReopen) {
+        bodyFormData.append("reopen_program_id", params?.id);
+      }
+      await createProgram(bodyFormData);
     }
   };
 
@@ -962,7 +959,7 @@ export default function CreatePrograms() {
                     </MuiButton>
                   )}
                   <MuiButton type="submit" autoFocus={false}>
-                    {params?.id ? "Update" : "Create"}
+                    {params?.id ? "Submit" : "Create"}
                   </MuiButton>
                 </div>
               </form>
