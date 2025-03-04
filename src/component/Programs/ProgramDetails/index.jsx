@@ -2232,7 +2232,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 Edit
                               </MenuItem>
                             )} */}
-                          {!("admin_assign_program" in programdetails) &&
+                          {/* {!("admin_assign_program" in programdetails) &&
                             (programdetails.status === "cancelled" ||
                               programdetails.status ===
                                 "new_program_request_rejected" ||
@@ -2254,7 +2254,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                                 />
                                 Re-Open
                               </MenuItem>
-                            )}
+                            )} */}
                           {/* {role === "mentor" &&
                             programdetails.participated_mentees_count === 0 &&
                             programdetails?.created_by ===
