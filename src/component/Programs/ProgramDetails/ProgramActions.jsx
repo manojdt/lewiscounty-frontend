@@ -732,14 +732,14 @@ const ProgramActions = ({
 const programAccept = false
   // Render common status buttons
   const renderCommonStatus = () => {
-    if (programAccept && ["mentor", "mentee"].includes(role)) {
-      return(
-        <Button btnName="Accept Program"
-        btnCls="w-[200px]"
-        onClick={() => handleOpenAcceptProgram()}
-      />
-      )
-    }
+    // if (programAccept && ["mentor", "mentee"].includes(role)) {
+    //   return(
+    //     <Button btnName="Accept Program"
+    //     btnCls="w-[200px]"
+    //     onClick={() => handleOpenAcceptProgram()}
+    //   />
+    //   )
+    // }
     if (
       ((programdetails.status === programActionStatus.yettostart &&
         !requestId &&
