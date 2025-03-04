@@ -45,6 +45,34 @@ export const Mentor = () => {
   const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
   const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
   // const [topPrograms, setTopPrograms] = useState([]);
+
+
+  useEffect(() => {
+    const fetchAndUpdateTokens = async () => {
+      try {
+        // Initial API call to get the user profile
+        const res = await dispatch(getUserProfile()).unwrap(); // Use .unwrap() for cleaner promise handling
+
+        if (res?.approve_status === "accept") {
+          const updateToken = await api.post("generate_new_token", {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if (updateToken.status === 200) {
+            localStorage.setItem("access_token", updateToken.data.access);
+            localStorage.setItem("refresh_token", updateToken.data.refresh);
+            navigate("/dashboard?type=yettojoin");
+          }
+        }
+      } catch (error) {
+        console.error("Error during profile or token update:", error);
+      }
+    };
+
+    fetchAndUpdateTokens();
+  }, []); 
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
     dispatch(chartProgramList(res));
@@ -139,6 +167,15 @@ export const Mentor = () => {
     //   }
     // })
   }, []);
+  const getTopMentors = async () => {
+    const topMentor = await api.get("rating/top_mentor");
+    if (topMentor.status === 200 && topMentor.data?.results) {
+      setTopMentorList(topMentor.data.results);
+    }
+  };
+  React.useEffect(()=>{
+    getTopMentors();
+  },[])
   const handleViewChange = () => {
     setProgramView(programView === "grid" ? "list" : "grid");
   };
@@ -162,32 +199,7 @@ export const Mentor = () => {
       onClick={handleViewChange}
     />
     )
-  useEffect(() => {
-    const fetchAndUpdateTokens = async () => {
-      try {
-        // Initial API call to get the user profile
-        const res = await dispatch(getUserProfile()).unwrap(); // Use .unwrap() for cleaner promise handling
-
-        if (res?.approve_status === "accept") {
-          const updateToken = await api.post("generate_new_token", {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          if (updateToken.status === 200) {
-            localStorage.setItem("access_token", updateToken.data.access);
-            localStorage.setItem("refresh_token", updateToken.data.refresh);
-            navigate("/dashboard?type=yettojoin");
-          }
-        }
-      } catch (error) {
-        console.error("Error during profile or token update:", error);
-      }
-    };
-
-    fetchAndUpdateTokens();
-  }, [dispatch]); // Added dispatch to dependencies for better practice
+ // Added dispatch to dependencies for better practice
 
   useEffect(() => {
     if(searchParams.get("type")){
@@ -239,12 +251,7 @@ export const Mentor = () => {
       //   }
     }, []);
 
-  const getTopMentors = async () => {
-    const topMentor = await api.get("rating/top_mentor");
-    if (topMentor.status === 200 && topMentor.data?.results) {
-      setTopMentorList(topMentor.data.results);
-    }
-  };
+  
   return (
     <>
       <div className="dashboard-content px-8 mt-10">

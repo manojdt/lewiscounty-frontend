@@ -52,7 +52,7 @@ export default function ListCard({
             <>
               {menu.role !== user.admin && (
                 <div
-                  className="flex flex-col justify-between py-2 pr-4 rounded cursor-pointer menu-content"
+                  className="flex flex-col justify-between p-3 rounded cursor-pointer menu-content"
                   onClick={() => handleClickItem(menu)}
                   aria-current="page"
                 >
