@@ -1236,12 +1236,12 @@ export default function ProfileView() {
                   <div className="absolute top-28 left-20 transform translate-x-1/2">
                     <div
                       className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
-                        userDetails?.approve_status === "rejected"
+                        ["cancel", "rejected"].includes(userDetails?.approve_status)
                           ? "bg-red-100 text-red-500"
                           : "bg-green-100 text-green-600"
                       } px-3 py-1 rounded-full`}
                     >
-                      {userDetails?.approve_status === "rejected" ? (
+                      {["cancel", "rejected"].includes(userDetails?.approve_status) ? (
                         <CancelIconn className="w-4 h-4" />
                       ) : (
                         <VerifiedIcon className="w-4 h-4" />
@@ -1263,12 +1263,12 @@ export default function ProfileView() {
                   <div className="absolute bottom-5 left-52  transform -translate-x-1/2 px-5 py-1 rounded-full flex items-center gap-1">
                     <div
                       className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
-                        requestData?.status === "rejected"
+                        ["cancel", "rejected"].includes(userDetails?.approve_status)
                           ? "bg-red-100 text-red-500"
                           : "bg-green-100 text-green-600"
                       } px-3 py-1 rounded-full`}
                     >
-                      {requestData?.status === "rejected" ? (
+                      {["cancel", "rejected"].includes(userDetails?.approve_status) ? (
                         <CancelIconn className="w-4 h-4" />
                       ) : (
                         <VerifiedIcon className="w-4 h-4" />
