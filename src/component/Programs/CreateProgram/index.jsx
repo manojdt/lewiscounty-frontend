@@ -394,7 +394,6 @@ export default function CreatePrograms() {
     }
     
     for (let key in fieldData) {
-      debugger
       if (key === "sponsor_logos" || key === "program_image") {
         if (fieldData[key]?.[0] instanceof File) {
           bodyFormData.append(key, fieldData[key][0]);
