@@ -157,14 +157,14 @@ export default function ProfileView() {
     : "Mentee";
   const breadcrumbsType = searchParams.get("breadcrumbsType") || "";
   const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
-    const contentRef = useRef(null);
-    const [showAll, setShowAll] = useState(false);
+  const contentRef = useRef(null);
+  const [showAll, setShowAll] = useState(false);
   const { requestData } = useSelector((state) => state.userList);
   const {
     register: registerDeactivate,
     handleSubmit: handleSubmitDeactivate,
     formState: { errors: errorsDeactivate },
-    reset: resetDeactivate
+    reset: resetDeactivate,
   } = useForm();
   const {
     register,
@@ -714,7 +714,7 @@ export default function ProfileView() {
       case requestPageBreadcrumbs.menteesProfileCounts:
         setBreadcrumbsArray(menteesProfile);
         break;
-        case requestPageBreadcrumbs.dashboardRecentMembers:
+      case requestPageBreadcrumbs.dashboardRecentMembers:
         setBreadcrumbsArray(dashboard_recent_members);
         break;
       case "discussion":
@@ -1221,12 +1221,68 @@ export default function ProfileView() {
                   border: "none",
                 }}
               >
-                <img
-                  src={userDetails?.profile_image || ProfileImageIcon}
-                  style={{ borderRadius: "50%", height: "143px" }}
-                  alt="ProfileImageIcon"
-                />
+                <div className="relative">
+                  <img
+                    src={userDetails?.profile_image || ProfileImageIcon}
+                    style={{ borderRadius: "50%", height: "143px" }}
+                    alt="ProfileImageIcon"
+                  />
+                </div>
               </label>
+              {role === "admin" &&
+                from !== "program_join" &&
+                !member_state &&
+                !["new", "pending"].includes(userDetails?.approve_status) && (
+                  <div className="absolute top-28 left-20 transform translate-x-1/2">
+                    <div
+                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
+                        userDetails?.approve_status === "rejected"
+                          ? "bg-red-100 text-red-500"
+                          : "bg-green-100 text-green-600"
+                      } px-3 py-1 rounded-full`}
+                    >
+                      {userDetails?.approve_status === "rejected" ? (
+                        <CancelIconn className="w-4 h-4" />
+                      ) : (
+                        <VerifiedIcon className="w-4 h-4" />
+                      )}
+                      <span>
+                        {approvalLabel === "Active" ||
+                        userDetails?.approve_status === "approved"
+                          ? "Approved"
+                          : approvalLabel === "Deactive" ||
+                            userDetails?.approve_status === "rejected"
+                          ? "Rejected"
+                          : approvalLabel}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              {from === "program_join" &&
+                !["new", "pending"].includes(requestData?.status) && (
+                  <div className="absolute bottom-5 left-52  transform -translate-x-1/2 px-5 py-1 rounded-full flex items-center gap-1">
+                    <div
+                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
+                        requestData?.status === "rejected"
+                          ? "bg-red-100 text-red-500"
+                          : "bg-green-100 text-green-600"
+                      } px-3 py-1 rounded-full`}
+                    >
+                      {requestData?.status === "rejected" ? (
+                        <CancelIconn className="w-4 h-4" />
+                      ) : (
+                        <VerifiedIcon className="w-4 h-4" />
+                      )}
+                      <span>
+                        {requestData?.status === "approved"
+                          ? "Approved"
+                          : requestData?.status === "rejected"
+                          ? "Rejected"
+                          : reqStatus[requestData?.status]}
+                      </span>
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
           <div className="flex gap-5 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row">
@@ -1566,93 +1622,113 @@ export default function ProfileView() {
               </>
             )} */}
 
-{role !== "admin" && (
-  <>
-    {(state?.data?.status === "new" || requestData?.status === "new") &&
-      ["new", "pending"].includes(requestData?.status) && (
-        <>
-          <div className="flex gap-4 pt-10">
-            <button
-              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
-              onClick={() => handleMemberCancelRequest()}
-            >
-              <CancelIconn /> Reject
-            </button>
-            <button
-              className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
-              onClick={() => handleMemberAcceptRequest()}
-            >
-              <VerifiedIcon /> Approve
-            </button>
-          </div>
-        </>
-      )}
+            {role !== "admin" && (
+              <>
+                {(state?.data?.status === "new" ||
+                  requestData?.status === "new") &&
+                  ["new", "pending"].includes(requestData?.status) && (
+                    <>
+                      <div className="flex gap-4 pt-10">
+                        <button
+                          className="py-3 px-16 text-white text-[14px] flex items-center"
+                          style={{
+                            border: "1px solid #E0382D",
+                            borderRadius: "5px",
+                            color: "#E0382D",
+                          }}
+                          onClick={() => handleOpenAdminApprove("rejected")}
+                        >
+                          Reject
+                        </button>
+                        <button
+                          className="py-3 px-16 text-white text-[14px] flex items-center"
+                          style={{
+                            background: "#16B681",
+                            borderRadius: "5px",
+                          }}
+                          onClick={() => handleOpenAdminApprove("approved")}
+                        >
+                          Approve
+                        </button>
+                      </div>
+                    </>
+                  )}
 
-    {(state?.data?.status === "approved" ||
-      state?.data?.status === "rejected" ||
-      requestData?.status === "approved" ||
-      requestData?.status === "rejected") && (
-      <div className="py-9">
-        <div
-          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
-            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
-          }`}
-        >
-          {requestData?.status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
-          <p>
-            {requestData?.status === "approved"
-              ? "Approved"
-              : requestData?.status === "rejected"
-              ? "Rejected"
-              : reqStatus[state?.data?.status]}
-          </p>
-        </div>
-      </div>
-    )}
+                {/* join req->view mentee profile */}
+                {/* {(state?.data?.status === "approved" ||
+                  state?.data?.status === "rejected" ||
+                  requestData?.status === "approved" ||
+                  requestData?.status === "rejected") && (
+                  <div className="py-9">
+                    <div
+                      className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+                        requestData?.status === "rejected"
+                          ? "text-red-500"
+                          : "text-[#16B681]"
+                      }`}
+                    >
+                      {requestData?.status === "rejected" ? (
+                        <CancelIconn />
+                      ) : (
+                        <VerifiedIcon />
+                      )}
+                      <p>
+                        {requestData?.status === "approved"
+                          ? "Approved"
+                          : requestData?.status === "rejected"
+                          ? "Rejected"
+                          : reqStatus[state?.data?.status]}
+                      </p>
+                    </div>
+                  </div>
+                )} */}
 
-    {role === "mentor" &&
-      searchParams.has("type") &&
-      searchParams.get("type") === "mentee_request" &&
-      searchParams.has("request_id") &&
-      searchParams.get("request_id") !== "" &&
-      ["new", "pending"].includes(userDetails?.approve_status) && (
-        <div className="flex gap-4 pt-10">
-          <button
-            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
-            onClick={() => handleMemberCancelRequest()}
-          >
-            <CancelIconn /> Reject
-          </button>
-          <button
-            className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
-            onClick={() => handleMemberAcceptRequest()}
-          >
-            <VerifiedIcon /> Approve
-          </button>
-        </div>
-      )}
+                {role === "mentor" &&
+                  searchParams.has("type") &&
+                  searchParams.get("type") === "mentee_request" &&
+                  searchParams.has("request_id") &&
+                  searchParams.get("request_id") !== "" &&
+                  ["new", "pending"].includes(userDetails?.approve_status) && (
+                    <div className="flex gap-4 pt-10">
+                      <button
+                        className="flex flex-row gap-1 items-center text-[15px] font-semibold text-red-500"
+                        onClick={() => handleMemberCancelRequest()}
+                      >
+                        <CancelIconn /> Reject
+                      </button>
+                      <button
+                        className="flex flex-row gap-1 items-center text-[15px] font-semibold text-[#16B681]"
+                        onClick={() => handleMemberAcceptRequest()}
+                      >
+                        <VerifiedIcon /> Approve
+                      </button>
+                    </div>
+                  )}
 
-    {role !== "mentor" && (
-      <>
-        <Button
-          onClick={handleShowPopup}
-          btnType="button"
-          btnCategory="secondary"
-          disabled={followInfo.is_follow === "waiting"}
-          btnName={followBtnText[followInfo?.is_follow]}
-          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
-        />
-        <Button
-          btnType="button"
-          btnName="Chat"
-          btnCls={"flex flex-row gap-1 items-center text-[15px] font-semibold"}
-          onClick={() => navigate("/discussions")}
-        />
-      </>
-    )}
-  </>
-)
-}
+                {role !== "mentor" && (
+                  <>
+                    <Button
+                      onClick={handleShowPopup}
+                      btnType="button"
+                      btnCategory="secondary"
+                      disabled={followInfo.is_follow === "waiting"}
+                      btnName={followBtnText[followInfo?.is_follow]}
+                      btnCls={
+                        "flex flex-row gap-1 items-center text-[15px] font-semibold"
+                      }
+                    />
+                    <Button
+                      btnType="button"
+                      btnName="Chat"
+                      btnCls={
+                        "flex flex-row gap-1 items-center text-[15px] font-semibold"
+                      }
+                      onClick={() => navigate("/discussions")}
+                    />
+                  </>
+                )}
+              </>
+            )}
 
             {role === "admin" && (
               <div className="flex gap-4 items-center">
@@ -1660,38 +1736,28 @@ export default function ProfileView() {
                 {from !== "program_join" &&
                   !member_state &&
                   !["new", "pending"].includes(userDetails?.approve_status) && (
-                    // <div
-                    //   className="py-3 px-16 text-white text-[14px] flex justify-center items-center"
-                    //   style={{
-                    //     ...reqStatusColor[
-                    //       approvalLabel === "Active" ||
-                    //       userDetails?.approve_status === "approved"
-                    //         ? "approved"
-                    //         : approvalLabel === "Deactive" ||
-                    //           userDetails?.approve_status === "rejected"
-                    //         ? "rejected"
-                    //         : userDetails?.approve_status
-                    //     ],
-                    //   }}
-                    // >
-                    //   {approvalLabel}
-                    // </div>
                     <div
-                    className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
-                      userDetails?.approve_status === "rejected" ? "text-red-500" : "text-[#16B681]"
-                    }`}
-                  >
-                    {userDetails?.approve_status === "rejected" ? <CancelIconn /> : <VerifiedIcon />}
-                    <p>
-                      {approvalLabel === "Active" || userDetails?.approve_status === "approved"
-                        ? "Approved"
-                        : approvalLabel === "Deactive" || userDetails?.approve_status === "rejected"
-                        ? "Rejected"
-                        : approvalLabel}
-                    </p>
-                  </div>
-                  
-
+                      className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+                        userDetails?.approve_status === "rejected"
+                          ? "text-red-500"
+                          : "text-[#16B681]"
+                      }`}
+                    >
+                      {/* {userDetails?.approve_status === "rejected" ? (
+                        <CancelIconn />
+                      ) : (
+                        <VerifiedIcon />
+                      )}
+                      <p>
+                        {approvalLabel === "Active" ||
+                        userDetails?.approve_status === "approved"
+                          ? "Approved"
+                          : approvalLabel === "Deactive" ||
+                            userDetails?.approve_status === "rejected"
+                          ? "Rejected"
+                          : approvalLabel}
+                      </p> */}
+                    </div>
                   )}
 
                 {/* This is Approved and Rejected status shows when come from program Join */}
@@ -1716,28 +1782,30 @@ export default function ProfileView() {
                         : reqStatus[requestData?.status]}
                     </div>
                   )} */}
-                  
-                  {from === "program_join" &&
-      !["new", "pending"].includes(requestData?.status) && (
-        <div
-          className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
-            requestData?.status === "rejected" ? "text-red-500" : "text-[#16B681]"
-          }`}
-        >
-          {requestData?.status === "rejected" ? <CancelIcon /> : <VerifiedIcon />}
-          <p>
-            {requestData?.status === "approved"
-              ? "Approved"
-              : requestData?.status === "rejected"
-              ? "Rejected"
-              : reqStatus[requestData?.status]}
-          </p>
-        </div>
-      )}
 
-
-
-                  
+                {/* {from === "program_join" &&
+                  !["new", "pending"].includes(requestData?.status) && (
+                    <div
+                      className={`flex flex-row gap-1 items-center text-[15px] font-semibold ${
+                        requestData?.status === "rejected"
+                          ? "text-red-500"
+                          : "text-[#16B681]"
+                      }`}
+                    >
+                      {requestData?.status === "rejected" ? (
+                        <CancelIcon />
+                      ) : (
+                        <VerifiedIcon />
+                      )}
+                      <p>
+                        {requestData?.status === "approved"
+                          ? "Approved"
+                          : requestData?.status === "rejected"
+                          ? "Rejected"
+                          : reqStatus[requestData?.status]}
+                      </p>
+                    </div>
+                  )} */}
 
                 {from !== "program_join" && type !== "view" && (
                   <div
@@ -1788,22 +1856,23 @@ export default function ProfileView() {
                     </MenuItem>
                   )}
                   {/*Adding the same option as the user table chate active and deactive options */}
-                  {member_state&&
-                  <MenuItem
-                    className="!text-[12px]"
-                    onClick={() =>
-                      navigate(
-                        `/discussions?breadcrumbsType=${requestPageBreadcrumbs.adminMemberChat}`
-                      )
-                    }
-                  >
-                    {/* <img
+                  {member_state && (
+                    <MenuItem
+                      className="!text-[12px]"
+                      onClick={() =>
+                        navigate(
+                          `/discussions?breadcrumbsType=${requestPageBreadcrumbs.adminMemberChat}`
+                        )
+                      }
+                    >
+                      {/* <img
                       src={TickCircle}
                       alt="AcceptIcon"
                       className="pr-3 w-[27px]"
                     /> */}
-                    Chat
-                  </MenuItem>}
+                      Chat
+                    </MenuItem>
+                  )}
 
                   {member_state === "Deactive" && (
                     <MenuItem className="!text-[12px]" onClick={handleActivate}>
@@ -1886,37 +1955,37 @@ export default function ProfileView() {
             </div>
           ))}
         </div> */}
- <div
-            ref={contentRef}
-            style={{
-              maxHeight: showAll
-                ? `${contentRef.current.scrollHeight}px`
-                : "380px",
-              overflow: "hidden",
-              transition: "max-height 0.5s ease",
-            }}
-          >
-        <FormContextProvider initialValues={userInfoState}>
-          {profileSection.map((section, index) => (
-            <Accordian key={index} title={section.title} defaultValue={true}>
-              {section.component}
-            </Accordian>
-          ))}
-        </FormContextProvider>
-</div>
-<div
-              className="underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer"
-              onClick={() => setShowAll(!showAll)}
-            >
-              {showAll ? "View less" : "View more"}
-              <img
-                className={`mt-1 transition-all duration-300 ${
-                  showAll ? "rotate-180" : ""
-                }`}
-                src={ArrowDown}
-                alt=""
-              />
-            </div>
+        <div
+          ref={contentRef}
+          style={{
+            maxHeight: showAll
+              ? `${contentRef.current.scrollHeight}px`
+              : "380px",
+            overflow: "hidden",
+            transition: "max-height 0.5s ease",
+          }}
+        >
+          <FormContextProvider initialValues={userInfoState}>
+            {profileSection.map((section, index) => (
+              <Accordian key={index} title={section.title} defaultValue={true}>
+                {section.component}
+              </Accordian>
+            ))}
+          </FormContextProvider>
+        </div>
+        <div
+          className="underline mt-3 flex items-center gap-2 text-blue-500 font-semibold text-lg cursor-pointer"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "View less" : "View more"}
+          <img
+            className={`mt-1 transition-all duration-300 ${
+              showAll ? "rotate-180" : ""
+            }`}
+            src={ArrowDown}
+            alt=""
+          />
+        </div>
         <div className="col-span-2">
           {/* {userDetails?.documents?.length > 0 && (
             <Stack>
@@ -1960,7 +2029,10 @@ export default function ProfileView() {
                             alignItems={"center"}
                             justifyContent={"space-between"}
                           >
-                            <p className="text-[16px] overflow-hidden text-ellipsis flex-1 font-semibold" title={e?.notes}>
+                            <p
+                              className="text-[16px] overflow-hidden text-ellipsis flex-1 font-semibold"
+                              title={e?.notes}
+                            >
                               {e?.notes}
                             </p>
                             <p className="text-[14px] font-normal">
@@ -2060,7 +2132,7 @@ export default function ProfileView() {
                 />
               </div>
               <form
-               onSubmit={handleSubmitDeactivate(handleDeactivePopupSubmit)} 
+                onSubmit={handleSubmitDeactivate(handleDeactivePopupSubmit)}
                 className="p-4"
               >
                 <label className="block text-xs font-bold mb-2">Reason</label>
