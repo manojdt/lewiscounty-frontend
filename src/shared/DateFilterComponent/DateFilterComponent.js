@@ -3,7 +3,7 @@ import { FormControl, Select, MenuItem, Stack, Box } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const VIEW_OPTIONS = [
-  { value: "", label: "All" },
+  { value: "all", label: "All" },
   { value: "day", label: "Day" },
   { value: "month", label: "Month" },
   { value: "year", label: "Year" },
