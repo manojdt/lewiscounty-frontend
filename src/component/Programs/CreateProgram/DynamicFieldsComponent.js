@@ -157,21 +157,23 @@ const PrerequisiteOptions = ({ index, fieldType }) => {
                 sx={{ bgcolor: "transparent" }}
               />
             </div>
-            <CloseIcon
-              onClick={() => handleCloseOption(option)}
-              className="!text-font-error-main mt-4 cursor-pointer"
-            />
+            <div className="!bg-background-error-light p-1 rounded-full mt-4">
+              <CloseIcon
+                onClick={() => handleCloseOption(option)}
+                className="!text-font-error-main cursor-pointer"
+              />
+            </div>
           </div>
         ))}
       </div>
-      <div className="flex justify-end">
-      <MuiButton
-        variant="text"
-        onClick={() => handleAddOptions()}
-        className="py-2 px-4 bg-background-primary-main text-white rounded"
-      >
-        Add +
-      </MuiButton>
+      <div className="flex justify-start">
+        <MuiButton
+          variant="text"
+          onClick={() => handleAddOptions()}
+          className="py-2 px-4 bg-background-primary-main text-white rounded !mt-2"
+        >
+          Add +
+        </MuiButton>
       </div>
     </div>
   );
@@ -270,7 +272,14 @@ const DynamicFieldsComponent = ({
         className={nestedField.width || "w-full"}
       >
         <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-5">
-          {nestedField.label} {nestedField?.name === "mentor_id" ? <span className="!text-font-secondary-gray !text-[12px]">{"(Optional)"}</span> : ""}
+          {nestedField.label}{" "}
+          {nestedField?.name === "mentor_id" ? (
+            <span className="!text-font-secondary-gray !text-[12px]">
+              {"(Optional)"}
+            </span>
+          ) : (
+            ""
+          )}
           <span style={{ color: "red" }}>
             {nestedField?.inputRules?.required ? "*" : ""}
           </span>

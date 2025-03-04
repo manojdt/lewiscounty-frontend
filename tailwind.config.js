@@ -10,6 +10,10 @@ module.exports = {
             light: "#1D5BBF0D",
             dark: "#76818E"
           },
+          error: {
+            main: "#FF4B26",
+            light: "#ffe7e7"
+          },
         },
         font: {
           primary: {

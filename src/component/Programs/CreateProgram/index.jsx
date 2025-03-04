@@ -949,13 +949,16 @@ export default function CreatePrograms() {
                     // && currentProgramDetail?.status === "draft"
                     <MuiButton
                       sx={{
-                        background: light,
+                        background: "#4d84dc85",
                         color: main,
                         border: "none",
+                        "&:hover": {
+                          color: "#fff"
+                        }
                       }}
                       onClick={onDraftSubmit}
                     >
-                      {"Draft"}
+                      {"Save"}
                     </MuiButton>
                   )}
                   <MuiButton type="submit" autoFocus={false}>
