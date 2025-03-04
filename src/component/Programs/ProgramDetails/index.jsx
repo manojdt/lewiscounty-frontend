@@ -2442,7 +2442,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                             </MenuItem>
                           )
                         }
-                        {(role === "mentor" || role === "admin") && (
+                        {(role === "mentor" || role === "admin" || role === "mentee") && (
                           <>
                             <MenuItem
                               onClick={() => handleMenu("share")}
