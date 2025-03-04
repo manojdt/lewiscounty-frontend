@@ -702,7 +702,7 @@ const ProgramSteps = ({
                 </>
               ) : field.type === "popup-input" ? (
                 <Controller
-                  name={field.name}
+                  name={`${field.name}`}
                   control={control}
                   rules={field.inputRules}
                   render={({ field: { onChange }, fieldState: { error } }) => {

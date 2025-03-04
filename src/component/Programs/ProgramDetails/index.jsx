@@ -2559,7 +2559,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                         {/* {programdetails.venue} */}
                         {programdetails?.program_mode === "virtual_meeting"
                           ? "Online"
-                          : `${programdetails.location_details?.city}, ${programdetails.location_details?.state_name}`}
+                          : (programdetails.location_details && Object.keys(programdetails.location_details)?.length) ? `${programdetails.location_details?.city}, ${programdetails.location_details?.state_name}` : "No Location"}
                       </span>
                     </div>
 
