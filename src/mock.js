@@ -1971,13 +1971,13 @@ export const memberMenteeRequestColumns = [
     id: 1,
     for: ["admin", "mentor"],
   },
-  {
-    field: "dob",
-    headerName: "D.O.B",
-    flex: 1,
-    id: 2,
-    for: ["admin"],
-  },
+  // {
+  //   field: "dob",
+  //   headerName: "D.O.B",
+  //   flex: 1,
+  //   id: 2,
+  //   for: ["admin"],
+  // },
   {
     field: "phone_number",
     headerName: "Phone Number",

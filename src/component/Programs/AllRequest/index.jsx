@@ -2579,8 +2579,8 @@ export default function AllRequest() {
         rowCount: programTableInfo?.count,
       });
     }
-
-    if (["member_join_request",RequestStatus.menteesJoinRequest.key].includes(selectedRequestedtype)) {
+    
+    if (selectedRequestedtype==="member_join_request") {
       setActiveTableDetails({
         column:
           actionTab === "mentor"
@@ -2590,6 +2590,18 @@ export default function AllRequest() {
         rowCount: memberRequest?.count,
       });
     }
+    if(selectedRequestedtype===RequestStatus.menteesJoinRequest.key){
+
+      const columns =  actionTab === "mentor"
+      ? [...memberMentorRequestColumns, ...membersColumns]
+      : [...memberMenteeRequestColumns, ...membersColumns];
+      const filteredColumns =columns.filter((item)=>!['age','skills','major_field_of_study'].includes(item.field))
+      setActiveTableDetails({
+        column:filteredColumns,
+        data: memberRequest?.results,
+        rowCount: memberRequest?.count,
+    })
+  }
 
     if (selectedRequestedtype === "new_goals_request") {
       setActiveTableDetails({
