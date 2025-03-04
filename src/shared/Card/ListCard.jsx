@@ -14,7 +14,7 @@ export default function ListCard({
   };
   return (
     <div
-      className="h-[350px]"
+      className="h-[350px] w-full"
       // style={{
       //   boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)",
       //   borderRadius: "10px",
@@ -28,7 +28,7 @@ export default function ListCard({
               background: "linear-gradient(180deg, #00B1C0 0%, #005DC6 100%)",
             }}
           ></div>
-          <h4>{title}</h4>
+          <h4 className="text-sm max-lg:text-[12px]">{title}</h4>
         </div>
         {viewall && (
           <p
@@ -44,7 +44,7 @@ export default function ListCard({
           </p>
         )}
       </div>
-      <ul className="flex gap-1 p-4 md:p-0 mt-7 font-medium">
+      <ul className="flex justify-center gap-1 p-4 md:p-0 mt-7 font-medium">
       <li className="">{programCount}</li>
         {items.map((menu, index) => (
         
