@@ -2381,7 +2381,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                           "aria-labelledby": "basic-button",
                         }}
                       >
-                        {
+                        {/* {
                           (role === "mentor" || role === "mentee") && (
                             <MenuItem
                               onClick={() => {
@@ -2398,7 +2398,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                               <p>Reject</p>
                             </MenuItem>
                           )
-                        }
+                        } */}
                         {(role === "mentor" || role === "admin") && (
                           <>
                             <MenuItem
@@ -3263,7 +3263,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 programActionStatus={programActionStatus}
               />
 
-              <div className="flex gap-3 flex-col">
+              {/* <div className="flex gap-3 flex-col">
                 <p className="text-[14px] font-semibold text-font-secondary-black">User Status</p>
                 <DataTable
                   rows={[{ id: 1, full_name: "hhhhh" }]}
@@ -3272,7 +3272,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   hideCheckbox
                   height={450}
                 />
-              </div>
+              </div> */}
 
               {/* Notes Section */}
               {["inprogress"].includes(programdetails?.status) &&
@@ -3818,7 +3818,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
         </div>
       </Backdrop>
       
-      <SelectMentor />
+      {/* <SelectMentor /> */}
     </div>
   );
 }

@@ -729,7 +729,7 @@ const ProgramActions = ({
 
     return null;
   };
-const programAccept = true
+const programAccept = false
   // Render common status buttons
   const renderCommonStatus = () => {
     if (programAccept && ["mentor", "mentee"].includes(role)) {
