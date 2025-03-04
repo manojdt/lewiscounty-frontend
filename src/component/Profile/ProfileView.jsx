@@ -51,10 +51,16 @@ import {
 import MuiModal from "../../shared/Modal";
 import DataTable from "../../shared/DataGrid";
 import { categoryColumns } from "../../mock";
-import { followBtnText, pipeUrls, requestStatus } from "../../utils/constant";
+import {
+  activityStatusColor,
+  followBtnText,
+  pipeUrls,
+  requestStatus,
+} from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { CancelPopup } from "../Mentor/Task/cancelPopup";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 
 import { updateProfile } from "../../services/profile";
 import {
@@ -1235,14 +1241,22 @@ export default function ProfileView() {
                 !["new", "pending"].includes(userDetails?.approve_status) && (
                   <div className="absolute top-28 left-20 transform translate-x-1/2">
                     <div
-                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
-                        ["cancel", "rejected"].includes(userDetails?.approve_status)
+                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold w-max ${
+                        ["cancel", "rejected"].includes(
+                          userDetails?.approve_status
+                        )
                           ? "bg-red-100 text-red-500"
+                          : userDetails?.approve_status === "inreview"
+                          ? "bg-orange-100 text-orange-500"
                           : "bg-green-100 text-green-600"
                       } px-3 py-1 rounded-full`}
                     >
-                      {["cancel", "rejected"].includes(userDetails?.approve_status) ? (
+                      {["cancel", "rejected"].includes(
+                        userDetails?.approve_status
+                      ) ? (
                         <CancelIconn className="w-4 h-4" />
+                      ) : userDetails?.approve_status === "inreview" ? (
+                        <RateReviewIcon className="w-4 h-4" />
                       ) : (
                         <VerifiedIcon className="w-4 h-4" />
                       )}
@@ -1262,14 +1276,22 @@ export default function ProfileView() {
                 !["new", "pending"].includes(requestData?.status) && (
                   <div className="absolute bottom-5 left-52  transform -translate-x-1/2 px-5 py-1 rounded-full flex items-center gap-1">
                     <div
-                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold ${
-                        ["cancel", "rejected"].includes(userDetails?.approve_status)
+                      className={`flex flex-row gap-1 items-center text-[14px] font-semibold w-max ${
+                        ["cancel", "rejected"].includes(
+                          userDetails?.approve_status
+                        )
                           ? "bg-red-100 text-red-500"
+                          : userDetails?.approve_status === "inreview"
+                          ? "bg-orange-100 text-orange-500"
                           : "bg-green-100 text-green-600"
                       } px-3 py-1 rounded-full`}
                     >
-                      {["cancel", "rejected"].includes(userDetails?.approve_status) ? (
+                      {["cancel", "rejected"].includes(
+                        userDetails?.approve_status
+                      ) ? (
                         <CancelIconn className="w-4 h-4" />
+                      ) : userDetails?.approve_status === "inreview" ? (
+                        <RateReviewIcon className="w-4 h-4" />
                       ) : (
                         <VerifiedIcon className="w-4 h-4" />
                       )}
