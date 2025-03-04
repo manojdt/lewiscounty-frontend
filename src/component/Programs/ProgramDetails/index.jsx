@@ -16,6 +16,9 @@ import {
   Menu,
   MenuItem,
   Stack,
+  styled,
+  Tooltip,
+  tooltipClasses,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -127,7 +130,20 @@ import { postComment } from "../../../services/feeds";
 import CloseCircleIcon from "../../../assets/icons/closeCircle.svg"
 import FilterIcon from "../../../assets/icons/filterIcon.svg";
 import LanguageIcon from '@mui/icons-material/Language';
+import StatusIndicator from "../../../shared/StatusIndicator/StatusIndicator";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { SelectMentor } from "./selectMentor";
 
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "transparent",
+    maxWidth: 500,
+    border: "none",
+    borderRadius: "3px",
+  },
+}));
 
 export default function ProgramDetails({ setProgramDetailsId }) {
   const [showBackdrop, setShowBackdrop] = React.useState(false);
@@ -259,6 +275,15 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     activity: false,
     reject: false
   })
+
+  const [filterPopup, setFilterPopup] = useState({
+    show: false,
+    selectedItem: "", // Change from array to string
+    options: [
+      { id: "mentor", name: "Mentor" },
+      { id: "mentee", name: "Mentee" },
+    ],
+  });
 
   const handleOpenAcceptProgram = () => {
     setAcceptPopup({
@@ -1232,7 +1257,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             onClick={(e) => {
               e.stopPropagation();
               // Call your filter function here
-              // handleFilterIconClick(e);
+              handleFilterIconClick(e);
             }}
           />
         </div>
@@ -1260,7 +1285,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
     },
     {
       field: "role",
-      headerName: "Role",
+      headerName: "Status",
       flex: 1,
       id: 5,
       sortable: false, // Remove default sorting
@@ -1274,21 +1299,76 @@ export default function ProgramDetails({ setProgramDetailsId }) {
             onClick={(e) => {
               e.stopPropagation();
               // Call your filter function here
-              // handleFilterIconClick(e);
+              handleFilterIconClick(e);
             }}
           />
         </div>
       ),
       renderCell: (params) => {
         return (
-          <div className="flex gap-2 items-center">
-            {" "}
-            {capitalizeFirstLetter(params?.row?.role)}
-          </div>
+          <Stack direction={"row"} alignItems={"center"} spacing={2} mt={"12px"}>
+            <StatusIndicator status={"rejected"} />
+            <HtmlTooltip
+              title={
+                <React.Fragment>
+                  <div className="border border-[#E0382D] rounded-[5px] bg-[#FFE7E7]">
+                    <Typography
+                      className="text-[#E0382D] !text-[14px] border border-b-[#E0382D] !font-semibold"
+                      p={"12px 20px"}
+                    >
+                      Reviewed Reason
+                    </Typography>
+                    <Typography
+                      className="text-[#18283D] !text-[12px]"
+                      p={"12px 20px"}
+                    >
+                      {/* {reportDetails?.rejection_reason} */}
+                      sdflsdjfljsldfljsdl
+                    </Typography>
+                  </div>
+                </React.Fragment>
+              }
+            >
+              <InfoOutlinedIcon className="!text-[16px] !text-font-secondary-gray" />
+            </HtmlTooltip>
+          </Stack>
         );
       },
     },
   ]
+
+  const handleFilterIconClick = (e) => {
+    // e.stopPropagation();
+    setFilterPopup({
+      ...filterPopup,
+      show: true,
+      // selectedItem: filterInfo.role || "",
+    });
+  };
+
+  const handleRoleFilterSubmit = () => {
+    console.log("ab")
+    setFilterPopup({
+      ...filterPopup,
+      show: false
+    })
+  }
+
+  const handleSelectOption = (id) => {
+    // If same item is clicked again, deselect it
+    if (filterPopup.selectedItem === id) {
+      setFilterPopup({
+        ...filterPopup,
+        selectedItem: "",
+      });
+    } else {
+      // Otherwise, select the new item
+      setFilterPopup({
+        ...filterPopup,
+        selectedItem: id,
+      });
+    }
+  };
 
   return (
     <div className="px-4 sm:px-4 md:px-6 lg:px-9 xl:px-9 my-6 md:grid lg:grid xl:grid">
@@ -2674,9 +2754,9 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   <div className="flex flex-col gap-2 sm:gap-2 md:gap-6 lg:gap-6 xl:gap-6 py-6 sm:flex-col md:flex-row lg:flex-row xl:flex-row">
                     <div className="flex gap-2 items-center">
                       {
-                      programdetails?.program_mode === "virtual_meeting" ? 
-                      <LanguageIcon className="!text-font-primary-main" /> :
-                      <img src={ LocationIcon } alt="LocationIcon" />
+                        programdetails?.program_mode === "virtual_meeting" ?
+                          <LanguageIcon className="!text-font-primary-main" /> :
+                          <img src={LocationIcon} alt="LocationIcon" />
                       }
                       <span className="text-[12px]">
                         {/* {programdetails.venue} */}
@@ -3183,12 +3263,16 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                 programActionStatus={programActionStatus}
               />
 
-              <DataTable
-                rows={[]}
-                columns={userStatusColumns}
-                hideFooter
-                hideCheckbox
-              />
+              <div className="flex gap-3 flex-col">
+                <p className="text-[14px] font-semibold text-font-secondary-black">User Status</p>
+                <DataTable
+                  rows={[{ id: 1, full_name: "hhhhh" }]}
+                  columns={userStatusColumns}
+                  hideFooter
+                  hideCheckbox
+                  height={450}
+                />
+              </div>
 
               {/* Notes Section */}
               {["inprogress"].includes(programdetails?.status) &&
@@ -3664,6 +3748,77 @@ export default function ProgramDetails({ setProgramDetailsId }) {
       <CancelPopup header="Reject Program Reason" open={acceptPopup?.reject}
         handleSubmit={() => false} handleClosePopup={() => handleCloseAcceptProgram()} />
 
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={filterPopup.show}
+      >
+        <div className="py-3 px-4 bg-white" style={{ borderRadius: "3px" }}>
+          <div
+            style={{
+              border: "1px solid rgba(29, 91, 191, 1)",
+              borderRadius: "3px",
+            }}
+            className="py-5 px-5"
+          >
+            <div className="flex justify-between mb-4">
+              <h3 className="text-base text-black font-medium">
+                Role Name
+              </h3>
+              <img
+                className="cursor-pointer"
+                onClick={() => setFilterPopup({ ...filterPopup, show: false })}
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
+
+            <div className="text-black">
+              <ul
+                className="py-3 leading-10"
+                style={{
+                  margin: "10px 0px 20px 0",
+                }}
+              >
+                {filterPopup.options.map((option, index) => (
+                  <li key={index} className="flex gap-7">
+                    <input
+                      type="checkbox"
+                      className="w-[20px]"
+                      checked={filterPopup.selectedItem === option.id}
+                      onChange={() => handleSelectOption(option.id)}
+                      value={option.id}
+                    />
+                    <span className="text-[16px]">{option.name}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="Cancel"
+                  btnCategory="secondary"
+                  onClick={() =>
+                    setFilterPopup({
+                      ...filterPopup,
+                      show: false,
+                      // selectedItem: filterInfo.role || [],
+                    })
+                  }
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[100px]"
+                  btnStyle={{ background: "rgba(29, 91, 191, 1)" }}
+                  onClick={handleRoleFilterSubmit}
+                  btnName={"Ok"}
+                  btnCategory="primary"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+      
+      <SelectMentor />
     </div>
   );
 }
