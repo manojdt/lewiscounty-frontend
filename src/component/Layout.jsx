@@ -16,7 +16,7 @@ import { user } from "../utils/constant";
 import { docuSign } from "../services/activities";
 
 export default function Layout({ subheader }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const userInfo = useSelector((state) => state.userInfo);
@@ -29,7 +29,7 @@ export default function Layout({ subheader }) {
   //   if(!userInfo.data.is_registered) navigate('/questions')
   // }, [])
 
-  const menuRight = useRef(null);
+  const requestMenu = useRef(null);
   const moreMenu = useRef(null);
 
   const handleRedirectDocuSign = () => {
@@ -75,6 +75,26 @@ export default function Layout({ subheader }) {
     });
   }
 
+  let requestMoreItem = [
+    {
+      label: (
+        <div className="flex gap-4 items-center">
+          {/* <img className="p-2 h-8" src={DiscussionIcon} alt="DiscussionIcon" /> */}
+          <p>Onboarding</p>
+        </div>
+      ),
+      command: () => navigate("/admin-requests?request_type=onboarding"),
+    },
+    {
+      label: (
+        <div className="flex gap-4 items-center">
+          {/* <img className="p-2 h-8" src={FeedbackIcon} alt="FeedbackIcon" /> */}
+          <p>Discharge</p>
+        </div>
+      ),
+      command: () => navigate("/admin-requests?request_type=discharge"),
+    },
+  ];
   let moreitems = [
     // {
     //   label: (
@@ -97,7 +117,11 @@ export default function Layout({ subheader }) {
     {
       label: (
         <div className="flex gap-4 items-center">
-          <img className="p-2 h-8" src={CertificateIcon} alt="CertificateIcon" />
+          <img
+            className="p-2 h-8"
+            src={CertificateIcon}
+            alt="CertificateIcon"
+          />
           <p>Certificate</p>
         </div>
       ),
@@ -220,24 +244,26 @@ export default function Layout({ subheader }) {
     <div>
       <Navbar />
       {!subheader &&
-        userInfo?.data?.is_registered &&
-        (userInfo?.data?.userinfo?.approve_status === "accept" ||
-          role === "admin") &&
-        userInfo.data.role !== user.super_admin ? (
+      userInfo?.data?.is_registered &&
+      (userInfo?.data?.userinfo?.approve_status === "accept" ||
+        role === "admin") &&
+      userInfo.data.role !== user.super_admin ? (
         <div
           className="secondary-menu py-8 sm:py-2 md:py-4"
           style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
         >
           <ul
             // style={{ gap: "40px" }}
-            className={`flex ${!userInfo?.data?.is_registered ? "ml-[150px]" : "justify-center"
-              } items-center p-2 md:p-0 mt-4 border border-gray-100 
+            className={`flex ${
+              !userInfo?.data?.is_registered ? "ml-[150px]" : "justify-center"
+            } items-center p-2 md:p-0 mt-4 border border-gray-100 
           rounded-lg md:space-x-8 rtl:space-x-reverse flex-row md:mt-0 md:border-0`}
           >
             {userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${pathname === "/dashboard" ? "dashboard-menu-active" : ""
-                  }`}
+                className={`transition-all duration-300 ${
+                  pathname === "/dashboard" ? "dashboard-menu-active" : ""
+                }`}
               >
                 <span
                   onClick={() => navigate("/dashboard?type=yettojoin")}
@@ -250,8 +276,9 @@ export default function Layout({ subheader }) {
             )}
 
             <li
-              className={`transition-all duration-300 ${pathname === "/programs" ? "dashboard-menu-active" : ""
-                }`}
+              className={`transition-all duration-300 ${
+                pathname === "/programs" ? "dashboard-menu-active" : ""
+              }`}
             >
               <span
                 onClick={() => navigate("/programs")}
@@ -262,8 +289,9 @@ export default function Layout({ subheader }) {
             </li>
             {role === "mentee" && userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${pathname === "/mentors" ? "dashboard-menu-active" : ""
-                  }`}
+                className={`transition-all duration-300 ${
+                  pathname === "/mentors" ? "dashboard-menu-active" : ""
+                }`}
               >
                 <span
                   onClick={() => navigate("/mentors")}
@@ -276,8 +304,9 @@ export default function Layout({ subheader }) {
 
             {role === "mentor" && userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${pathname === "/mentees" ? "dashboard-menu-active" : ""
-                  }`}
+                className={`transition-all duration-300 ${
+                  pathname === "/mentees" ? "dashboard-menu-active" : ""
+                }`}
               >
                 <span
                   onClick={() => navigate("/mentees")}
@@ -290,8 +319,9 @@ export default function Layout({ subheader }) {
 
             {role === "admin" && (
               <li
-                className={`transition-all duration-300 ${pathname === "/members" ? "dashboard-menu-active" : ""
-                  }`}
+                className={`transition-all duration-300 ${
+                  pathname === "/members" ? "dashboard-menu-active" : ""
+                }`}
               >
                 <span
                   onClick={() => navigate("/members")}
@@ -304,15 +334,35 @@ export default function Layout({ subheader }) {
 
             {userInfo?.data?.is_registered && (
               <li
-                className={`transition-all duration-300 ${pathname === "/all-request" ? "dashboard-menu-active" : ""
-                  }`}
+                className={`transition-all duration-300 ${
+                  pathname === "/all-request" ? "dashboard-menu-active" : ""
+                }`}
               >
                 <span
-                  onClick={() => navigate("/all-request")}
-                  className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
+                  onClick={(event) => requestMenu.current.toggle(event)}
+                  className="py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px] inline-flex w-full justify-center"
                 >
                   Requests
+                  <svg
+                    className="-mr-1 h-6 w-5 text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </span>
+                <Menu
+                  className="custom-menu w-[220px]"
+                  model={requestMoreItem}
+                  popup
+                  ref={requestMenu}
+                  popupAlignment="right"
+                />
               </li>
             )}
 
@@ -339,10 +389,11 @@ export default function Layout({ subheader }) {
             {userInfo?.data?.is_registered && (
               <>
                 <li
-                  className={`transition-all duration-300 ${pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
+                  className={`transition-all duration-300 ${
+                    pathname === "/mentee-tasks" || pathname === "/mentor-tasks"
                       ? "dashboard-menu-active"
                       : ""
-                    }`}
+                  }`}
                 >
                   <span
                     onClick={() =>
@@ -367,22 +418,24 @@ export default function Layout({ subheader }) {
                     Goals
                   </span>
                 </li> */}
-                {(role===user.admin||role===user.mentor)&&
-                <li
-                  className={`transition-all duration-300 ${pathname === "/reports" ? "dashboard-menu-active" : ""
+                {(role === user.admin || role === user.mentor) && (
+                  <li
+                    className={`transition-all duration-300 ${
+                      pathname === "/reports" ? "dashboard-menu-active" : ""
                     }`}
-                >
-                  <span
-                    onClick={() => navigate("/reports")}
-                    className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   >
-                    Reports
-                  </span>
-                </li>
-}
+                    <span
+                      onClick={() => navigate("/reports")}
+                      className="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
+                    >
+                      Reports
+                    </span>
+                  </li>
+                )}
                 <li
-                  className={`transition-all duration-300 ${pathname === "/calendar" ? "dashboard-menu-active" : ""
-                    }`}
+                  className={`transition-all duration-300 ${
+                    pathname === "/calendar" ? "dashboard-menu-active" : ""
+                  }`}
                 >
                   <span
                     onClick={() => navigate("/calendar")}
