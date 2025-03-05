@@ -240,7 +240,7 @@ export default function Layout({ subheader }) {
                   }`}
               >
                 <span
-                  onClick={() => navigate("/dashboard")}
+                  onClick={() => navigate("/dashboard?type=yettojoin")}
                   className="block py-2 px-3 sm:py-0 sm:px-0 rounded md:p-0 cursor-pointer md:text-[14px] lg:text-[16px]"
                   aria-current="page"
                 >
