@@ -12,6 +12,7 @@ export const MentorFormData = {
   phone_number: "",
   email: "",
   languages_known: [],
+  other_language: "",
   marital_status: "",
 
   // Background Questions
@@ -35,7 +36,7 @@ export const MentorFormData = {
     },
   ],
 
-  signature: null,
+  documents: null,
 
   error: {},
 };
@@ -94,7 +95,7 @@ export const MentorFormSection = [
         type: "textbox",
         label: "Street Address",
         placeholder: "Enter Address",
-        isRequired: true,
+        isRequired: false,
         col: 12,
         key: "address",
       },
@@ -128,7 +129,7 @@ export const MentorFormSection = [
         type: "textbox",
         label: "Phone Number",
         placeholder: "Enter Phone Number",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "phone_number",
         is_pattern: true,
@@ -147,15 +148,27 @@ export const MentorFormSection = [
         type: "checkbox",
         label: "What languages are you comfortable speaking?",
         isRequired: false,
+        isMultiple: true,
         options: [
           { label: "English", value: "english" },
           { label: "Spanish", value: "spanish" },
           { label: "Tamil", value: "tamil" },
           { label: "Other", value: "other" },
         ],
-        col: 12,
+        col: 4,
         key: "languages_known",
         isMultiSelect: true,
+      },
+      {
+        type: "selectBox",
+        label: "Select Language",
+        placeholder: "Select Language",
+        isRequired: false,
+        col: 2,
+        key: "other_language",
+        options: [],
+        conditionalDisplay: "languages_known",
+        conditionalValue: "other", // This will only display the field when "other" is selected
       },
       {
         type: "selectBox",

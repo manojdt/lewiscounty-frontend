@@ -162,7 +162,7 @@ function App() {
           </Route>
 
           <Route path='/login-type' element={<LoginType />} />
-          <Route path='/questions' element={<Questions />} />
+          {/* <Route path='/questions' element={<Questions />} /> */}
           <Route path='/mentor-application-form' element={<MentorApplicationForm />} />
           <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />} />

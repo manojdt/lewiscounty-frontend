@@ -73,6 +73,14 @@ export const questionsApi = rtkQueryApiServices.injectEndpoints({
       invalidatesTags: ["Documents"],
     }),
 
+    getLanguageList: builder.query({
+      query: (data) => ({
+        url: "profile/languages",
+        method: "GET",
+        body: data,
+      }),
+    }),
+
     ProgramAddressDetails: builder.mutation({
       query: (params) => ({ url: `locations`, params }),
       providesTags: ["Locations"],
@@ -82,6 +90,7 @@ export const questionsApi = rtkQueryApiServices.injectEndpoints({
 export const {
   useProgramAddressDetailsMutation,
   useGetMentorQuestionsQuery,
+  useGetLanguageListQuery,
   useUpdateUserInfoMutation,
   useUpdateUserInfoPostMutation,
   useUpdateMenteeInfoMutation,

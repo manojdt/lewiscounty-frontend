@@ -22,24 +22,30 @@ import {
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
 import { useNavigate } from "react-router-dom";
 import email_notify_icon from "../../assets/icons/email_notify_icon.svg";
-import { useUpdateUserInfoPostMutation } from "../../features/questions/questionsapi.service";
+import {
+  useGetLanguageListQuery,
+  useUpdateUserInfoPostMutation,
+} from "../../features/questions/questionsapi.service";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import moment from "moment";
+import { updateUserInfo } from "../../services/loginInfo";
 
 export function MentorApplicationForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
   const userData = userInfo?.data || {};
-  console.log("userInfo", userInfo?.data);
+
   const [updateUserInfoPost] = useUpdateUserInfoPostMutation();
+  const { data: languagesData, isLoading: isLanguagesLoading } =
+    useGetLanguageListQuery();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTCOpen, setIsTCOpen] = useState(false);
   const [searchedOption, setSearchedOption] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [addressFieldData, setAddressFieldData] = useState([]);
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -62,10 +68,84 @@ export function MentorApplicationForm() {
         last_name: userData.last_name,
         email: userData.email,
         phone_number: userData?.userinfo?.phone_number,
-        gender: userData?.userinfo.gender,
+        gender: userData?.userinfo?.gender,
       }));
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    if (languagesData && languagesData.length > 0) {
+      // Create a deep copy of the form sections
+      const updatedFormSections = JSON.parse(JSON.stringify(MentorFormSection));
+
+      // Find the Personal Information section
+      const personalInfoSection = updatedFormSections.find(
+        (section) => section.title === "Personal Information"
+      );
+
+      if (personalInfoSection) {
+        // Find the language checkbox field
+        const languageFieldIndex = personalInfoSection.fields.findIndex(
+          (field) => field.key === "languages_known"
+        );
+
+        if (languageFieldIndex !== -1) {
+          // Set common languages for the checkbox (keeping just a few common ones)
+          // Typically you'd select a few common languages for the checkbox options
+          const commonLanguages = [
+            { label: "English", value: "english" },
+            { label: "Spanish", value: "spanish" },
+            { label: "Tamil", value: "tamil" },
+            { label: "Other", value: "other" },
+          ];
+
+          // Update the checkbox options
+          personalInfoSection.fields[languageFieldIndex].options =
+            commonLanguages;
+
+          // Create or update the dropdown field for "other" languages
+          const otherLanguageOptions = languagesData.map((lang) => ({
+            label: lang.name || lang.label, // Adjust based on your API response structure
+            value: lang.code || lang.value, // Adjust based on your API response structure
+          }));
+
+          // Find if the "other_language" field already exists
+          const otherLangFieldIndex = personalInfoSection.fields.findIndex(
+            (field) => field.key === "other_language"
+          );
+
+          if (otherLangFieldIndex !== -1) {
+            // Update existing field
+            personalInfoSection.fields[otherLangFieldIndex].options =
+              otherLanguageOptions;
+          } else {
+            // Add new field after the languages_known field
+            const newOtherLangField = {
+              type: "selectBox",
+              label: "Select Other Language",
+              placeholder: "Select Language",
+              isRequired: false,
+              col: 12,
+              key: "other_language",
+              options: otherLanguageOptions,
+              conditionalDisplay: "languages_known",
+              conditionalValue: "other",
+            };
+
+            // Insert the new field after the checkbox field
+            personalInfoSection.fields.splice(
+              languageFieldIndex + 1,
+              0,
+              newOtherLangField
+            );
+          }
+        }
+      }
+
+      // Update form sections with the modified data
+      setFormSections(updatedFormSections);
+    }
+  }, [languagesData]);
 
   const handleAddressfieldApi = (value, fieldName) => {
     if (!!value) {
@@ -84,7 +164,33 @@ export function MentorApplicationForm() {
 
   // Handle form field changes
   const handleFieldChange = (key, value, event) => {
-    if (["state", "city", "zip_code"].includes(key)) {
+    if (key === "languages_known") {
+      // Handle language checkbox selection
+      let updatedLanguages = Array.isArray(value) ? [...value] : [value];
+
+      // If "other" is removed, also clear the other_language field
+      if (!updatedLanguages.includes("other")) {
+        setFormData((prevData) => ({
+          ...prevData,
+          languages_known: updatedLanguages,
+          other_language: "", // Clear other language if "other" is not selected
+          error: {
+            ...prevData.error,
+            [key]: "",
+          },
+        }));
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          languages_known: updatedLanguages,
+          error: {
+            ...prevData.error,
+            [key]: "",
+          },
+        }));
+      }
+    } else if (["state", "city", "zip_code"].includes(key)) {
+      // Existing logic for address fields
       if (!document.getElementById("fields_overlay") && value) {
         searchBar?.current?.toggle(event);
       }
@@ -92,15 +198,26 @@ export function MentorApplicationForm() {
         setIsLoading(true);
       }
       handleAddressfieldApi(value, key);
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [key]: value,
+        error: {
+          ...prevData.error,
+          [key]: "",
+        },
+      }));
+    } else {
+      // Default handling for other fields
+      setFormData((prevData) => ({
+        ...prevData,
+        [key]: value,
+        error: {
+          ...prevData.error,
+          [key]: "",
+        },
+      }));
     }
-    setFormData((prevData) => ({
-      ...prevData,
-      [key]: value,
-      error: {
-        ...prevData.error,
-        [key]: "",
-      },
-    }));
   };
 
   // Handle reference field changes
@@ -149,6 +266,14 @@ export function MentorApplicationForm() {
       newErrors.last_name = "Last name is required";
       isValid = false;
     }
+    if (!formData.dob) {
+      newErrors.dob = "Date of Birth is required";
+      isValid = false;
+    }
+    if (!formData.gender) {
+      newErrors.gender = "Gender is required";
+      isValid = false;
+    }
 
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -158,26 +283,9 @@ export function MentorApplicationForm() {
       isValid = false;
     }
 
-    if (!formData.phone_number) {
-      newErrors.phone_number = "Phone number is required";
-      isValid = false;
-    } else if (
-      !/^(?:\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/.test(
-        formData.phone_number
-      )
-    ) {
-      newErrors.phone_number = "Invalid phone number format";
-      isValid = false;
-    }
-
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-      isValid = false;
-    }
-
     // Validate signature
-    if (!formData.signature) {
-      newErrors.signature = "Signature is required";
+    if (!formData.documents) {
+      newErrors.documents = "Signature is required";
       isValid = false;
     }
 
@@ -204,59 +312,114 @@ export function MentorApplicationForm() {
   // Handle form submission
   const handleSubmit = async () => {
     const isValid = validateForm();
-
     if (isValid) {
       setLoading(true);
       const { state, city, zip_code, ...data } = formData;
       try {
         // Format data for submission
         const payload = new FormData();
-
         // Append personal information
         Object.keys(data).forEach((key) => {
-          if (key === "dob") {
-            payload.append(key, moment(data[key]).format("YYYY-MM-DD"));
-          }
-          if (key !== "references" && key !== "error" && key !== "signature") {
-            payload.append(key, data[key]);
+          // Skip special keys and empty values
+          if (
+            key !== "references" &&
+            key !== "error" &&
+            key !== "documents" &&
+            key !== "other_language" && // Skip other_language as we'll handle it with languages_known
+            data[key] !== undefined &&
+            data[key] !== null &&
+            data[key] !== ""
+          ) {
+            if (key === "dob") {
+              payload.append(key, moment(data[key]).format("YYYY-MM-DD"));
+            } else if (key === "languages_known") {
+              // Handle languages specially
+              const languagesList = data[key].filter(
+                (lang) => lang !== "other"
+              );
+
+              // If "other" is selected and a specific language is chosen, add it
+              if (data[key].includes("other") && data.other_language) {
+                languagesList.push(data.other_language);
+              }
+
+              payload.append(key, JSON.stringify(languagesList));
+            } else {
+              // Handle all other fields normally
+              payload.append(key, data[key]);
+            }
           }
         });
 
-        // Append references as JSON
+        // Append references as JSON, but only those with values
         data.references.forEach((reference, index) => {
-          payload.append(`references[${index}]`, JSON.stringify(reference));
+          // Filter out empty values from each reference object
+          const filteredReference = {};
+          Object.keys(reference).forEach((key) => {
+            if (
+              reference[key] !== undefined &&
+              reference[key] !== null &&
+              reference[key] !== ""
+            ) {
+              filteredReference[key] = reference[key];
+            }
+          });
+
+          // Only append reference if it has at least one property
+          if (Object.keys(filteredReference).length > 0) {
+            payload.append(
+              `references[${index}]`,
+              JSON.stringify(filteredReference)
+            );
+          }
         });
 
-        // If there's a signature, convert it to blob and append
+        // If there's a documents, convert it to blob and append
         if (signatureRef.current) {
           const signatureDataURL = signatureRef.current.toDataURL();
           const signatureBlob = await fetch(signatureDataURL).then((r) =>
             r.blob()
           );
-          payload.append("signature", signatureBlob, "signature.png");
+          payload.append("documents", signatureBlob, "signature.png");
         }
 
-        // Simulate API call
-        updateUserInfoPost(payload);
-        setTimeout(() => {
-          setIsPopupOpen(true);
-          toast.success("Application submitted successfully!");
-          setLoading(false);
+        // Make the API call and wait for it to complete
+        const response = await updateUserInfoPost(payload).unwrap();
 
-          // Redirect or reset form as needed
-          navigate("/dashboard");
+        // Update the Redux store with the new data
+        await dispatch(updateUserInfo({ data: response }));
+
+        // Show success popup
+        setIsPopupOpen(true);
+        toast.success("Application submitted successfully!");
+
+        // Use setTimeout to allow Redux to complete its update
+        setTimeout(() => {
+          setLoading(false);
+          setIsPopupOpen(false); // Close popup
+
+          // Get the latest user data from userData selector
+          // This will have the updated values after the dispatch
+          const isCompleted = userData?.userinfo?.is_questions_completed;
+          const hasFileUpload = userData?.userinfo?.mentor_file_upload;
+
+          // Navigate if both conditions are met
+          if (isCompleted && hasFileUpload) {
+            navigate("/dashboard");
+          } else {
+            toast.info(
+              "Application submitted. Additional steps may be required."
+            );
+          }
         }, 2000);
-        setIsPopupOpen(false);
       } catch (error) {
         toast.error("Error submitting application. Please try again.");
         setLoading(false);
       }
     } else {
       toast.error("Please complete all required fields.");
-
       // Auto-expand sections with errors
       const newSections = [...formSections];
-
       // Check personal information errors
       const personalInfoFields = formSections[0].fields.map(
         (field) => field.key
@@ -267,7 +430,6 @@ export function MentorApplicationForm() {
       if (hasPersonalInfoErrors) {
         newSections[0].expanded = true;
       }
-
       // Check reference errors
       const hasReferenceErrors = Object.keys(formData.error).some((key) =>
         key.startsWith("references_")
@@ -275,12 +437,10 @@ export function MentorApplicationForm() {
       if (hasReferenceErrors) {
         newSections[3].expanded = true;
       }
-
       // Check signature error
       if (formData.error.signature) {
         newSections[4].expanded = true;
       }
-
       setFormSections(newSections);
     }
   };
@@ -298,27 +458,27 @@ export function MentorApplicationForm() {
     }
   };
 
-  // Handle signature save
+  // Handle documents save
   const handleSignatureEnd = () => {
     if (signatureRef.current && !signatureRef.current.isEmpty()) {
       setFormData((prevData) => ({
         ...prevData,
-        signature: signatureRef.current.toDataURL(),
+        documents: signatureRef.current.toDataURL(),
         error: {
           ...prevData.error,
-          signature: "",
+          documents: "",
         },
       }));
     }
   };
 
-  // Handle signature clear
+  // Handle documents clear
   const handleClearSignature = () => {
     if (signatureRef.current) {
       signatureRef.current.clear();
       setFormData((prevData) => ({
         ...prevData,
-        signature: null,
+        documents: null,
       }));
     }
   };
@@ -371,7 +531,7 @@ export function MentorApplicationForm() {
     <>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
+        open={loading || isLanguagesLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -460,9 +620,9 @@ export function MentorApplicationForm() {
                         onEnd={handleSignatureEnd}
                       />
 
-                      {formData.error.signature && (
+                      {formData.error.documents && (
                         <Typography color="error" variant="caption">
-                          {formData.error.signature}
+                          {formData.error.documents}
                         </Typography>
                       )}
 

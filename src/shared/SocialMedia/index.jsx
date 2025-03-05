@@ -105,7 +105,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                     if(user_data?.userinfo?.is_questions_completed||user_data.role==="admin"||user_data.role==="mentee"){
                         navigate(redirectPath);
                       }else{
-                        navigate("/questions");
+                        navigate("/mentor-application-form");
                       }
                 } else if (
                     user_data?.role === "mentee" &&
@@ -113,7 +113,7 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                 ) {
                     navigate("/programs");
                 } else {
-                    navigate("/questions");
+                    navigate("/mentor-application-form");
                 }
             }
         })

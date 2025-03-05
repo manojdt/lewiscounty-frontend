@@ -85,7 +85,7 @@ export const Signup = () => {
           if (decodedRes?.is_verified) {
             if (userData.data.role === "fresher") navigate("/login-type");
             else if (userData.data.is_registered) navigate("/dashboard");
-            else navigate("/questions");
+            else navigate("/mentor-application-form");
             dispatch(updateInfo());
           } else {
             setShowBackdrop(true);

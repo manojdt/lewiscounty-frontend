@@ -1,11 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { rtkQueryApiServices } from "../../services/api";
 import { jwtDecode } from "jwt-decode";
 
+
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
+
+// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
 const loginApiSlice = createApi({
   reducerPath: "loginApiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.REACT_APP_BASE_URL}/api/`, // Use your base URL here
+    baseUrl, // Use your base URL here
     prepareHeaders: (headers) => {
     //   const token = localStorage.getItem("access_token");
     //   if (token) {

@@ -203,7 +203,7 @@ export default function Layout({ subheader }) {
     // }
     if (role === "mentor") {
       if (!userInfo.data.is_registered) {
-        navigate("/questions");
+        navigate("/mentor-application-form");
       }
       // if (!userInfo.data.document_upload) {
       //   navigate('/mentor-doc-upload');

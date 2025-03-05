@@ -76,8 +76,13 @@ export const EquipmentFormFields = ({
     <>
       <Grid container spacing={4}>
         {fields?.map((fld, index) => {
+          const shouldDisplay = fld.conditionalDisplay
+          ? Array.isArray(formData[fld.conditionalDisplay])
+            ? formData[fld.conditionalDisplay].includes(fld.conditionalValue)
+            : formData[fld.conditionalDisplay] === fld.conditionalValue
+          : true;
           return (
-            !fld?.isHide && (
+            !fld?.isHide && shouldDisplay && (
               <Grid item xs={fld?.col ?? 6}>
                 <Stack spacing={2}>
                   <Typography
@@ -203,7 +208,7 @@ export const EquipmentFormFields = ({
                             fld.key,
                             newValue ? newValue.toISOString() : null
                           );
-                        }}                                                
+                        }}
                       />
                     </div>
                   )}
@@ -252,12 +257,43 @@ export const EquipmentFormFields = ({
                             direction={"row"}
                             alignItems={"center"}
                             spacing={1}
+                            key={data.value} // Add a unique key for each checkbox
                           >
                             <Checkbox
-                              checked={formData[fld?.key] === data?.value}
-                              onChange={() =>
-                                handleChange(fld?.key, data.value)
+                              checked={
+                                // Ensure formData[fld?.key] is an array before calling .includes()
+                                Array.isArray(formData[fld?.key])
+                                  ? formData[fld?.key].includes(data.value)
+                                  : formData[fld?.key] === data.value
                               }
+                              onChange={() => {
+                                if (fld?.isMultiple) {
+                                  // Handle multi-selection
+                                  const selectedValues = Array.isArray(
+                                    formData[fld?.key]
+                                  )
+                                    ? formData[fld?.key]
+                                    : []; // Ensure selectedValues is an array
+                                  const value = data.value;
+
+                                  let updatedValues;
+                                  if (selectedValues.includes(value)) {
+                                    // If the value is already selected, remove it
+                                    updatedValues = selectedValues.filter(
+                                      (v) => v !== value
+                                    );
+                                  } else {
+                                    // If the value is not selected, add it
+                                    updatedValues = [...selectedValues, value];
+                                  }
+
+                                  // Update the form data
+                                  handleChange(fld?.key, updatedValues);
+                                } else {
+                                  // Handle single selection
+                                  handleChange(fld?.key, data.value);
+                                }
+                              }}
                             />
                             <Typography className="!text-[#232323] !text-[14px]">
                               {data?.label}

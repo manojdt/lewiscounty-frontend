@@ -495,7 +495,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
   const handleJoinProgram = async (request_type) => {
     if (role === "mentee" && !userdetails?.data?.is_registered) {
       navigate(
-        `/questions?program_id=${programdetails.id}&breadcrumbsType=${requestPageBreadcrumbs.newMenteeQuestions}`
+        `/mentor-application-form?program_id=${programdetails.id}&breadcrumbsType=${requestPageBreadcrumbs.newMenteeQuestions}`
       );
     } else if (role === "mentee" && !userdetails?.data?.document_upload) {
       navigate(`/mentee-doc-upload/${programdetails.id}`);

@@ -5,9 +5,8 @@ import { toast } from "react-toastify";
 let refresh = false;
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
-// const baseUrl = "http://192.168.3.118:8000/api/"
 
-// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/"
+// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
 //comments
 export const rtkQueryServiceTags = {
   PROGRAM: "Program",

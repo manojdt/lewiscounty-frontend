@@ -9,7 +9,7 @@ export default function UserGuard() {
     }
     if (userInfo.data.role !== 'fresher') {
         if (userInfo.data.is_registered) { return <Navigate to="/dashboard" /> }
-        return <Navigate to="/questions" />
+        return <Navigate to="/mentor-application-form" />
     }
 
     return <Outlet />
