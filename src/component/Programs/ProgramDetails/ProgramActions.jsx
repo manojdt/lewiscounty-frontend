@@ -560,31 +560,34 @@ const ProgramActions = ({
                 </div>
               )}
           </>
-        ) : (
-          !menteeNotJoinCondition.includes(programdetails.status) &&
-          ![
-            "program_join_payment_initiate",
-            "program_join_payment_pending",
-            "program_join_request_submitted",
-            "program_join_request_rejected",
-          ].includes(programdetails?.mentee_join_status) &&
-          !programdetails?.admin_assign_program && (
-            <MuiButton
-              endIcon={
-                <img
-                  style={{ width: "15px", height: "13px" }}
-                  src={DoubleArrowIcon}
-                  alt="DoubleArrowIcon"
-                />
-              }
-              onClick={() =>
-                !isLaunchingProgram && handleJoinProgram("program_join")
-              }
-            >
-              {isLaunchingProgram ? "Loading..." : "Join Program"}
-            </MuiButton>
-          )
-        )}
+        ) : null
+        // (
+        //   !menteeNotJoinCondition.includes(programdetails.status) &&
+        //   ![
+        //     "program_join_payment_initiate",
+        //     "program_join_payment_pending",
+        //     "program_join_request_submitted",
+        //     "program_join_request_rejected",
+        //   ].includes(programdetails?.mentee_join_status) &&
+        //   !programdetails?.admin_assign_program && (
+        //     <MuiButton
+        //       endIcon={
+        //         <img
+        //           style={{ width: "15px", height: "13px" }}
+        //           src={DoubleArrowIcon}
+        //           alt="DoubleArrowIcon"
+        //         />
+        //       }
+        //       onClick={() =>
+        //         !isLaunchingProgram && handleJoinProgram("program_join")
+        //       }
+        //     >
+        //       {isLaunchingProgram ? "Loading..." : "Join Program"}
+        //     </MuiButton>
+        //   )
+        // )
+        
+        }
       </div>
     );
   };

@@ -3788,7 +3788,7 @@ export default function ProgramDetails({ setProgramDetailsId }) {
                   fontSize: "18px",
                 }}
               >
-                Are you sure you want to Accept this Program?
+                Are you sure you want to join this program?
               </p>
             </div>
             <div className="flex justify-center">

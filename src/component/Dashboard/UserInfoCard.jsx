@@ -31,7 +31,7 @@ export default function UserInfoCard() {
                     return { ...menu, count: role === 'mentor' ? userprograms.totalPrograms : totalCount?.allprogram }
                 }              
                 // Mentor Response Count
-                if (role === 'mentor' && statusAction.includes(menu.status)) {
+                if ((role === 'mentor' || role === "mentee") && statusAction.includes(menu.status)) {
                     if(menu.status === 'reschedule'){
                         return {...menu,page:"/programs?type=reschedule", count: totalCount[menu.mentorStatus]}
                     }else{
