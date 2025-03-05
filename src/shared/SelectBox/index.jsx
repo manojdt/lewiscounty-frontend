@@ -1,4 +1,4 @@
-import { MenuItem, Select } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
 import React, { useRef } from "react";
 import ArrowDown from "../../assets/icons/menuDownIcon.svg";
 
@@ -6,7 +6,7 @@ export const SelectBox = ({
   value = "",
   handleChange = () => false,
   menuList = [],
-  width = "100px"
+  width = "100px",
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const selectRef = useRef(null);
@@ -15,32 +15,34 @@ export const SelectBox = ({
     setIsOpen((prev) => !prev);
     if (selectRef.current) {
       if (!isOpen) {
-        selectRef.current.focus(); 
+        selectRef.current.focus();
       } else {
-        selectRef.current.blur(); 
+        selectRef.current.blur();
       }
     }
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <Select
+      <TextField
+        select
+        fullWidth
         ref={selectRef}
         value={value}
         onChange={handleChange}
-        open={isOpen} 
-        onClose={() => setIsOpen(false)} 
-        onOpen={() => setIsOpen(true)} 
-        sx={{
-          height: "40px",
-          border: "1px solid #1D5BBF",
-          color: "#FFFFFF",
-          minWidth: width ?? "100px",
-          background: "#1D5BBF",
-          "& .MuiSelect-select": {
-            fontSize: "14px",
-          },
-        }}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        onOpen={() => setIsOpen(true)}
+        // sx={{
+        //   height: "40px",
+        //   // border: "1px solid #1D5BBF",
+        //   color: "#FFFFFF",
+        //   minWidth: width ?? "100px",
+        //   background: "#1D5BBF0D",
+        //   "& .MuiSelect-select": {
+        //     fontSize: "14px",
+        //   },
+        // }}
         IconComponent={(props) => (
           <div
             onClick={toggleOpen}
@@ -83,7 +85,7 @@ export const SelectBox = ({
             {e?.label}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
     </div>
   );
 };

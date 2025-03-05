@@ -96,6 +96,7 @@ import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
 import CreateNewUser from "./component/Members/CreateNewUser";
 import { IndividualPage } from "./component/Questions/IndividualPage";
+import { MenteeSubmitForm } from "./component/MenteeQuestions/MenteeSubmitForm";
 
 
 function App() {
@@ -162,6 +163,7 @@ function App() {
 
           <Route path='/login-type' element={<LoginType />} />
           <Route path='/questions' element={<Questions />} />
+          <Route path='/mentee-questions' element={<MenteeSubmitForm />} />
           <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />} />
 

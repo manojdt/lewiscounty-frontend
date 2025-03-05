@@ -195,7 +195,7 @@ const Login = () => {
             navigate("/questions");
           }
         } else if (user_data?.role === "mentee" && !user_data?.is_registered) {
-          navigate("/programs");
+          navigate("/mentee-questions");
         } else {
           navigate("/questions");
         }

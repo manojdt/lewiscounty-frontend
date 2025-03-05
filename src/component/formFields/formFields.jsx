@@ -1,7 +1,11 @@
 import {
     Checkbox,
+    FormControl,
+    FormControlLabel,
     Grid,
     InputAdornment,
+    Radio,
+    RadioGroup,
     Stack,
     TextField,
     Typography,
@@ -70,6 +74,16 @@ import { CustomUpload } from "./CustomUpload";
           {fields?.map((fld, index) => {
             return (
               !fld?.isHide && (
+<>
+                {fld.fieldHeading&&
+                <Grid item xs={12}>
+<Typography
+                      className="!text-[#353F4F] !text-[14px]"
+                      fontWeight={700}
+                    >
+                      {fld.fieldHeading}
+                    </Typography>
+                </Grid>}
                 <Grid item xs={fld?.col ?? 6}>
                   <Stack spacing={2}>
                     <Typography
@@ -141,7 +155,7 @@ import { CustomUpload } from "./CustomUpload";
                           title: `Invalid ${fld?.label}`, // Tooltip if validation fails
                         }}
                       />
-                   { ['state','city','zip_code'].includes(fld.key)  &&<SearchModal searchBar={searchBar} isLoading={isLoading} addressFieldData={addressFieldData} onSearchOptionClick = {onSearchOptionClick}/>}
+                   { (['state','city','zip_code'].includes(fld.key)||fld.addressDropdown)  &&<SearchModal searchBar={searchBar} isLoading={isLoading} addressFieldData={addressFieldData} onSearchOptionClick = {onSearchOptionClick}/>}
                       </>
           }
                    
@@ -173,7 +187,7 @@ import { CustomUpload } from "./CustomUpload";
                           dateFormat="mm-dd-yy"
                           placeholder={fld?.placeholder ?? "Select"}
                           ref={(el) => (calendarRef.current[index] = el)}
-                          minDate={fld?.minDate ? fld?.minDate : new Date()}
+                          minDate={fld?.minDate}
                           // maxDate={""}
                           disabled={fld?.isDisable ?? false}
                         />
@@ -247,6 +261,35 @@ import { CustomUpload } from "./CustomUpload";
                         })}
                       </Stack>
                     )}
+                    {fld.type === "radio" && (
+                    <FormControl
+                      component="fieldset"
+                      className="my-3"
+                      error={!!formData.error?.[fld?.key]}
+                    >
+                      <RadioGroup
+                        row
+                        value={formData[fld?.key]}
+                        onChange={(e) => {
+                          const Value = e.target.value;
+                          handleChange(fld.key, Value);
+                        }}
+                      >
+                        {fld.options?.map((option) => (
+                          <FormControlLabel
+                            key={option.value}
+                            value={option.value}
+                            control={
+                              <Radio
+                                checked={formData[fld?.key] === option.value}
+                              />
+                            }
+                            label={option.label}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                  )}
   
                     {fld?.type === "upload" && (
                       <CustomUpload
@@ -327,6 +370,7 @@ import { CustomUpload } from "./CustomUpload";
                     )}
                   </Stack>
                 </Grid>
+</>
               )
             );
           })}

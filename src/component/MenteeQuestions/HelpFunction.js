@@ -1,0 +1,275 @@
+export const formFieldData = [
+  {
+    title: "Youth Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name",
+        isRequired: true,
+        col: 6,
+        key: "youth_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name",
+        isRequired: true,
+        col: 6,
+        key: "youth_last_name",
+      },
+      {
+        type: "date",
+        label: "Date of Birth",
+        isRequired: true,
+        col: 6,
+        key: "youth_dob",
+      },
+      {
+        type: "radio",
+        label: "Gender",
+        isRequired: true,
+        col: 6,
+        key: "youth_gender",
+        options: [
+          { label: "Male", value: "male" },
+          { label: "Female", value: "female" },
+          { label: "Unspecified", value: "unspecified" },
+        ],
+      },
+      {
+        type: "textbox",
+        label: "Street Address",
+        isRequired: true,
+        col: 12,
+        key: "youth_street_address",
+      },
+      {
+        type: "textbox",
+        label: "City",
+        addressDropdown:true,
+        isRequired: false,
+        col: 6,
+        key: "youth_city",
+      },
+      {
+        type: "textbox",
+        label: "State",
+        addressDropdown:true,
+        isRequired: false,
+        col: 6,
+        key: "youth_state",
+      },
+      {
+        type: "textbox",
+        addressDropdown:true,
+        label: "Zip Code",
+        isRequired: false,
+        col: 6,
+        key: "youth_zip_code",
+      },
+      {
+        type: "textbox",
+        label: "Phone number",
+        isRequired: true,
+        col: 6,
+        key: "youth_phone_number",
+         is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}"
+      },
+      {
+        type: "textbox",
+        label: "School",
+        isRequired: false,
+        col: 6,
+        key: "youth_school",
+      },
+      {
+        type: "textbox",
+        label: "Grade",
+        isRequired: false,
+        col: 6,
+        key: "youth_grade",
+      },
+      {
+        type: "checkbox",
+        label: "Preferred language",
+        isRequired: true,
+        col: 6,
+        key: "youth_preferred_language",
+        options: [
+          { label: "English", value: "english" },
+          { label: "Spanish", value: "spanish" },
+          { label: "Other", value: "other" },
+        ],
+      },
+      {
+        type: "selectBox",
+        label: "Ethnicity",
+        isRequired: false,
+        col: 6,
+        key: "youth_ethnicity",
+      },
+    ],
+  },
+  {
+    title: "Referring Individual Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name of person making the referral",
+        isRequired: true,
+        col: 6,
+        key: "referrer_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name of person making the referral",
+        isRequired: true,
+        col: 6,
+        key: "referrer_last_name",
+      },
+      {
+        type: "textbox",
+        label: "Phone Number",
+        isRequired: true,
+        col: 6,
+        key: "referrer_phone",
+         is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}"
+      },
+      {
+        type: "textbox",
+        label: "Email Address",
+        isRequired: true,
+        col: 6,
+        key: "referrer_email",
+      },
+      {
+        type: "selectBox",
+        label: "Relationship of person making the referral",
+        isRequired: true,
+        col: 12,
+        key: "referrer_relationship",
+        options: [
+          { label: "Parent", value: "parent" },
+          { label: "Other family member", value: "family_member" },
+          { label: "Self-referral by youth", value: "self_referral" },
+          { label: "School Staff", value: "school_staff" },
+          { label: "Coach", value: "coach" },
+          { label: "Medical staff", value: "medical_staff" },
+          { label: "Counselor", value: "counselor" },
+          { label: "Friend of youth", value: "friend" },
+          { label: "Family Friend", value: "family_friend" },
+          { label: "Neighbor", value: "neighbor" },
+          { label: "Other", value: "other" },
+        ],
+      },
+      {
+        type: "textarea",
+        label:
+          "Why do you think the Youth Mentorship Program would benefit this youth?",
+        isRequired: false,
+        col: 12,
+        key: "referrer_benefit_reason",
+      },
+      {
+        type: "selectBox",
+        label: "Youth is living with",
+        isRequired: true,
+        col: 12,
+        fieldHeading:'Please be sure that the youth knows about the Mentorship progrma that you have made a referral',
+        key: "youth_living_with",
+        options: [
+          { label: "Mother and Father", value: "both_parents" },
+          { label: "Mother", value: "mother" },
+          { label: "Father", value: "father" },
+          { label: "Grandparents", value: "grandparents" },
+          { label: "Relative", value: "relative" },
+          { label: "Other", value: "other" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Parent/Guardian Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name",
+        isRequired: true,
+        col: 6,
+        key: "parent_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name",
+        isRequired: true,
+        col: 6,
+        key: "parent_last_name",
+      },
+      {
+        type: "textbox",
+        label: "Street Address",
+        isRequired: true,
+        col: 12,
+        key: "parent_street_address",
+      },
+      {
+        type: "textbox",
+        label: "State",
+        isRequired: true,
+        col: 4,
+        addressDropdown:true,
+        key: "parent_state",
+      },
+      {
+        type: "textbox",
+        label: "City",
+        isRequired: true,
+        addressDropdown:true,
+        col: 4,
+        key: "parent_city",
+      },
+      {
+        type: "textbox",
+        label: "Zip code",
+        isRequired: true,
+        addressDropdown:true,
+        col: 4,
+        key: "parent_zip_code",
+      },
+      {
+        type: "textbox",
+        label: "Phone number",
+        isRequired: true,
+        col: 6,
+        key: "parent_phone",
+         is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}"
+      },
+      {
+        type: "selectBox",
+        label: "Marital Status",
+        isRequired: false,
+        col: 6,
+        key: "parent_marital_status",
+        options: [
+          { label: "Married", value: "married" },
+          { label: "Single", value: "single" },
+          { label: "Domestic Partnership", value: "domestic_partnership" },
+          { label: "Divorced", value: "divorced" },
+          { label: "Separated", value: "separated" },
+          { label: "Widowed", value: "widowed" },
+        ],
+      },
+    ],
+  },
+];
+export const removeFirstUnderscoreWord = (input) => {
+  // Check if input is null, undefined, or not a string
+  if (!input || typeof input !== 'string') {
+    return input;
+  }
+  
+  const parts = input.split('_');
+  return parts.length > 1 ? parts.slice(1).join('_') : input;
+};
