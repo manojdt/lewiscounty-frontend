@@ -1,0 +1,30 @@
+.calendar-container .p-datepicker.p-component {
+    width: 400px !important;
+}
+
+.calendar-container .p-datepicker.p-component table span {
+    font-size: 12px;
+}
+
+
+.calendar-container .p-datepicker.p-component table th span {
+    color: rgba(0, 174, 189, 1);
+    font-weight: normal;
+}
+
+.calendar-container .p-datepicker.p-component table th:last-child span {
+    color: rgba(255, 10, 10, 1);
+}
+
+.calendar-container .p-datepicker table td.p-datepicker-today>span {
+    background: linear-gradient(93.13deg, #00AEBD -3.05%, #1D5BBF 93.49%);
+    color: #fff;
+}
+
+.calendar-container .p-datepicker-group-container {
+    border: 1px solid rgba(217, 217, 217, 1);
+}
+
+.calendar-container .p-datepicker-group-container .p-datepicker-header {
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+}

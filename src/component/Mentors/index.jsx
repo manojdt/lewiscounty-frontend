@@ -1,0 +1,1022 @@
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
+import DataTable from "../../shared/DataGrid";
+import FilterIcon from "../../assets/icons/Filter.svg";
+import StarIcon from "../../assets/icons/filledStar.svg";
+import MoreIcon from "../../assets/icons/moreIcon.svg";
+import ViewIcon from "../../assets/images/view1x.png";
+import SearchIcon from "../../assets/images/search1x.png";
+import ReportIcon from "../../assets/icons/report.svg";
+import FollowIcon from "../../assets/images/connect1x.png";
+import GridViewIcon from "../../assets/icons/gridviewIcon.svg";
+import ListViewIcon from "../../assets/icons/listviewIcon.svg";
+import Dropdown from "../../shared/Dropdown";
+import { mentorColumns, mentorRows } from "../../mock";
+import {
+  getMyMentors,
+  getMyReqMentors,
+  getMyTopMentors,
+  getMyTopPrograms,
+  menteeCancelReq,
+  menteeFollowReq,
+  menteeUnFollowReq,
+  updateUserList,
+} from "../../services/userList";
+import { myMentorColumns } from "../../utils/formFields";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { Button } from "../../shared";
+import ConnectIcon from "../../assets/images/Connectpop1x.png";
+import SuccessTik from "../../assets/images/blue_tik1x.png";
+import {
+  followBtnText,
+  requestStatusColor,
+  requestStatusText,
+} from "../../utils/constant";
+import CloseRequest from "../../assets/icons/closeCircle.svg";
+import CloseReqPopup from "../../assets/icons/closeReqPopup.svg";
+import CancelReq from "../../assets/icons/cancelRequest.svg";
+import dayjs from "dayjs";
+import moment from "moment";
+import { dashboardTopprograms, requestPageBreadcrumbs } from "../Breadcrumbs/BreadcrumbsCommonData";
+import { dateFormat, formatRenderCellDateValues, formatTableNullValues, useDebounce } from "../../utils";
+import MentorCardView from "./MentorCardView";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+
+export const Mentors = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [searchParams] = useSearchParams();
+  const mentortype = searchParams.get("type");
+  const breadcrumbType = searchParams.get("breadcrumbType");
+  const mentortypereq = searchParams.get("req");
+  const breadcrumbsStatusType = searchParams.get("status") || "";
+  const state = useLocation()?.state;
+  const [viewType, setViewType] = useState('table');
+  const { mentorList, loading, status } = useSelector(
+    (state) => state.userList
+  );
+  const [formattedMentorList, setFormattedMentorList] = React.useState([])
+  const [breadcrumbsArray, setBreadcrumbsArray] = useState([]);
+  React.useMemo(()=>{
+    if(mentorList?.results){
+      const formattedRowData = formatTableNullValues(mentorList?.results)
+      setFormattedMentorList(formattedRowData)
+    }
+  },[mentorList])
+  const [mentorType, setMentorType] = useState(
+    mentortypereq
+      ? mentortypereq
+      : mentortype ?? state?.type === "requestmentor"
+      ? "requestmentor"
+      : "mymentor"
+  );
+  const [requestTab, setRequestTab] = useState("all");
+  const [selectedItem, setSelectedItem] = useState({});
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+  const [search, setSearch] = React.useState("");
+  const debouncedSearchTerm = useDebounce(search, 500);
+  const [followPopup, setFollowPopup] = React.useState({
+    bool: false,
+    data: {},
+    type: "",
+  });
+  const [createMeetingLoading, setCreateMeetingLoading] = React.useState({
+    bool: false,
+    type: "",
+  });
+  const [cancelPopup, setCancelPopup] = React.useState({
+    bool: false,
+    activity: false,
+  });
+
+  const mentorOption = [
+    {
+      name: "My Mentors",
+      value: "mymentor",
+    },
+    {
+      name: "Top Mentors",
+      value: "topmentor",
+    },
+    {
+      name: "Top Programs",
+      value: "top_programs",
+    },
+    {
+      name: "Request Mentors",
+      value: "requestmentor",
+    },
+  ];
+
+  const requestBtns = [
+    {
+      name: "All",
+      key: "all",
+    },
+    {
+      name: "New",
+      key: "new",
+    },
+    {
+      name: "Pending",
+      key: "pending",
+    },
+    {
+      name: "Accept",
+      key: "accept",
+    },
+    {
+      name: "Cancel",
+      key: "cancel",
+    },
+  ];
+
+  const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event, row) => {
+    setSelectedItem(row);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const mentorColumn = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      id: 0,
+      renderCell: (params) => {
+        return (
+          <div className="flex gap-2 items-center">
+            {params.row.first_name} {params.row.last_name}
+          </div>
+        );
+      },
+    },
+    ...myMentorColumns,
+    {
+      field: "ratings",
+      headerName: "Ratings",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return (
+          <div className="flex h-full gap-2 items-center">
+            {/* {Array.from(
+              {
+                length: params?.row?.average_rating,
+              },
+              (_, index) => (
+                <img
+                  key={index}
+                  src={StarIcon}
+                  alt="StarIcon"
+                  className="w-4 h-4"
+                />
+              )
+            )} */}
+            {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">{params?.row?.average_rating}</span>
+            </>
+      }
+          </div>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      id: 6,
+      renderCell: (params) => {
+        return (
+          <>
+            <div
+              className="cursor-pointer flex items-center h-full"
+              onClick={(event) => {
+                handleClick(event, params.row);
+              }}
+            >
+              <img src={MoreIcon} alt="MoreIcon" />
+            </div>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  if (mentorType === "topmentor") {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`
+                    );
+                  }else if (mentorType === "mymentor") {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}&fromType=mymentor`
+                    );
+                  } else {
+                    navigate(
+                      `/mentor-details/${selectedItem.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`
+                    );
+                  }
+                }}
+                className="!text-[12px]"
+              >
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                View
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  selectedItem?.is_follow !== "waiting" &&
+                    handleOpenFollowPopup(
+                      selectedItem.id,
+                      selectedItem?.is_follow
+                    );
+                }}
+                className="!text-[12px]"
+              >
+                <img
+                  src={FollowIcon}
+                  alt="FollowIcon"
+                  className="pr-3 w-[27px]"
+                />
+                {followBtnText[selectedItem?.is_follow]}
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      },
+    },
+  ];
+
+  const reqMentorColumn = [
+    {
+      field: "mentor_name",
+      headerName: "Name",
+      flex: 1,
+      id: 0,
+    },
+    ...myMentorColumns,
+    {
+      field: "ratings",
+      headerName: "Ratings",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return (
+          <div className="flex gap-2 items-center">
+            {" "}
+            {/* <img src={StarIcon} alt="StarIcon" /> */}
+          
+                {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">  {params?.row?.average_rating}</span>
+            </>
+      }
+          </div>
+        );
+      },
+    },
+    {
+      field: "request_date",
+      headerName: "Requested Date",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return (
+          <div className="flex gap-2 items-center">
+            {" "}
+            {params?.row?.requested_date
+              ? moment(params?.row?.requested_date).format("MM-DD-YYYY")
+              : "..."}
+          </div>
+        );
+      },
+    },
+    {
+      field: "last_updated_date",
+      headerName: "Last Updated Date",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+           return formatRenderCellDateValues(params?.row?.last_updated_date);
+         },
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      id: 2,
+      renderCell: (params) => {
+        return (
+          <>
+            <div className="cursor-pointer flex items-center h-full relative">
+              <span
+                className="w-[80px] flex justify-center h-[30px] px-3"
+                style={{
+                  background:
+                    requestStatusColor[params.row.status]?.bgColor || "",
+                  lineHeight: "30px",
+                  borderRadius: "3px",
+                  width: "110px",
+                  height: "34px",
+                  color: requestStatusColor[params.row.status]?.color || "",
+                  fontSize: "12px",
+                }}
+              >
+                {" "}
+                {requestStatusText[params.row.status]}
+              </span>
+            </div>
+          </>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      id: 6,
+      renderCell: (params) => {
+        return (
+          <>
+            <div
+              className="cursor-pointer flex items-center h-full"
+              onClick={(event) => {
+                handleClick(event, params.row);
+              }}
+            >
+              <img src={MoreIcon} alt="MoreIcon" />
+            </div>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() =>
+                  navigate(
+                    `/profileView?breadcrumbsType=${requestPageBreadcrumbs.newFollowRequestMentor}&status=${requestTab}`,
+                    {
+                      state: {
+                        row_id: selectedItem?.id,
+                        user_id: selectedItem?.following,
+                        rejection_reason: selectedItem?.cancelled_reason,
+                        page: "requested_mentor",
+                      },
+                    }
+                  )
+                }
+                className="!text-[12px]"
+              >
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                View
+              </MenuItem>
+              {/* {(selectedItem.status === "new" ||
+                selectedItem.status === "pending") && (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenCancelPopup(selectedItem);
+                    }}
+                    className="!text-[12px]"
+                  >
+                    <img
+                      src={CloseRequest}
+                      alt="FollowIcon"
+                      className="pr-3 w-[27px]"
+                    />
+                    Cancel Request
+                  </MenuItem>
+                </>
+              )} */}
+              {/* {selectedItem.status === "accept" &&
+                <>
+                <MenuItem
+                onClick={() => {
+                  selectedItem?.is_follow !== 'waiting' &&
+                    handleOpenFollowPopup(
+                      selectedItem?.following,
+                      selectedItem?.is_follow
+                    );
+                }}
+                className='!text-[12px]'
+              >
+                <img
+                  src={FollowIcon}
+                  alt='FollowIcon'
+                  className='pr-3 w-[27px]'
+                />
+                {followBtnText[selectedItem?.is_follow]}
+              </MenuItem>
+              </>} */}
+            </Menu>
+          </>
+        );
+      },
+    },
+  ];
+  const topProgramsColumn = [
+    {
+      field: "program_name",
+      headerName: "Program Name",
+      flex: 1,
+      id: 0,
+    },
+    { field: "created_by", headerName: "Mentor Name", flex: 1, id: 2, },
+    {
+      field: 'participated_mentees',
+      headerName: 'Mentees',
+      flex: 1,
+      id: 7,
+  },
+  //  {
+  //       field: 'to_request',
+  //       headerName: 'Start date & End Date',
+  //       flex: 1,
+  //       id: 4,
+  //       renderCell: (params) => {
+  //         return <div>{dateFormat(params.row.start_date)} & {dateFormat(params.row.end_date)}</div>
+  //     }
+  //   },
+    {
+      field: "average_rating",
+      headerName: "Ratings",
+      flex: 1,
+      id: 5,
+      renderCell: (params) => {
+        return (
+          <div className="flex gap-2 items-center">
+            {" "}
+            {/* <img src={StarIcon} alt="StarIcon" /> */}
+          
+                {params?.row?.average_rating>0&&params?.row?.average_rating&&<>
+              <img
+                   // key={index}
+                   src={StarIcon}
+                   alt="StarIcon"
+                   className="w-4 h-4"
+                 />
+             <span className="text-blue-700 font-bold pt-[2px]">  {params?.row?.average_rating}</span>
+            </>
+      }
+          </div>
+        );
+      },
+    },
+   
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      id: 6,
+      renderCell: (params) => {
+        return (
+          <>
+            <div
+              className="cursor-pointer flex items-center h-full"
+              onClick={(event) => {
+                handleClick(event, params.row);
+              }}
+            >
+              <img src={MoreIcon} alt="MoreIcon" />
+            </div>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={() =>
+                  navigate(
+                    `/program-details/${selectedItem.program}`
+                  )
+                }
+                className="!text-[12px]"
+              >
+                <img src={ViewIcon} alt="ViewIcon" className="pr-3 w-[30px]" />
+                View
+              </MenuItem>
+            </Menu>
+          </>
+        );
+      },
+    },
+  ];
+
+  const title =
+    mentorOption.find((option) => option.value === mentorType)?.name || "";
+
+  const handleTab = (key) => setRequestTab(key);
+
+  const getMentorDatas = (type = mentorType) => {
+    if (type === "topmentor") {
+      dispatch(getMyTopMentors(paginationModel));
+    } else if (type === "requestmentor") {
+      dispatch(
+        getMyReqMentors({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          status: breadcrumbsStatusType || requestTab,
+        })
+      );
+    }else if (mentorType === "top_programs") {
+      dispatch(
+        getMyTopPrograms({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          search: debouncedSearchTerm,
+        })
+      );
+    } else if (type === "mymentor"){
+      dispatch(getMyMentors(paginationModel));
+    }
+  };
+  useEffect(() => {
+    if (searchParams.get("req")) {
+      setMentorType(searchParams.get("req"));
+      getMentorDatas(searchParams.get("req"));
+    }
+  }, [searchParams]);
+  useEffect(() => {
+    getMentorDatas(searchParams.get("req")||mentorType);
+  }, [paginationModel]);
+
+  useEffect(() => {
+    if (status === "done") {
+      setCreateMeetingLoading({
+        ...createMeetingLoading,
+        bool: true,
+      });
+      setTimeout(() => {
+        setCreateMeetingLoading({
+          bool: false,
+          type: "",
+        });
+        dispatch(updateUserList({ status: "" }));
+        getMentorDatas(mentorType);
+        setMentorType(mentorType);
+        setFollowPopup({
+          bool: false,
+          id: "",
+          type: "",
+        });
+      }, [2000]);
+    }
+  }, [status]);
+
+  const handleMentorTypeChange = (value) => {
+    setMentorType(value);
+    // getMentorDatas(value);
+    setPaginationModel({
+      page: 0,
+      pageSize: 10,
+    });
+    navigate(`/mentors?req=${value}`);
+    setViewType("table")
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+
+  };
+  useEffect(() => {
+    if (mentorType === "topmentor") {
+      dispatch(getMyTopMentors({ ...paginationModel, search: debouncedSearchTerm }));
+    } else if (mentorType === "requestmentor") {
+      dispatch(
+        getMyReqMentors({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          search: debouncedSearchTerm,
+          status: requestTab,
+        })
+      );
+    }else if (mentorType === "top_programs") {
+      dispatch(
+        getMyTopPrograms({
+          page: paginationModel?.page + 1,
+          limit: paginationModel?.pageSize,
+          search: debouncedSearchTerm,
+        })
+      );
+    } else if (mentorType === "mymentor"){
+      dispatch(getMyMentors({ ...paginationModel, search: debouncedSearchTerm }));
+    }
+}, [debouncedSearchTerm]);
+  const handleOpenFollowPopup = (id, type) => {
+    handleClose();
+    setFollowPopup({
+      bool: true,
+      id: id,
+      type: type,
+    });
+    setCreateMeetingLoading({
+      ...createMeetingLoading,
+      type: type,
+    });
+  };
+  const handleCloseFollowPopup = () => {
+    setFollowPopup({
+      bool: false,
+      data: "",
+    });
+  };
+
+  const handleSubmitBtn = (id) => {
+    if (followPopup?.type === "accepted") {
+      handleUnFollowMentor(id);
+    } else {
+      handleFollowMentor(id);
+    }
+  };
+
+  const handleFollowMentor = async (id) => {
+    const payload = {
+      user_id: id,
+    };
+    await dispatch(menteeFollowReq(payload)).then(() => {
+      setFollowPopup({
+        bool: false,
+        id: "",
+      });
+    });
+  };
+
+  const handleUnFollowMentor = (id) => {
+    const payload = {
+      user_id: id,
+    };
+
+    dispatch(menteeUnFollowReq(payload)).then(() => {
+      setFollowPopup({
+        bool: false,
+        id: "",
+      });
+    });
+  };
+
+  const handleOpenCancelPopup = (data) => {
+    handleClose();
+    setCancelPopup({
+      bool: true,
+      activity: false,
+      data: data,
+    });
+  };
+
+  const handleCloseCancelPopup = () => {
+    setCancelPopup({
+      bool: false,
+      activity: false,
+    });
+  };
+
+  const handleTabSwitch = (value) => {
+    handleTab(value);
+    dispatch(
+      getMyReqMentors({
+        page: paginationModel?.page + 1,
+        limit: paginationModel?.pageSize,
+        search: search,
+        status: value,
+      })
+    );
+  };
+
+  const handleCancelRequest = async () => {
+    const payload = {
+      follow_id: cancelPopup?.data?.id,
+    };
+    await dispatch(menteeCancelReq(payload)).then((res) => {
+      if (res?.meta?.requestStatus === "fulfilled") {
+        setCancelPopup({
+          bool: false,
+          activity: true,
+        });
+        setMentorType("requestmentor");
+        setTimeout(() => {
+          setCancelPopup({
+            bool: false,
+            activity: false,
+          });
+        }, 2000);
+      }
+    });
+  };
+  const handleViewChange = () => {
+    setViewType(viewType === "table" ? "card" : "table");
+  };
+  useEffect(() => {
+    if (breadcrumbsStatusType) {
+      setRequestTab(breadcrumbsStatusType);
+    }
+    if(breadcrumbType===requestPageBreadcrumbs.topPrograms){
+      const topPro=dashboardTopprograms()
+      setBreadcrumbsArray(topPro)
+    }
+  }, [breadcrumbsStatusType,breadcrumbType]);
+  return (
+    <div className="px-2 py-9 sm:px-2 md:px-4 lg:px-9 xl:px-9">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <div className="pb-2">
+      {breadcrumbType&&<Breadcrumbs items={breadcrumbsArray} />}
+      </div>
+      <div
+        className="px-0 py-5 sm:px-0 md:px-1 lg:px-3 xl:px-3"
+        style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}
+      >
+        <div className="flex justify-between px-5 pb-4 mb-8 border-b-2 flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row md:items-center lg:items-center xl:items-center">
+          <div className="flex gap-5 items-center ">
+            <p>{title}</p>
+            {mentorType === "mymentor"&&
+            <img
+                  src={viewType === "table" ? ListViewIcon : GridViewIcon}
+                  className="cursor-pointer"
+                  alt="viewicon"
+                  onClick={handleViewChange}
+                />
+              }
+              <p>{/* <img src={FilterIcon} alt='FilterIcon' /> */}</p>
+          </div>
+          <div className="flex gap-8 items-center">
+            <div className="relative">
+              <input
+                type="text"
+                id="search-navbar"
+                className="block w-40 p-2 text-sm text-gray-900 border border-background-primary-main h-[42px] md:w-[320px] lg:w-[345px]"
+                placeholder="Search here..."
+                style={{
+                  border: "1px solid rgba(29, 91, 191, 1)",
+                  height: "41px",
+                  // width: '345px',
+                }}
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <div className="absolute inset-y-0 end-0 flex items-center pe-3 pointer-events-none">
+                <img src={SearchIcon} alt="SearchIcon" />
+              </div>
+            </div>
+            <Dropdown
+              label={"My Mentors"}
+              options={mentorOption}
+              value={mentorType}
+              handleDropdown={(event) =>
+                handleMentorTypeChange(event.target.value)
+              }
+            />
+          </div>
+        </div>
+        <div className="mx-5">
+          {mentorType === "requestmentor" && (
+            <div className="flex gap-3 mb-6">
+              {requestBtns.map((actionBtn, index) => (
+                <button
+                  key={index}
+                  className="text-[14px]"
+                  style={{
+                    background:
+                      requestTab === actionBtn.key
+                        ? "linear-gradient(97.86deg, #005DC6 -15.07%, #00B1C0 112.47%)"
+                        : "rgba(249, 249, 249, 1)",
+                    color: requestTab === actionBtn.key ? "#fff" : "#000",
+                    borderRadius: "3px",
+                    height: "40px",
+                    width: "150px",
+                    border: requestTab !== actionBtn.key && "1px solid #88B2E8",
+                  }}
+                  onClick={() => handleTabSwitch(actionBtn.key)}
+                >
+                  {actionBtn.name}
+                </button>
+              ))}
+            </div>
+          )}
+{viewType==="table"?
+          <DataTable
+            rows={formattedMentorList ?? []}
+            columns={
+              mentorType==="top_programs"?topProgramsColumn: mentorType === "requestmentor" ? reqMentorColumn : mentorColumn
+            }
+            hideCheckbox
+            rowCount={mentorList?.count}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
+          />:
+           <MentorCardView
+      mentors={mentorList?.results}
+      onViewProfile={(mentor) => {
+        if (mentorType === "topmentor") {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.topMentor}&fromType=topmentor`
+          );
+        } else if (mentorType === "mymentor") {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}&fromType=mymentor`
+          );
+        } else {
+          navigate(
+            `/mentor-details/${mentor.id}?breadcrumbsType=${requestPageBreadcrumbs.myMentor}`
+          );
+        }
+      }}
+      onFollow={(mentor) => {
+        mentor?.is_follow !== "waiting" &&
+          handleOpenFollowPopup(mentor.id, mentor?.is_follow);
+      }}
+      loading={loading}
+      paginationModel={paginationModel}
+      setPaginationModel={setPaginationModel}
+      totalCount={mentorList?.count}
+    />}
+        </div>
+      </div>
+
+      {/* Follow Request Popup */}
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={followPopup?.bool}
+      >
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+          <img src={ConnectIcon} alt="ConnectIcon" />
+          <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
+            {/* {followInfo.is_following ? 'UnFollow' : 'Follow'} */}
+            {followPopup?.type === "accepted" ? "Unfollow" : "Follow"}
+            {/* Follow */}
+          </span>
+
+          <div className="py-5">
+            <p
+              style={{
+                color: "rgba(24, 40, 61, 1)",
+                fontWeight: 600,
+                fontSize: "18px",
+              }}
+            >
+              Are you sure you want to
+              <span>
+                {" "}
+                {followPopup?.type === "accepted" ? "unfollow" : "follow"}{" "}
+              </span>
+              Mentor?
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="flex gap-6 justify-center align-middle">
+              <Button
+                btnName="Cancel"
+                btnCategory="secondary"
+                onClick={() => handleCloseFollowPopup()}
+              />
+              <Button
+                btnType="button"
+                btnCls="w-[110px]"
+                btnName={
+                  followPopup?.type === "accepted" ? "Unfollow" : "Follow"
+                }
+                btnCategory="primary"
+                onClick={() => handleSubmitBtn(followPopup?.id)}
+              />
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={createMeetingLoading?.bool}
+        onClick={() => setCreateMeetingLoading(false)}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              {createMeetingLoading?.type === "accepted"
+                ? "Unfollow is Successfully"
+                : "Connect is Successfully"}
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+
+      {/* cancel request popup */}
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={cancelPopup?.bool}
+      >
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] p-[12px] justify-center items-center">
+          <div className="border border-[#E50027] rounded-[15px] h-[100%] w-[100%] justify-center items-center flex flex-col relative">
+            <div
+              className="absolute top-[12px] right-[12px] cursor-pointer"
+              onClick={() => handleCloseCancelPopup()}
+            >
+              <img src={CloseReqPopup} />
+            </div>
+            <img src={CancelReq} alt="ConnectIcon" />
+
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure want to cancel this Request?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnName="No"
+                  btnCategory="secondary"
+                  btnCls="border !border-[#E50027] !text-[#E50027] w-[110px]"
+                  onClick={() => handleCloseCancelPopup()}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px] !bg-[#E50027] !text-[#fff] border !border-[#E50027]"
+                  btnName={"Yes"}
+                  btnCategory="secondary"
+                  onClick={() => handleCancelRequest()}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Backdrop>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={cancelPopup?.activity}
+        onClick={() => setCreateMeetingLoading(false)}
+      >
+        <div className="px-5 py-1 flex justify-center items-center">
+          <div
+            className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+            style={{ background: "#fff", borderRadius: "10px" }}
+          >
+            <img src={SuccessTik} alt="SuccessTik" />
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              Mentor request has been successfully cancelled
+            </p>
+          </div>
+        </div>
+      </Backdrop>
+    </div>
+  );
+};
