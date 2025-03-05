@@ -96,6 +96,7 @@ import HistoryNotes from "./component/Programs/ProgramDetails/notesHistory";
 import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
 import CreateNewUser from "./component/Members/CreateNewUser";
 import { IndividualPage } from "./component/Questions/IndividualPage";
+import MentorApplicationForm from "./component/Mentor/MentorApplicationForm";
 
 
 function App() {
@@ -162,6 +163,7 @@ function App() {
 
           <Route path='/login-type' element={<LoginType />} />
           <Route path='/questions' element={<Questions />} />
+          <Route path='/mentor-application-form' element={<MentorApplicationForm />} />
           <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />} />
 

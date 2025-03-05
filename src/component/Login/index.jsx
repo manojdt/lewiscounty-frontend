@@ -192,12 +192,12 @@ const Login = () => {
           ) {
             navigate(redirectPath);
           } else {
-            navigate("/questions");
+            navigate("/mentor-application-form");
           }
         } else if (user_data?.role === "mentee" && !user_data?.is_registered) {
           navigate("/programs");
         } else {
-          navigate("/questions");
+          navigate("/mentor-application-form");
         }
       }
     });

@@ -74,7 +74,7 @@ const MuiCustomModal = (props) => {
       )}
       <DialogContent>{children}</DialogContent>
       {actionButtons && (
-        <DialogActions className="mt-4 gap-x-5 !justify-center">
+        <DialogActions className="my-4 gap-x-5 !justify-center">
           {actionButtons?.map(({ children, ...restButtonProps }) => (
             <Button {...restButtonProps}>{children}</Button>
           ))}

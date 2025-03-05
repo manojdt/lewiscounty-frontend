@@ -1,10 +1,15 @@
 import { createTheme, responsiveFontSizes } from "@mui/material";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 
 let MuiTheme = createTheme({
   palette: {
     primary: {
       main: "#1D5BBF",
       light: "#1D5BBF0D",
+      dark: "#1D5BBF",
+    },
+    secondary: {
+      main: "#1D5BBF",
     },
   },
   typography: {
@@ -19,6 +24,9 @@ let MuiTheme = createTheme({
         colorInherit: {
           borderColor: "rgba(62, 62, 62, 1)",
           color: "rgba(62, 62, 62, 1)",
+        },
+        containedSecondary: {
+          background: "#1D5BBF",
         },
         containedPrimary: {
           background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
@@ -63,9 +71,9 @@ let MuiTheme = createTheme({
         dense: true,
       },
     },
-    MuiRadio:{
-      defaultProps:{
-        icon:(
+    MuiRadio: {
+      defaultProps: {
+        icon: (
           <div
             style={{
               width: 20,
@@ -77,8 +85,8 @@ let MuiTheme = createTheme({
               justifyContent: "center",
             }}
           />
-          ),
-        checkedIcon:(
+        ),
+        checkedIcon: (
           <div
             style={{
               width: 20,
@@ -99,8 +107,13 @@ let MuiTheme = createTheme({
               }}
             />
           </div>
-        )
-      }
+        ),
+      },
+    },
+    MuiCheckbox: {
+      defaultProps: {
+        checkedIcon: <CheckBoxOutlinedIcon />,
+      },
     },
     MuiDataGrid: {
       defaultProps: {

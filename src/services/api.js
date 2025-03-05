@@ -7,7 +7,7 @@ let refresh = false;
 const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 // const baseUrl = "http://192.168.3.118:8000/api/"
 
-// const baseUrl = "https://810h20rg-8000.inc1.devtunnels.ms/api/"
+// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/"
 //comments
 export const rtkQueryServiceTags = {
   PROGRAM: "Program",
@@ -15,14 +15,9 @@ export const rtkQueryServiceTags = {
   MATERIAL: "Material",
   CERTIFICATE: "Certificate",
   CALENDAR: "Calendar",
+  USER: "User",
 };
-const {
-  PROGRAM,
-  GOALS,
-  MATERIAL,
-  CERTIFICATE,
-  CALENDAR
-} = rtkQueryServiceTags;
+const { PROGRAM, GOALS, MATERIAL, CERTIFICATE, CALENDAR, USER } = rtkQueryServiceTags;
 
 export const rtkQueryApiServices = createApi({
   reducerPath: "rtkQueryApiServices",
@@ -38,13 +33,7 @@ export const rtkQueryApiServices = createApi({
       return headers;
     },
   }),
-  tagTypes: [
-    PROGRAM,
-    GOALS,
-    MATERIAL,
-    CERTIFICATE,
-    CALENDAR
-  ], // Define the necessary tags
+  tagTypes: [PROGRAM, GOALS, MATERIAL, CERTIFICATE, CALENDAR, USER], // Define the necessary tags
   endpoints: () => ({}),
 });
 
@@ -81,8 +70,12 @@ api.interceptors.response.use(
       error?.response?.data?.message ??
       error?.response?.data?.errors?.non_field_errors?.[0];
     if (errMsg?.length > 0) {
-      if(errMsg !== "Please verify your email address. A verification link has been sent to your registered email address."){
-      toast.error(errMsg);}
+      if (
+        errMsg !==
+        "Please verify your email address. A verification link has been sent to your registered email address."
+      ) {
+        toast.error(errMsg);
+      }
     }
     if (
       error.code &&
