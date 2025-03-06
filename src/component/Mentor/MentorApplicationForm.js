@@ -61,7 +61,7 @@ export function MentorApplicationForm() {
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
-        phone_number: userData?.userinfo.phone_number,
+        phone_number: userData?.userinfo?.phone_number,
         gender: userData?.userinfo.gender,
       }));
     }
