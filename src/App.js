@@ -97,6 +97,8 @@ import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
 import CreateNewUser from "./component/Members/CreateNewUser";
 import { IndividualPage } from "./component/Questions/IndividualPage";
 import { MenteeSubmitForm } from "./component/MenteeQuestions/MenteeSubmitForm";
+import MenteeAssessment from "./component/MenteeQuestions/MenteeAssisment";
+import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAssismentForm";
 
 
 function App() {
@@ -164,6 +166,8 @@ function App() {
           <Route path='/login-type' element={<LoginType />} />
           <Route path='/questions' element={<Questions />} />
           <Route path='/mentee-questions' element={<MenteeSubmitForm />} />
+          <Route path='/mentee-assisment' element={<MenteeAssessment />} />
+          <Route path='/mentee-assisment-form' element={<MenteeApplicationAssismentForm />} />
           <Route element={<Layout />}>
             <Route path='/dashboard' element={<Dashboard />} />
 

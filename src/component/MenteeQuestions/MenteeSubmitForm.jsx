@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from "react";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
 import { EquipmentFormFields } from "../formFields/formFields";
-import { Box, Stack } from "@mui/material";
-import { formFieldData, removeFirstUnderscoreWord } from "./HelpFunction";
+import { Backdrop, Box, Stack } from "@mui/material";
+import {
+  debounce,
+  formFieldData,
+} from "./HelpFunction";
 import { Button } from "../../shared";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { updateMenteeQuestionform } from "../../services/loginInfo";
-
+import SuccessTik from "../../assets/images/blue_tik1x.png";
+import { useUpdateMenteeQuestionsMutation } from "../../features/login/loginapi.services";
+import { useGetLanguageListQuery } from "../../features/questions/questionsapi.service";
 export const MenteeSubmitForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.userInfo);
   const [searchedOption, setSearchedOption] = useState({});
   const [isLoading, setLoading] = useState(false);
+  const [sucessPopup, setsucessPopup] = useState(false);
   const [addressFieldData, setAddressFieldData] = useState([]);
   const [fieldData, setFieldData] = useState(formFieldData);
   const [addressState, setAddressState] = useState("");
   const searchBar = React.useRef(null);
-  const [ethnicityOptions, setEthnicityOptions] = useState([]);
   const [otherLanguageOptions, setOtherLanguageOptions] = useState([]);
+
+  // const [updateMenteeQuestions] = useUpdateMenteeQuestionsMutation();
+  // const { data: languagesData, isLoading: isLanguagesLoading } =
+  //   useGetLanguageListQuery();
   const [formData, setFormData] = React.useState({
     youth_first_name: "",
     youth_last_name: "",
@@ -57,6 +66,9 @@ export const MenteeSubmitForm = () => {
       youth_gender: "",
       youth_street_address: "",
       youth_phone_number: "",
+      youth_zip_code:'',
+      youth_city:'',
+      youth_state:'',
       youth_preferred_language: "",
       referrer_first_name: "",
       referrer_last_name: "",
@@ -74,18 +86,27 @@ export const MenteeSubmitForm = () => {
     },
   });
   const constructResponse = () => {
-    return  {
-      // user: 1,
+    const preferred_languages = [
+      ...(Array.isArray(formData.youth_preferred_language)
+        ? formData.youth_preferred_language
+        : [formData.youth_preferred_language]),
+      ...(Array.isArray(formData.youth_other_language)
+        ? formData.youth_other_language
+        : [formData.youth_other_language]),
+    ].filter((lang) => lang && lang !== "other");
+    // console.log(preferred_languages, "preferred_languages");
+    const res = {
+      user: userInfo?.data?.user_id,
       first_name: formData?.youth_first_name,
       last_name: formData?.youth_last_name,
       // email: formData?.youth_,
       phone_number: formData?.youth_phone_number,
-      dob: moment(formData.youth_dob).format("yyyy-mm-dd"),
+      dob: moment(formData.youth_dob).format("YYYY-MM-DD"),
       gender: formData.youth_gender,
       // current_education: formData.youth_grade,
       school: formData?.youth_school,
       grade: formData.youth_grade,
-      preferred_languages: [formData?.youth_preferred_language],
+      preferred_languages: preferred_languages,
       Ethncity: formData.youth_ethnicity,
       street_address: formData?.youth_street_address,
       location: formData.youth_location,
@@ -95,6 +116,8 @@ export const MenteeSubmitForm = () => {
           first_name: formData?.referrer_first_name,
           last_name: formData?.referrer_last_name,
           phone_number: formData?.referrer_phone,
+          email: formData?.referrer_email,
+          living_with: formData?.youth_living_with,
           relationship: formData.referrer_relationship,
           referral_reason: formData?.referrer_benefit_reason,
         },
@@ -110,6 +133,7 @@ export const MenteeSubmitForm = () => {
         },
       ],
     };
+    return res;
   };
   const handleValidate = () => {
     const error = formData?.error || {};
@@ -169,8 +193,29 @@ export const MenteeSubmitForm = () => {
     //     error.youth_phone_number = "Invalid Phone Number Format (e.g., (123) 456-7890)";
     //   }
     // }
+    if (!formData?.youth_state?.trim()) {
+      isValid = false;
+      error.youth_state = "State is Required";
+    } else {
+      delete error.youth_state;
+    }
 
-    if (!formData?.youth_preferred_language?.trim()) {
+    if (!formData?.youth_city?.trim()) {
+      isValid = false;
+      error.youth_city = "City is Required";
+    } else {
+      delete error.youth_city;
+    }
+
+    if (!formData?.youth_zip_code?.trim()) {
+      isValid = false;
+      error.youth_zip_code = "Zip Code is Required";
+    }
+    if (
+      !formData?.youth_preferred_language ||
+      (Array.isArray(formData?.youth_preferred_language) &&
+        formData?.youth_preferred_language.length === 0)
+    ) {
       isValid = false;
       error.youth_preferred_language = "Preferred Language is Required";
     } else {
@@ -215,15 +260,14 @@ export const MenteeSubmitForm = () => {
     if (!formData?.referrer_email?.trim()) {
       isValid = false;
       error.referrer_email = "Referrer Email is Required";
+    } else {
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.referrer_email)) {
+        isValid = false;
+        error.referrer_email = "Invalid Email Format";
+      }
     }
-    // else {
-    //   // Email validation
-    //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //   if (!emailRegex.test(formData.referrer_email)) {
-    //     isValid = false;
-    //     error.referrer_email = "Invalid Email Format";
-    //   }
-    // }
 
     if (!formData?.referrer_relationship?.trim()) {
       isValid = false;
@@ -302,22 +346,36 @@ export const MenteeSubmitForm = () => {
 
     return isValid;
   };
-  const handleAddressfieldApi = (value, fieldName) => {
-    if (!!value) {
-      setTimeout(() => {
-        dispatch(
-          getProgramAddressDetails({ id: value, fieldName: fieldName })
-        ).then((response) => {
-          if (isLoading) {
+  const debouncedAddressFieldApi = React.useCallback(
+    debounce((value, fieldName) => {
+      if (!!value) {
+        dispatch(getProgramAddressDetails({ id: value, fieldName: fieldName }))
+          .then((response) => {
+            // Always set loading to false when API call completes
             setLoading(false);
-          }
-          if (!!response?.payload?.data?.length) {
-            setAddressFieldData(response?.payload?.data);
-          }
-        });
-      }, 2000);
-    }
-  };
+
+            if (!!response?.payload?.data?.length) {
+              setAddressFieldData(response?.payload?.data);
+            } else {
+              // Clear address field data if no results
+              setAddressFieldData([]);
+            }
+          })
+          .catch((error) => {
+            // Important: Always set loading to false even if there's an error
+            console.error("API call error:", error);
+            setLoading(false);
+            setAddressFieldData([]);
+          });
+      } else {
+        // If no value, reset loading state and clear data
+        setLoading(false);
+        setAddressFieldData([]);
+      }
+    }, 500),
+    [dispatch]
+  );
+
   useEffect(() => {
     if (searchedOption?.id && addressState) {
       setFormData((prevFormData) => {
@@ -386,26 +444,79 @@ export const MenteeSubmitForm = () => {
       const apiKey = mappedKey.startsWith("youth_")
         ? key.replace("youth_", "")
         : key.replace("parent_", "");
-      handleAddressfieldApi(value, apiKey);
+      debouncedAddressFieldApi(value, apiKey);
     }
+    if (mappedKey === "youth_preferred_languag") {
+      // Get the current value as an array
+      const currentLanguages = Array.isArray(formData[mappedKey])
+        ? [...formData[mappedKey]]
+        : formData[mappedKey]
+        ? [formData[mappedKey]]
+        : [];
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [mappedKey]: value,
-      error: {
-        ...prevFormData.error,
-        [mappedKey]: "",
-      },
-    }));
+      // Check if value already exists in the array
+      const valueIndex = currentLanguages.indexOf(value);
+
+      // Toggle the value
+      if (valueIndex > -1) {
+        // Remove if exists
+        currentLanguages.splice(valueIndex, 1);
+      } else {
+        // Add if doesn't exist
+        currentLanguages.push(value);
+      }
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [mappedKey]: currentLanguages,
+        error: {
+          ...prevFormData.error,
+          [mappedKey]: "",
+        },
+      }));
+    } else {
+      // Handle other fields normally
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [mappedKey]: value,
+        error: {
+          ...prevFormData.error,
+          [mappedKey]: "",
+        },
+      }));
+    }
   };
-  const handleSubmit = () => {
+  const handleSubmit =async () => {
     console.log(formData);
     if (handleValidate()) {
-      const res = constructResponse()
-      console.log(res,"res")
-      dispatch(updateMenteeQuestionform(res))
+      const res = constructResponse();
+      console.log(res, "res");
+      dispatch(updateMenteeQuestionform(res)).then((response)=>{
+        console.log(response,"response")
+        if (response) {
+          setsucessPopup(true);
+        }
+      })
     }
   };
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch({ type: "logout" });
+    navigate("/login");
+  };
+  useEffect(() => {
+    // If any completion state (success or error) is true, show the backdrop
+    if (sucessPopup) {
+      // Set timeout to handle cleanup after 3 seconds
+      const timer = setTimeout(() => {
+        // Reset all states
+        setsucessPopup(false);
+        // handleLogout()
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [sucessPopup]);
   const handleDeleteFile = (key, id) => {
     setFormData({
       ...formData,
@@ -413,69 +524,65 @@ export const MenteeSubmitForm = () => {
       // formData[key]?.filter((e, i) => i !== id)
     });
   };
-  useEffect(() => {
-    const fetchEthnicityOptions = async () => {
-      try {
-        const response = [];
-        // await dispatch(getEthnicityOptions());
-        if (response?.payload?.data) {
-          const options = response.payload.data.map((item) => ({
-            label: item.name,
-            value: item.id,
-          }));
-          setEthnicityOptions(options);
-
-          // Update fieldData to include fetched options
-          const updatedFieldData = fieldData.map((section) => ({
-            ...section,
-            fields: section.fields.map((field) =>
-              field.key === "youth_ethnicity"
-                ? { ...field, options: options }
-                : field
-            ),
-          }));
-          setFieldData(updatedFieldData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch ethnicity options", error);
-      }
-    };
-
-    fetchEthnicityOptions();
-  }, []);
 
   // Handle language change to show/hide other language field
   useEffect(() => {
     const updateLanguageFields = async () => {
-      console.log("dhsdjs");
-      if (formData.youth_preferred_language === "other") {
+      // Check if "other" is one of the selected languages
+      const hasOtherLanguage = Array.isArray(formData.youth_preferred_language)
+        ? formData.youth_preferred_language.includes("other")
+        : formData.youth_preferred_language === "other";
+
+      // Get the latest field data with dynamic language options
+      const currentFieldData = [...fieldData];
+
+      if (hasOtherLanguage) {
         try {
-          const response = [];
-          // await dispatch(getOtherLanguageOptions());
-          if (response) {
-            const options = response.map((item) => ({
-              label: item.name,
-              value: item.id,
-            }));
-            setOtherLanguageOptions(options);
+          // Create other language options - you can use the same language list or a different one
+          const otherLanguagesList =
+          //  languagesData ? 
+          //   languagesData.filter(lang => {
+          //     // Filter out languages that might be better as "other" options
+          //     // This is optional and depends on your requirements
+          //     return true;
+          //   }).map(lang => ({
+          //     label: lang.name || lang.label,
+          //     value: lang.code || lang.value,
+          //   })) : 
+            [
+              { label: "French", value: "french" },
+              { label: "Mandarin", value: "mandarin" },
+              { label: "Arabic", value: "arabic" },
+              { label: "Hindi", value: "hindi" },
+              { label: "Portuguese", value: "portuguese" },
+              { label: "Russian", value: "russian" },
+              { label: "Japanese", value: "japanese" },
+              { label: "German", value: "german" },
+            ];
 
-            // Update fieldData to add other language field
-            const updatedFieldData = fieldData.map((section) => {
-              if (section.title === "Youth Information") {
-                const languageFieldIndex = section.fields.findIndex(
-                  (field) => field.key === "youth_preferred_language"
-                );
+          // Create the updated field data
+          const updatedFieldData = currentFieldData.map((section) => {
+            if (section.title === "Youth Information") {
+              const languageFieldIndex = section.fields.findIndex(
+                (field) => field.key === "youth_preferred_language"
+              );
 
-                // Create new fields array with other language select
+              // Only add the other language field if it doesn't already exist
+              if (
+                !section.fields.some(
+                  (field) => field.key === "youth_other_language"
+                )
+              ) {
                 const newFields = [
                   ...section.fields.slice(0, languageFieldIndex + 1),
                   {
-                    type: "selectBox",
+                    type: "multiSelect",
                     label: "Specify Other Language",
                     isRequired: true,
                     col: 6,
+                    isMultiSelect: true,
                     key: "youth_other_language",
-                    options: options,
+                    options: otherLanguagesList,
                   },
                   ...section.fields.slice(languageFieldIndex + 1),
                 ];
@@ -485,19 +592,19 @@ export const MenteeSubmitForm = () => {
                   fields: newFields,
                 };
               }
-              return section;
-            });
+            }
+            return section;
+          });
 
-            setFieldData(updatedFieldData);
-          }
+          setFieldData(updatedFieldData);
         } catch (error) {
-          console.error("Failed to fetch other language options", error);
+          console.error("Failed to update other language options", error);
         }
       } else {
-        // Revert fieldData to remove other language field
-        const revertedFieldData = fieldData.map((section) => {
+        // If "other" is not selected, remove the other language field
+        const revertedFieldData = currentFieldData.map((section) => {
           if (section.title === "Youth Information") {
-            // Remove other language field if exists
+            // Filter out the other language field if it exists
             const newFields = section.fields.filter(
               (field) => field.key !== "youth_other_language"
             );
@@ -519,23 +626,35 @@ export const MenteeSubmitForm = () => {
 
     updateLanguageFields();
   }, [formData.youth_preferred_language]);
-
+  useEffect(() => {
+    if (userInfo && userInfo.data && Object.keys(userInfo.data).length) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        youth_first_name: userInfo.data.first_name,
+        youth_last_name: userInfo.data.last_name,
+      }));
+    }
+  }, [userInfo]);
   return (
     <div>
       {" "}
-      <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}>
+      <div className="mt-6 pl-6">
+        <p className="font-bold">Mentee Referral</p>
+      </div>
+      {/* <div style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)" }}> */}
         <Box
           className="bg-[#fff] rounded-[10px]"
           sx={{
-            boxShadow: "4px 4px 15px 4px #0000000D",
-            padding: "30px 20px",
-            margin: "50px 30px 30px 30px",
+           boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.15)",
+            padding: "10px 20px",
+            margin: "30px 30px 30px 30px",
           }}
         >
           <Stack spacing={2}>
-            {fieldData?.map((data) => {
+            {fieldData?.map((data, i) => {
               return (
                 <CustomAccordian
+                  key={i}
                   title={data?.title}
                   children={
                     <EquipmentFormFields
@@ -574,8 +693,29 @@ export const MenteeSubmitForm = () => {
               onClick={() => handleSubmit()}
             />
           </Stack>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={sucessPopup}
+          >
+            <div className="px-5 py-1 flex justify-center items-center">
+              <div
+                className="flex justify-center items-center flex-col gap-[2.25rem] py-[4rem] px-[3rem] mt-20 mb-20"
+                style={{ background: "#fff", borderRadius: "10px" }}
+              >
+                <img src={SuccessTik} alt="SuccessTik" />
+                <p
+                  className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+                  style={{
+                    fontWeight: 600,
+                  }}
+                >
+                  {"Questions submitted Successfully."}
+                </p>
+              </div>
+            </div>
+          </Backdrop>
         </Box>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
