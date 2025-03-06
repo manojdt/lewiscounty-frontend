@@ -14,6 +14,7 @@ import moment from "moment";
 import SuccessTik from "../../assets/images/blue_tik1x.png";
 import { useUpdateMenteeQuestionsMutation } from "../../features/login/loginapi.services";
 import { useGetLanguageListQuery } from "../../features/questions/questionsapi.service";
+import { updateMenteeQuestionform } from "../../services/loginInfo";
 export const MenteeSubmitForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -107,9 +108,9 @@ export const MenteeSubmitForm = () => {
       school: formData?.youth_school,
       grade: formData.youth_grade,
       preferred_languages: preferred_languages,
-      Ethncity: formData.youth_ethnicity,
+      Ethncity: [formData.youth_ethnicity],
       street_address: formData?.youth_street_address,
-      location: formData.youth_location,
+      mentee_location: formData.youth_location,
 
       mentee_referrers: [
         {
@@ -129,7 +130,7 @@ export const MenteeSubmitForm = () => {
           street_address: formData?.parent_street_address,
           phone_number: formData?.parent_phone,
           marital_status: formData?.parent_marital_status,
-          location: formData?.guardian_location,
+          guardian_location: formData?.guardian_location,
         },
       ],
     };
@@ -493,7 +494,7 @@ export const MenteeSubmitForm = () => {
       console.log(res, "res");
       dispatch(updateMenteeQuestionform(res)).then((response)=>{
         console.log(response,"response")
-        if (response) {
+        if (response.payload.status===201) {
           setsucessPopup(true);
         }
       })
@@ -511,7 +512,7 @@ export const MenteeSubmitForm = () => {
       const timer = setTimeout(() => {
         // Reset all states
         setsucessPopup(false);
-        // handleLogout()
+        handleLogout()
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -704,12 +705,20 @@ export const MenteeSubmitForm = () => {
               >
                 <img src={SuccessTik} alt="SuccessTik" />
                 <p
-                  className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+                  className="text-[16px] text-black font-semibold bg-clip-text"
                   style={{
                     fontWeight: 600,
                   }}
                 >
-                  {"Questions submitted Successfully."}
+                  {"You're all set"}
+                </p>
+                <p
+                  className="text-[16px] text-black font-semibold bg-clip-text"
+                  style={{
+                    fontWeight: 400,
+                  }}
+                >
+                  {"Thank you for completing our application. A team member will be in contact with you"}
                 </p>
               </div>
             </div>
