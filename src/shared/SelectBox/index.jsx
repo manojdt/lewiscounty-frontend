@@ -16,6 +16,7 @@ export const SelectBox = ({
     if (selectRef.current) {
       if (!isOpen) {
         selectRef.current.focus();
+        selectRef.current.focus();
       } else {
         selectRef.current.blur();
       }

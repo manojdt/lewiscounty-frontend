@@ -196,6 +196,16 @@ export const updateMenteeDocument = createAsyncThunk(
     return updateDocument;
   }
 );
+export const updateMenteeQuestionform = createAsyncThunk(
+  "updateMenteeQuestionform",
+  async (data) => {
+    const updateDocument = await api.post("mentee_info_update/mentee_registration_form/", data);
+    if (updateDocument.status === 201 || updateDocument.status === 200) {
+      return updateDocument;
+    }
+    return updateDocument;
+  }
+);
 
 export const updateToken = createAsyncThunk('updateToken', async (data) => {
   const updateNewToken = await api.post('generate_new_token');

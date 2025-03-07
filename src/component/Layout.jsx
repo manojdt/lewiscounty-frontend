@@ -211,7 +211,7 @@ export default function Layout({ subheader }) {
     }
 
     if (role === "mentee" && !userInfo?.data?.is_registered) {
-      navigate("/programs?type=planned");
+      navigate("/mentee-questions");
       
     }
   }, [userInfo]);

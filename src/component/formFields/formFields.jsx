@@ -19,8 +19,9 @@ import selectedVMTypeIcon from "../../assets/icons/selectedVMTypeIcon.svg";
 import SignatureCanvas from "react-signature-canvas";
 import SearchModal from "./SearchModal";
 import { CustomUpload } from "./CustomUpload";
-import moment from "moment";
+import MultiSelectBox from "../../shared/Multiselect";
 import MuiDatePicker from "../../shared/CustomDatePicker/MuiDatePicker";
+import moment from "moment";
 
 export const EquipmentFormFields = ({
   fields = [],
@@ -83,6 +84,17 @@ export const EquipmentFormFields = ({
           : true;
           return (
             !fld?.isHide && shouldDisplay && (
+              <>
+              {fld.fieldHeading && (
+                <Grid item xs={12}>
+                  <Typography
+                    className="!text-[#353F4F] !text-[14px]"
+                    fontWeight={700}
+                  >
+                    {fld.fieldHeading}
+                  </Typography>
+                </Grid>
+              )}
               <Grid item xs={fld?.col ?? 6}>
                 <Stack spacing={2}>
                   <Typography
@@ -141,7 +153,8 @@ export const EquipmentFormFields = ({
                           title: `Invalid ${fld?.label}`, // Tooltip if validation fails
                         }}
                       />
-                      {["state", "city", "zip_code"].includes(fld.key) && (
+                      {(["state", "city", "zip_code"].includes(fld.key) ||
+                          fld.addressDropdown)&& (
                         <SearchModal
                           searchBar={searchBar}
                           isLoading={isLoading}
@@ -170,6 +183,18 @@ export const EquipmentFormFields = ({
                       disabled={fld?.isDisable ?? false}
                     />
                   )}
+                   {fld?.type === "multiSelect" && (
+                      <MultiSelectBox
+                        name={fld?.key}
+                        menuList={fld?.options || []}
+                        value={formData[fld?.key] || []}
+                        handleChange={(key, value) => handleChange(key, value)}
+                        placeholder={fld?.placeholder || "Select"}
+                        disabled={fld?.isDisable || false}
+                        error={formData?.error?.[fld?.key]}
+                        width="100%"
+                      />
+                    )}
                   {fld?.type === "date" && (
                     <div className="relative !bg-[#FAFAFA] cursor-pointer">
                       <Calendar
@@ -411,6 +436,7 @@ export const EquipmentFormFields = ({
                   )}
                 </Stack>
               </Grid>
+              </>
             )
           );
         })}

@@ -1,0 +1,1163 @@
+export const formFieldData = [
+  {
+    title: "Youth Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name",
+        isRequired: true,
+        isDisable: true,
+        col: 6,
+        key: "youth_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name",
+        isRequired: true,
+        isDisable: true,
+        col: 6,
+        key: "youth_last_name",
+      },
+      {
+        type: "custom_date",
+        label: "Date of Birth",
+        isRequired: false,
+        col: 6,
+        key: "youth_dob",
+      },
+      {
+        type: "radio",
+        label: "Gender",
+        isRequired: false,
+        col: 6,
+        key: "youth_gender",
+        options: [
+          { label: "Male", value: "male" },
+          { label: "Female", value: "female" },
+          { label: "Unspecified", value: "unspecified" },
+        ],
+      },
+      {
+        type: "textbox",
+        label: "Street Address",
+        isRequired: false,
+        col: 12,
+        key: "youth_street_address",
+      },
+      {
+        type: "textbox",
+        label: "State",
+        addressDropdown: true,
+        isRequired: false,
+        col: 6,
+        key: "youth_state",
+      },
+      {
+        type: "textbox",
+        label: "City",
+        addressDropdown: true,
+        isRequired: false,
+        col: 6,
+        key: "youth_city",
+      },
+      {
+        type: "textbox",
+        addressDropdown: true,
+        label: "Zip Code",
+        isRequired: false,
+        col: 6,
+        key: "youth_zip_code",
+      },
+      {
+        type: "textbox",
+        label: "Phone number",
+        isRequired: false,
+        col: 6,
+        key: "youth_phone_number",
+        is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}",
+      },
+      {
+        type: "textbox",
+        label: "School",
+        isRequired: false,
+        col: 6,
+        key: "youth_school",
+      },
+      {
+        type: "textbox",
+        label: "Grade",
+        isRequired: false,
+        col: 6,
+        key: "youth_grade",
+      },
+      {
+        type: "checkbox",
+        label: "Preferred language",
+        isRequired: false,
+        col: 6,
+        key: "youth_preferred_language",
+        isMultiple: true,
+        options: [
+          { label: "English", value: "english" },
+          { label: "Spanish", value: "spanish" },
+          { label: "Other", value: "other" },
+        ],
+      },
+      {
+        type: "selectBox",
+        label: "Ethnicity",
+        isRequired: false,
+        col: 6,
+        key: "youth_ethnicity",
+        options: [
+          { label: "African American", value: "african_american" },
+          { label: "Asian American", value: "asian_american" },
+          { label: "Native American", value: "native_american" },
+          { label: "Hispanic", value: "hispanic" },
+          { label: "Caucasian", value: "caucasian" },
+          { label: "Multi-Racial", value: "multi_racial" },
+          { label: "Other", value: "other" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Referring Individual Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name of person making the referral",
+        isRequired: true,
+        col: 6,
+        key: "referrer_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name of person making the referral",
+        isRequired: true,
+        col: 6,
+        key: "referrer_last_name",
+      },
+      {
+        type: "textbox",
+        label: "Phone Number",
+        isRequired: false,
+        col: 6,
+        key: "referrer_phone",
+        is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}",
+      },
+      {
+        type: "textbox",
+        label: "Email Address",
+        isRequired: false,
+        col: 6,
+        key: "referrer_email",
+      },
+      {
+        type: "selectBox",
+        label: "Relationship of person making the referral",
+        isRequired: false,
+        col: 12,
+        key: "referrer_relationship",
+        options: [
+          { label: "Parent", value: "parent" },
+          { label: "Other family member", value: "family_member" },
+          { label: "Self-referral by youth", value: "self_referral" },
+          { label: "School Staff", value: "school_staff" },
+          { label: "Coach", value: "coach" },
+          { label: "Medical staff", value: "medical_staff" },
+          { label: "Counselor", value: "counselor" },
+          { label: "Friend of youth", value: "friend" },
+          { label: "Family Friend", value: "family_friend" },
+          { label: "Neighbor", value: "neighbor" },
+          { label: "Other", value: "other" },
+        ],
+      },
+      {
+        type: "textarea",
+        label:
+          "Why do you think the Youth Mentorship Program would benefit this youth?",
+        isRequired: false,
+        col: 12,
+        key: "referrer_benefit_reason",
+      },
+      {
+        type: "selectBox",
+        label: "Youth is living with",
+        isRequired: false,
+        col: 12,
+        fieldHeading:
+          "Please be sure that the youth knows about the Mentorship progrma that you have made a referral",
+        key: "youth_living_with",
+        options: [
+          { label: "Mother and Father", value: "both_parents" },
+          { label: "Mother", value: "mother" },
+          { label: "Father", value: "father" },
+          { label: "Grandparents", value: "grandparents" },
+          { label: "Relative", value: "relative" },
+          { label: "Other", value: "other" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Parent/Guardian Information",
+    fields: [
+      {
+        type: "textbox",
+        label: "First name",
+        isRequired: true,
+        col: 6,
+        key: "parent_first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last name",
+        isRequired: true,
+        col: 6,
+        key: "parent_last_name",
+      },
+      {
+        type: "textbox",
+        label: "Street Address",
+        isRequired: false,
+        col: 12,
+        key: "parent_street_address",
+      },
+      {
+        type: "textbox",
+        label: "State",
+        isRequired: false,
+        col: 4,
+        addressDropdown: true,
+        key: "parent_state",
+      },
+      {
+        type: "textbox",
+        label: "City",
+        isRequired: false,
+        addressDropdown: true,
+        col: 4,
+        key: "parent_city",
+      },
+      {
+        type: "textbox",
+        label: "Zip code",
+        isRequired: false,
+        addressDropdown: true,
+        col: 4,
+        key: "parent_zip_code",
+      },
+      {
+        type: "textbox",
+        label: "Phone number",
+        isRequired: false,
+        col: 6,
+        key: "parent_phone",
+        is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}",
+      },
+      {
+        type: "selectBox",
+        label: "Marital Status",
+        isRequired: false,
+        col: 6,
+        key: "parent_marital_status",
+        options: [
+          { label: "Married", value: "married" },
+          { label: "Single", value: "single" },
+          { label: "Domestic Partnership", value: "domestic_partnership" },
+          { label: "Divorced", value: "divorced" },
+          { label: "Separated", value: "separated" },
+          { label: "Widowed", value: "widowed" },
+        ],
+      },
+    ],
+  },
+];
+// MenteeFormFields.js - Form field definitions based on the Figma design
+// MenteeFormFields.js - Form field definitions based on the Figma design
+export const MenteeFormData = {
+  // General Information
+  first_name: "",
+  last_name: "",
+  
+  // Current Support
+  home_members: [
+    {
+      name: "",
+      relationship: "",
+      rating: 0
+    }
+  ],
+  home_relationship_rating: 0,
+  has_other_family: false,
+  how_often_see_family: "",
+  family_relationship_rating: 0,
+  
+  // Friends Information
+  friends: [
+    {
+      name: "",
+      activities: ""
+    }
+  ],
+  friends_in_trouble: false,
+  friends_encouraging: false,
+  friends_positive_feelings: "",
+  friends_can_talk_to: false,
+  connects_with_neighbors: false,
+  
+  // School Information
+  school_name: "",
+  grade: "",
+  has_iep_504: false,
+  attendance: "",
+  grades_info: "",
+  connects_with_school_staff: false,
+  
+  // Activities & Interests
+  hobbies: [],
+  free_time_activities: "",
+  has_job: false,
+  wants_job: false,
+  typical_school_day: "",
+  free_time: "",
+  
+  // Mental Health
+  mental_health_diagnosis: false,
+  sees_therapist: false,
+  stress_handling: "",
+  reaction_when_mad: "",
+  help_when_stressed: "",
+  substance_treatment: false,
+  suicide_attempts: false,
+  skippable: true,
+  
+  // Medical
+  medical_concerns: "",
+  taking_medication: false,
+  allergies: false,
+  needed_medications: "",
+  
+  // Emotional/Social/Spiritual
+  music_preferences: "",
+  plays_instrument: false,
+  wants_to_learn_instrument: false,
+  favorite_sports_team: "",
+  has_pets: false,
+  future_career: "",
+  role_models: "",
+  bucket_list: "",
+  good_at: "",
+  learn_new: "",
+  family_tradition: "",
+  favorite_holiday: "",
+  religious_beliefs: "",
+  attends_church: false,
+  mentor_qualities: "",
+  
+  // Activities Rating
+  activities: [
+    {
+      name: "",
+      rating: 0
+    }
+  ],
+  activity_to_add: "",
+  
+  // Preferences
+  preferences: {
+    ocean_mountain: "",
+    cold_hot: "",
+    spicy_mild: "",
+    book_movie: "",
+    milkshake_fries: "",
+    store_bought_homemade: "",
+    lake_beach: "",
+    city_country: "",
+    aquarium_zoo: "",
+    sunset_sunrise: "",
+    hamburger_taco: ""
+  },
+  
+  // Contact Information
+  parent_phone: "",
+  youth_phone: "",
+  dob: null,
+  race: "",
+  address: "",
+  city: "",
+  state: "",
+  zip_code: "",
+  communication_preference: [],
+  transportation: "",
+  
+  // Signatures
+  youth_signature: null,
+  parent_signature: null,
+  
+  error: {},
+};
+
+export const MenteeFormSection = [
+  {
+    title: "General Information",
+    expanded: true,
+    fields: [
+      {
+        type: "textbox",
+        label: "First Name",
+        placeholder: "Ex: John",
+        isRequired: true,
+        col: 6,
+        key: "first_name",
+      },
+      {
+        type: "textbox",
+        label: "Last Name",
+        placeholder: "Ex: Doe",
+        isRequired: true,
+        col: 6,
+        key: "last_name",
+      },
+    ],
+  },
+  {
+    title: "Current Support",
+    expanded: false,
+    fields: [
+      {
+        type: "dynamic_support",
+        label: "Who lives in the home?",
+        isRequired: true,
+        key: "home_members",
+        columns: [
+          {
+            key: "name",
+            label: "Name",
+            type: "textbox",
+            placeholder: "Name",
+            col: 6,
+          },
+          {
+            key: "relationship",
+            label: "Relationship",
+            type: "selectBox",
+            placeholder: "Relationship",
+            options: [
+              { label: "Parent", value: "parent" },
+              { label: "Sibling", value: "sibling" },
+              { label: "Grandparent", value: "grandparent" },
+              { label: "Other Relative", value: "other_relative" },
+              { label: "Guardian", value: "guardian" },
+              { label: "Other", value: "other" },
+            ],
+            col: 6,
+          },
+        ],
+        buttonText: "Add",
+      },
+      {
+        type: "rating_scale",
+        label: "On a scale of 1-10, how do you rate your relationship with each person in your home?",
+        isRequired: false,
+        key: "home_relationship_rating",
+        min: 1,
+        max: 10,
+      },
+      {
+        type: "radio",
+        label: "Do you have other family that live in the area?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 6,
+        key: "has_other_family",
+      },
+      {
+        type: "selectBox",
+        label: "How often do you see them?",
+        placeholder: "-Select-",
+        isRequired: true,
+        conditionalDisplay: "has_other_family",
+        conditionalValue: true,
+        col: 6,
+        key: "how_often_see_family",
+        options: [
+          { label: "Daily", value: "daily" },
+          { label: "Weekly", value: "weekly" },
+          { label: "Monthly", value: "monthly" },
+          { label: "A few times a year", value: "few_times_year" },
+          { label: "Rarely", value: "rarely" },
+          { label: "Never", value: "never" },
+        ],
+      },
+      {
+        type: "rating_scale",
+        label: "Rate those relationships on a scale of 1-10.",
+        isRequired: false,
+        key: "family_relationship_rating",
+        min: 1,
+        max: 10,
+      },
+    ],
+  },
+  {
+    title: "Friends",
+    expanded: false,
+    fields: [
+      {
+        type: "dynamic_friends",
+        label: "Who are your friends?",
+        isRequired: false,
+        key: "friends",
+        columns: [
+          {
+            key: "name",
+            label: "Friend name",
+            type: "textbox",
+            placeholder: "Enter name",
+            isRequired: false,
+          },
+        ],
+        buttonText: "Add",
+      },
+      {
+        type: "textarea",
+        label: "What do you do with them?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "friend_activities",
+      },
+      {
+        type: "radio",
+        label: "Do any of your friends get in trouble at school, with the law or at home?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "friends_in_trouble",
+      },
+      {
+        type: "radio",
+        label: "Are any of your friends really encouraging (breath of fresh air)?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "friends_encouraging",
+      },
+      {
+        type: "textarea",
+        label: "What do they do that makes you feel good about them?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "friends_positive_feelings",
+      },
+      {
+        type: "radio",
+        label: "Are they friends that you feel you could easily talk to if you were struggling with something?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "friends_can_talk_to",
+      },
+      {
+        type: "radio",
+        label: "Do you connect with any neighbors, family friends or other non-family in the area?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "connects_with_neighbors",
+      },
+    ],
+  },
+  {
+    title: "School Information",
+    expanded: false,
+    fields: [
+      {
+        type: "textbox",
+        label: "What school do you go to?",
+        placeholder: "e.g., Lincoln High School",
+        isRequired: true,
+        col: 6,
+        key: "school_name",
+      },
+      {
+        type: "selectBox",
+        label: "Grade",
+        placeholder: "Grade",
+        isRequired: false,
+        col: 6,
+        key: "grade",
+        options: [
+          { label: "6th Grade", value: "6" },
+          { label: "7th Grade", value: "7" },
+          { label: "8th Grade", value: "8" },
+          { label: "9th Grade", value: "9" },
+          { label: "10th Grade", value: "10" },
+          { label: "11th Grade", value: "11" },
+          { label: "12th Grade", value: "12" },
+        ],
+      },
+      {
+        type: "radio",
+        label: "Do you have an IEP/504 Plan?",
+        isRequired: true,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "has_iep_504",
+      },
+      {
+        type: "textbox",
+        label: "Attendance",
+        placeholder: "e.g., Lincoln High School",
+        isRequired: true,
+        col: 6,
+        key: "attendance",
+      },
+      {
+        type: "textbox",
+        label: "Grades",
+        placeholder: "e.g., Lincoln High School",
+        isRequired: true,
+        col: 6,
+        key: "grades_info",
+      },
+      {
+        type: "radio",
+        label: "Do you connect with any teachers, coaches, or staff at school?",
+        isRequired: true,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "connects_with_school_staff",
+      },
+    ],
+  },
+  {
+    title: "Past/Current Involvement",
+    expanded: false,
+    fields: [
+      {
+        type: "checkbox",
+        label: "Hobbies",
+        isRequired: false,
+        isMultiple: true,
+        options: [
+          { label: "Sports", value: "sports" },
+          { label: "Music", value: "music" },
+          { label: "Theater", value: "theater" },
+          { label: "Clubs", value: "clubs" },
+          { label: "Church Youth Group", value: "church_youth_group" },
+        ],
+        col: 12,
+        key: "hobbies",
+        isMultiSelect: true,
+      },
+      {
+        type: "textarea",
+        label: "What do you usually do with your free time - after school, on weekends?",
+        placeholder: "e.g., Part-time at a coffee shop, Babysitting, interested in tech internships",
+        isRequired: true,
+        col: 12,
+        key: "free_time_activities",
+      },
+      {
+        type: "radio",
+        label: "Do you have a job or have you had one in the past year?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "has_job",
+      },
+      {
+        type: "radio",
+        label: "Do you want a job?",
+        isRequired: true,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "wants_job",
+      },
+      {
+        type: "textarea",
+        label: "What does a typical school day look like for you?",
+        placeholder: "Describe",
+        isRequired: true,
+        col: 12,
+        key: "typical_school_day",
+      },
+      {
+        type: "textarea",
+        label: "What do you do in your free time?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "free_time",
+      },
+    ],
+  },
+  {
+    title: "Mental Health",
+    expanded: false,
+    fields: [
+      {
+        type: "info_text",
+        text: "This section contains questions related to mental health. If any of these questions make you feel uncomfortable, you may choose to skip them or talk to a program coordinator for support.",
+        color: "red",
+      },
+      {
+        type: "radio",
+        label: "Do you have any formal mental health diagnosis?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "mental_health_diagnosis",
+      },
+      {
+        type: "radio",
+        label: "Do you see a therapist or counselor?",
+        isRequired: true,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "sees_therapist",
+      },
+      {
+        type: "textarea",
+        label: "How do you handle stressful situations?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "stress_handling",
+      },
+      {
+        type: "radio",
+        label: "How do you react when you get mad?",
+        isRequired: false,
+        options: [
+          { label: "Verbal aggression", value: "verbal_aggression" },
+          { label: "Physical aggression", value: "physical_aggression" },
+        ],
+        col: 12,
+        key: "reaction_when_mad",
+      },
+      {
+        type: "textarea",
+        label: "If you are at one of the Mentorship activities or outings, what can we do to help if you get stressed or angry?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "help_when_stressed",
+      },
+      {
+        type: "radio",
+        label: "Are you in treatment for alcohol or drug use?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "substance_treatment",
+      },
+      {
+        type: "radio",
+        label: "Has there been any suicide attempts or running away in the last 6 months?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "suicide_attempts",
+      },
+    ],
+  },
+  {
+    title: "Medical",
+    expanded: false,
+    fields: [
+      {
+        type: "textarea",
+        label: "Any medical concerns that we should be aware of?",
+        placeholder: "eg., Seizures, fainting, asthma.",
+        isRequired: false,
+        col: 12,
+        key: "medical_concerns",
+      },
+      {
+        type: "radio",
+        label: "Are you taking any medication?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "taking_medication",
+      },
+      {
+        type: "radio",
+        label: "Any allergies?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "allergies",
+      },
+      {
+        type: "textarea",
+        label: "Any medication, inhaler or EpiPen that you need to have with you if you go on a Mentorship Program outing?",
+        placeholder: "Mention medication",
+        isRequired: false,
+        col: 12,
+        key: "needed_medications",
+      },
+    ],
+  },
+  {
+    title: "Emotional/Social/Spiritual",
+    expanded: false,
+    fields: [
+      {
+        type: "textarea",
+        label: "What is your favorite type of music? Favorite musician / singer / band?",
+        placeholder: "Mention your preference",
+        isRequired: false,
+        col: 12,
+        key: "music_preferences",
+      },
+      {
+        type: "radio",
+        label: "Do you play a musical instrument?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "plays_instrument",
+      },
+      {
+        type: "radio",
+        label: "Do you want to learn to play an instrument?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "wants_to_learn_instrument",
+      },
+      {
+        type: "textarea",
+        label: "Do you have a favorite sports team or athlete?",
+        placeholder: "Mention your favorite sports team or athlete if yes",
+        isRequired: false,
+        col: 12,
+        key: "favorite_sports_team",
+      },
+      {
+        type: "radio",
+        label: "Do you have a pet/pets?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "has_pets",
+      },
+      {
+        type: "textarea",
+        label: "What do you want to do for work when you are an adult?",
+        placeholder: "Type here",
+        isRequired: false,
+        col: 12,
+        key: "future_career",
+      },
+      {
+        type: "textarea",
+        label: "Do you have any real life people (famous or not) that you look up to?",
+        placeholder: "Mention name if yes",
+        isRequired: false,
+        col: 12,
+        key: "role_models",
+      },
+      {
+        type: "textarea",
+        label: "Tell me about some things on your bucket list.",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "bucket_list",
+      },
+      {
+        type: "textarea",
+        label: "Tell me about something that you are good at?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "good_at",
+      },
+      {
+        type: "textarea",
+        label: "If you could learn something new what would it be?",
+        placeholder: "Mention your preference",
+        isRequired: false,
+        col: 12,
+        key: "learn_new",
+      },
+      {
+        type: "textarea",
+        label: "What is a family tradition that do you have?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "family_tradition",
+      },
+      {
+        type: "textarea",
+        label: "What is your favorite holiday and how do you celebrate it?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "favorite_holiday",
+      },
+      {
+        type: "textarea",
+        label: "Tell me about your religious beliefs / faith?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "religious_beliefs",
+      },
+      {
+        type: "radio",
+        label: "Do you attend church?",
+        isRequired: false,
+        options: [
+          { label: "Yes", value: true },
+          { label: "No", value: false },
+        ],
+        col: 12,
+        key: "attends_church",
+      },
+      {
+        type: "textarea",
+        label: "What would you like to have in a mentor?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "mentor_qualities",
+      },
+    ],
+  },
+  {
+    title: "Activities Rating",
+    expanded: false,
+    fields: [
+      {
+        type: "activity_rating",
+        label: "Rate the following activities:",
+        rating_description: [
+          "1 = I love doing this activity or I would really like to learn to do this.",
+          "2 = This activity is ok, I do it sometimes or I kind of would like to learn to do it.",
+          "3 = I have no interest in this activity."
+        ],
+        isRequired: false,
+        key: "activities",
+        buttonText: "Add",
+      },
+    ],
+  },
+  {
+    title: "Preferences",
+    expanded: false,
+    fields: [
+      {
+        type: "preference_pairs",
+        label: "Select based on your preference",
+        isRequired: true,
+        key: "preferences",
+        pairs: [
+          { key: "ocean_mountain", option1: "Ocean", option2: "Mountain" },
+          { key: "cold_hot", option1: "Cold", option2: "Hot" },
+          { key: "spicy_mild", option1: "Spicy", option2: "Mild" },
+          { key: "book_movie", option1: "Book", option2: "Movie" },
+          { key: "milkshake_fries", option1: "Milkshake", option2: "Fries" },
+          { key: "store_bought_homemade", option1: "Store-bought gifts", option2: "home-made gifts" },
+          { key: "lake_beach", option1: "Lake", option2: "Beach" },
+          { key: "city_country", option1: "City", option2: "Country" },
+          { key: "aquarium_zoo", option1: "Aquarium", option2: "Zoo" },
+          { key: "sunset_sunrise", option1: "Sunset", option2: "Sunrise" },
+          { key: "hamburger_taco", option1: "Hamburger", option2: "Taco" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Contact Information",
+    expanded: false,
+    fields: [
+      {
+        type: "textbox",
+        label: "Parent phone",
+        placeholder: "(555) 555-1234",
+        isRequired: false,
+        col: 6,
+        key: "parent_phone",
+        is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}",
+      },
+      {
+        type: "textbox",
+        label: "Youth phone",
+        placeholder: "(555) 555-1234",
+        isRequired: false,
+        col: 6,
+        key: "youth_phone",
+        is_pattern: true,
+        pattern: "\\(\\d{3}\\) \\d{3}-\\d{4}|\\d{3}-\\d{3}-\\d{4}",
+      },
+      {
+        type: "custom_date",
+        label: "Date of Birth",
+        placeholder: "Select date of birth",
+        isRequired: false,
+        col: 6,
+        key: "dob",
+      },
+      {
+        type: "textbox",
+        label: "Race",
+        placeholder: "Mention your race",
+        isRequired: false,
+        col: 6,
+        key: "race",
+      },
+      {
+        type: "textarea",
+        label: "Mailing / physical address:",
+        placeholder: "Mention mailing / physical address:",
+        isRequired: true,
+        col: 12,
+        key: "address",
+      },
+      {
+        type: "textbox",
+        label: "State",
+        placeholder: "State",
+        isRequired: true,
+        col: 4,
+        key: "state",
+      },
+      {
+        type: "textbox",
+        label: "City",
+        placeholder: "City",
+        isRequired: true,
+        col: 4,
+        key: "city",
+      },
+      {
+        type: "textbox",
+        label: "Zip code",
+        placeholder: "Zip code",
+        isRequired: true,
+        col: 4,
+        key: "zip_code",
+        is_pattern: true,
+        format_type: "zip_code",
+      },
+      {
+        type: "checkbox",
+        label: "How do you prefer to communicate about Mentorship activities and events?",
+        isRequired: true,
+        isMultiple: true,
+        options: [
+          { label: "Text", value: "text" },
+          { label: "email", value: "email" },
+          { label: "Phone call", value: "phone_call" },
+        ],
+        col: 12,
+        key: "communication_preference",
+        isMultiSelect: true,
+      },
+      {
+        type: "textarea",
+        label: "How would you be transported to / from group outings or to meet with your Mentor?",
+        placeholder: "Describe",
+        isRequired: false,
+        col: 12,
+        key: "transportation",
+      },
+    ],
+  },
+  {
+    title: "Signature",
+    expanded: false,
+    isSignature: true,
+    youth_signature: true,
+    parent_signature: true,
+    fields: [],
+  },
+];
+export const removeFirstUnderscoreWord = (input) => {
+  // Check if input is null, undefined, or not a string
+  if (!input || typeof input !== "string") {
+    return input;
+  }
+
+  const parts = input.split("_");
+  return parts.length > 1 ? parts.slice(1).join("_") : input;
+};
+export const debounce = (func, delay) => {
+  let timeoutId;
+  return function (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+      timeoutId = null;
+    }, delay);
+  };
+};
