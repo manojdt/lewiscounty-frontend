@@ -278,6 +278,7 @@ export const formFieldData = [
   },
 ];
 // MenteeFormFields.js - Form field definitions based on the Figma design
+// MenteeFormFields.js - Form field definitions based on the Figma design
 export const MenteeFormData = {
   // General Information
   first_name: "",
@@ -291,6 +292,7 @@ export const MenteeFormData = {
       rating: 0
     }
   ],
+  home_relationship_rating: 0,
   has_other_family: false,
   how_often_see_family: "",
   family_relationship_rating: 0,
@@ -332,6 +334,7 @@ export const MenteeFormData = {
   help_when_stressed: "",
   substance_treatment: false,
   suicide_attempts: false,
+  skippable: true,
   
   // Medical
   medical_concerns: "",
@@ -363,6 +366,7 @@ export const MenteeFormData = {
       rating: 0
     }
   ],
+  activity_to_add: "",
   
   // Preferences
   preferences: {

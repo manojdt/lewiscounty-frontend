@@ -23,6 +23,10 @@ import { toast } from "react-toastify";
 import SignatureCanvas from "react-signature-canvas";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
 import { EquipmentFormFields } from "../formFields/formFields";
+import {
+  MenteeFormData,
+  MenteeFormSection,
+} from "./HelpFunction";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
 import { useNavigate } from "react-router-dom";
 // import email_notify_icon from "../../assets/icons/email_notify_icon.svg";
@@ -34,9 +38,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import moment from "moment";
 import { updateUserInfo } from "../../services/loginInfo";
-import { MenteeFormData, MenteeFormSection } from "./HelpFunction";
 
-export function MenteeApplicationAssismentForm() {
+export function MenteeApplicationForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
@@ -437,6 +440,7 @@ export function MenteeApplicationAssismentForm() {
 
   // Render custom field types
   const renderCustomFields = (section, sectionIndex) => {
+    // Signature section
     if (section.isSignature) {
       return (
         <Box>
@@ -511,7 +515,363 @@ export function MenteeApplicationAssismentForm() {
         </Box>
       );
     }
+    
+    // Dynamic support section (home members)
+    if (section.title === "Current Support") {
+      return (
+        <Box>
+          {/* Standard fields */}
+          <EquipmentFormFields
+            fields={section.fields.filter(f => f.type !== "dynamic_support" && f.type !== "rating_scale")}
+            searchBar={searchBar}
+            setSearchedOption={setSearchedOption}
+            addressFieldData={addressFieldData}
+            isLoading={isLoading}
+            formData={{ ...formData, error: formData.error }}
+            handleChange={handleFieldChange}
+          />
+          
+          {/* Home members dynamic section */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 500 }}>
+              Who lives in the home? <span style={{ color: 'red' }}>*</span>
+            </Typography>
+            
+            {formData.home_members.map((member, index) => (
+              <Box key={`member-${index}`} sx={{ mb: 2, p: 2, backgroundColor: "#F5F8FC", borderRadius: 1 }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={12} md={5}>
+                    <TextField
+                      fullWidth
+                      label="Name"
+                      placeholder="Name"
+                      value={member.name || ""}
+                      onChange={(e) => handleDynamicFieldChange("home_members", index, "name", e.target.value)}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth size="small">
+                      <FormLabel id={`relationship-label-${index}`}>Relationship</FormLabel>
+                      <TextField
+                        select
+                        SelectProps={{
+                          native: true,
+                        }}
+                        value={member.relationship || ""}
+                        onChange={(e) => handleDynamicFieldChange("home_members", index, "relationship", e.target.value)}
+                        size="small"
+                      >
+                        <option value="">Select Relationship</option>
+                        <option value="parent">Parent</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="grandparent">Grandparent</option>
+                        <option value="other_relative">Other Relative</option>
+                        <option value="guardian">Guardian</option>
+                        <option value="other">Other</option>
+                      </TextField>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    {formData.home_members.length > 1 && (
+                      <IconButton 
+                        color="error"
+                        onClick={() => handleRemoveDynamicField("home_members", index)}
+                        aria-label="Remove person"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
+            ))}
+            
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => handleAddDynamicField("home_members", { name: "", relationship: "" })}
+              >
+                Add
+              </Button>
+            </Box>
+          </Box>
+          
+          {/* Rating scale */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              On a scale of 1-10, how do you rate your relationship with each person in your home?
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
+                <Button
+                  key={`rating-home-${rating}`}
+                  variant={formData.home_relationship_rating === rating ? "contained" : "outlined"}
+                  sx={{ 
+                    minWidth: "40px", 
+                    height: "40px", 
+                    borderRadius: "20%", 
+                    p: 0,
+                    backgroundColor: formData.home_relationship_rating === rating ? "#2185d0" : "transparent",
+                    '&:hover': {
+                      backgroundColor: formData.home_relationship_rating === rating ? "#1678c2" : "rgba(0,0,0,0.04)",
+                    }
+                  }}
+                  onClick={() => handleFieldChange("home_relationship_rating", rating)}
+                >
+                  {rating}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          
+          {/* Family relationship rating */}
+          <Box sx={{ mb: 4, mt: 4 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              Rate those relationships on a scale of 1-10.
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
+                <Button
+                  key={`rating-family-${rating}`}
+                  variant={formData.family_relationship_rating === rating ? "contained" : "outlined"}
+                  sx={{ 
+                    minWidth: "40px", 
+                    height: "40px", 
+                    borderRadius: "50%", 
+                    p: 0,
+                    backgroundColor: formData.family_relationship_rating === rating ? "#2185d0" : "transparent",
+                    '&:hover': {
+                      backgroundColor: formData.family_relationship_rating === rating ? "#1678c2" : "rgba(0,0,0,0.04)",
+                    }
+                  }}
+                  onClick={() => handleFieldChange("family_relationship_rating", rating)}
+                >
+                  {rating}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      );
+    }
+    
+    // Friends dynamic section
+    if (section.title === "Friends") {
+      return (
+        <Box>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 500 }}>
+              Who are your friends?
+            </Typography>
+            
+            {formData.friends.map((friend, index) => (
+              <Box key={`friend-${index}`} sx={{ mb: 2, p: 2, backgroundColor: "#F5F8FC", borderRadius: 1 }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={12} md={10}>
+                    <TextField
+                      fullWidth
+                      label="Friend name"
+                      placeholder="Enter name"
+                      value={friend.name || ""}
+                      onChange={(e) => handleDynamicFieldChange("friends", index, "name", e.target.value)}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    {formData.friends.length > 1 && (
+                      <IconButton 
+                        color="error"
+                        onClick={() => handleRemoveDynamicField("friends", index)}
+                        aria-label="Remove friend"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
+            ))}
+            
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => handleAddDynamicField("friends", { name: "" })}
+              >
+                Add
+              </Button>
+            </Box>
+          </Box>
+          
+          {/* Standard fields */}
+          <EquipmentFormFields
+            fields={section.fields.filter(f => f.type !== "dynamic_friends")}
+            searchBar={searchBar}
+            setSearchedOption={setSearchedOption}
+            addressFieldData={addressFieldData}
+            isLoading={isLoading}
+            formData={{ ...formData, error: formData.error }}
+            handleChange={handleFieldChange}
+          />
+        </Box>
+      );
+    }
+    
+    // Activities rating section
+    if (section.title === "Activities Rating") {
+      return (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Rate the following activities:
+          </Typography>
+          
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            1 = I love doing this activity or I would really like to learn to do this.
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            2 = This activity is ok, I do it sometimes or I kind of would like to learn to do it.
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 3 }}>
+            3 = I have no interest in this activity.
+          </Typography>
+          
+          {formData.activities.map((activity, index) => (
+            <Box key={`activity-${index}`} sx={{ mb: 3, p: 2, backgroundColor: "#F5F8FC", borderRadius: 1 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">
+                    {activity.name || `Activity ${index + 1}`}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    {[1, 2, 3].map((rating) => (
+                      <Button
+                        key={`activity-${index}-rating-${rating}`}
+                        variant={activity.rating === rating ? "contained" : "outlined"}
+                        sx={{ 
+                          minWidth: "40px", 
+                          backgroundColor: activity.rating === rating ? "#2185d0" : "transparent",
+                          '&:hover': {
+                            backgroundColor: activity.rating === rating ? "#1678c2" : "rgba(0,0,0,0.04)",
+                          }
+                        }}
+                        onClick={() => handleDynamicFieldChange("activities", index, "rating", rating)}
+                      >
+                        {rating}
+                      </Button>
+                    ))}
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          ))}
+          
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2, gap: 2 }}>
+            <TextField
+              label="Activity name"
+              placeholder="eg: volleyball"
+              value={formData.activity_to_add || ""}
+              onChange={(e) => handleFieldChange("activity_to_add", e.target.value)}
+              fullWidth
+              size="small"
+            />
+            <Button
+              startIcon={<AddIcon />}
+              onClick={() => {
+                if (formData.activity_to_add) {
+                  handleAddDynamicField("activities", { name: formData.activity_to_add, rating: 0 });
+                  handleFieldChange("activity_to_add", "");
+                } else {
+                  toast.warning("Please enter an activity name");
+                }
+              }}
+            >
+              Add
+            </Button>
+          </Box>
+        </Box>
+      );
+    }
+    
+    // Preferences section
+    if (section.title === "Preferences") {
+      // The preference pairs
+      const preferencePairs = [
+        { key: "ocean_mountain", option1: "Ocean", option2: "Mountain" },
+        { key: "cold_hot", option1: "Cold", option2: "Hot" },
+        { key: "spicy_mild", option1: "Spicy", option2: "Mild" },
+        { key: "book_movie", option1: "Book", option2: "Movie" },
+        { key: "milkshake_fries", option1: "Milkshake", option2: "Fries" },
+        { key: "store_bought_homemade", option1: "Store-bought gifts", option2: "home-made gifts" },
+        { key: "lake_beach", option1: "Lake", option2: "Beach" },
+        { key: "city_country", option1: "City", option2: "Country" },
+        { key: "aquarium_zoo", option1: "Aquarium", option2: "Zoo" },
+        { key: "sunset_sunrise", option1: "Sunset", option2: "Sunrise" },
+        { key: "hamburger_taco", option1: "Hamburger", option2: "Taco" },
+      ];
+      
+      return (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 3 }}>
+            Select based on your preference <span style={{ color: 'red' }}>*</span>
+          </Typography>
+          
+          <Grid container spacing={3}>
+            {preferencePairs.map((pair) => (
+              <Grid item xs={12} md={6} lg={4} key={pair.key}>
+                <Paper sx={{ p: 2, backgroundColor: "#F5F8FC" }}>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      value={formData.preferences[pair.key] || ""}
+                      onChange={(e) => handlePreferenceChange(pair.key, e.target.value)}
+                    >
+                      <FormControlLabel 
+                        value={pair.option1.toLowerCase()} 
+                        control={<Radio />} 
+                        label={pair.option1} 
+                      />
+                      <Typography sx={{ mx: 1, display: 'flex', alignItems: 'center' }}>/</Typography>
+                      <FormControlLabel 
+                        value={pair.option2.toLowerCase()} 
+                        control={<Radio />} 
+                        label={pair.option2} 
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      );
+    }
 
+    // Mental Health section with warning
+    if (section.title === "Mental Health") {
+      return (
+        <Box>
+          <Typography 
+            variant="body1" 
+            sx={{ mb: 4, color: 'red', fontWeight: 500 }}
+          >
+            This section contains questions related to mental health. If any of these questions make you feel uncomfortable, you may choose to skip them or talk to a program coordinator for support.
+          </Typography>
+          
+          <EquipmentFormFields
+            fields={section.fields.filter(f => f.type !== "info_text")}
+            searchBar={searchBar}
+            setSearchedOption={setSearchedOption}
+            addressFieldData={addressFieldData}
+            isLoading={isLoading}
+            formData={{ ...formData, error: formData.error }}
+            handleChange={handleFieldChange}
+          />
+        </Box>
+      );
+    }
+    
     // Otherwise use the standard field renderer with our standard fields
     return (
       <EquipmentFormFields
@@ -625,7 +985,21 @@ export function MenteeApplicationAssismentForm() {
         </Grid2>
         
         {/* Success Modal */}
-      
+        {/* <MuiCustomModal open={isPopupOpen} maxWidth={"sm"}>
+          <div className="flex justify-center">
+            <img
+              className="w-10 h-10 mt-6 mb-4"
+              src={email_notify_icon}
+              alt="email_notify_icon"
+            />
+          </div>
+
+          <p className="text-center text-lg mb-10">
+            {
+              "Thank you for completing the Mentee application. A team member will be in contact with you soon."
+            }
+          </p>
+        </MuiCustomModal> */}
         
         {/* Terms & Conditions Modal */}
         <MuiCustomModal
@@ -659,4 +1033,4 @@ export function MenteeApplicationAssismentForm() {
   );
 }
 
-export default MenteeApplicationAssismentForm;
+export default MenteeApplicationForm;
