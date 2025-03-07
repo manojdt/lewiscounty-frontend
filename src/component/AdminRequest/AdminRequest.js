@@ -135,10 +135,10 @@ const AdminRequest = () => {
           <Box>
             <Typography variant="body1">Name: {row.name}</Typography>
             <Typography variant="body1">
-              Submitted Date: {row.submittedDate}
+              Submitted Date: {row.created_at}
             </Typography>
             <Typography variant="body1">
-              Status: {row.applicationStatus}
+              Status: {row.application_status}
             </Typography>
             {/* Add more details as needed */}
           </Box>,
@@ -147,7 +147,7 @@ const AdminRequest = () => {
     });
 
     // Conditional actions based on status
-    if (row.applicationStatus === "Waiting for Verification") {
+    if (row.application_status === "waiting_for_verification") {
       items.push({
         label: "Verify Application",
         action: () =>
@@ -167,8 +167,8 @@ const AdminRequest = () => {
     }
 
     if (
-      row.interviewStatus === "Selected" &&
-      row.backgroundVerification === "..."
+      row.interview_status === "selected" &&
+      row.bg_status === "not_started"
     ) {
       items.push({
         label: "Start Background Check",
@@ -189,7 +189,7 @@ const AdminRequest = () => {
       });
     }
 
-    if (row.trainingVideo === "Yet to watch") {
+    if (row.video_status === "yet_to_watch") {
       items.push({
         label: "Send Reminder",
         action: () =>
@@ -209,7 +209,7 @@ const AdminRequest = () => {
       });
     }
 
-    if (row.finalDecision === "Pending") {
+    if (row.approve_status === "pending") {
       items.push({
         label: "Approve",
         action: () =>

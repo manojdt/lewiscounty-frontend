@@ -63,6 +63,40 @@ export const statusColors = {
 
   // For not submitted status
   "Not Submitted": "#6E6E6E",
+  
+  // Gender choices from backend
+  male: "#1D5BBF",
+  female: "#1D5BBF",
+  others: "#1D5BBF",
+  none: "#6E6E6E",
+  nonbinary: "#1D5BBF",
+  "prefer not to answer": "#6E6E6E",
+    
+  // MaritalStatus choices from backend
+  single: "#1D5BBF",
+  married: "#1D5BBF",
+  domestic_partnership: "#1D5BBF",
+  widowed: "#1D5BBF",
+  divorced: "#1D5BBF",
+  separated: "#1D5BBF",
+  
+  // InterviewStatus choices from backend
+  mail_sent: "#1D5BBF",
+  selected: "#FFD500",
+  not_selected: "#E0382D",
+  
+  // BackgroundCheckStatus choices from backend
+  not_started: "#1D5BBF",
+  passed: "#16B681",
+  failed: "#E0382D",
+  
+  // TrainingVideoStatus choices from backend
+  yet_to_watch: "#FFD500",
+  watched: "#16B681",
+  
+  // ApplicationStatus choices from backend
+  waiting_for_verification: "#FFD500",
+  verified: "#16B681",  
 };
 
 // Comprehensive text mapping based on constants.js and ProfileView
@@ -125,6 +159,42 @@ export const statusText = {
 
   // For not submitted status
   "Not Submitted": "Not Submitted",
+  
+  // Gender choices from backend
+  male: "Male",
+  female: "Female",
+  others: "Others",
+  none: "None",
+  nonbinary: "Non Binary",
+  "prefer not to answer": "Prefer Not To Answer",  
+  
+  // MaritalStatus choices from backend
+  single: "Single",
+  married: "Married",
+  domestic_partnership: "Domestic Partnership",
+  widowed: "Widowed",
+  divorced: "Divorced",
+  separated: "Separated",
+  
+  // InterviewStatus choices from backend
+  mail_sent: "Mail Sent",
+  selected: "Selected",
+  not_selected: "Not Selected",
+  
+  // BackgroundCheckStatus choices from backend
+  not_started: "Not Started",
+  passed: "Passed",
+  failed: "Failed",
+  
+  // TrainingVideoStatus choices from backend
+  yet_to_watch: "Yet to Watch",
+  watched: "Watched",
+  
+  // ApplicationStatus choices from backend
+  waiting_for_verification: "Waiting for Verification",
+  verified: "Verified",
+  // rejected: "Rejected", // Already exists above
+  // inreview: "INREVIEW", // Already exists above
 };
 
 // Map of statuses that should show icons instead of dots
@@ -133,6 +203,11 @@ export const statusWithIcons = {
   Rejected: CancelIcon,
   approved: VerifiedIcon,
   rejected: CancelIcon,
+  accept: VerifiedIcon,
+  cancel: CancelIcon,
+  passed: VerifiedIcon,
+  failed: CancelIcon,
+  verified: VerifiedIcon,
 };
 
 /**
@@ -145,10 +220,13 @@ export const statusWithIcons = {
  * @returns {JSX.Element} Status indicator with dot/icon and text
  */
 const StatusIndicator = ({ status, useIcon = false, sx = {} }) => {
-  const statusColor = statusColors[status] || "#6E6E6E"; // Default gray if status not found
-  const displayText = statusText[status] || status; // Use mapping or the status itself
+  // Normalize status value to lowercase for case-insensitive matching
+  const normalizedStatus = status?.toLowerCase?.() || status;
+  
+  const statusColor = statusColors[normalizedStatus] || "#6E6E6E"; // Default gray if status not found
+  const displayText = statusText[normalizedStatus] || status; // Use mapping or the status itself
   const showDot = status !== "Not Submitted"; // Don't show dot for "Not Submitted"
-  const IconComponent = useIcon && statusWithIcons[status];
+  const IconComponent = useIcon && (statusWithIcons[normalizedStatus] || statusWithIcons[status]);
 
   return status ? (
     <Stack direction="row" alignItems="center" spacing={1} sx={sx}>

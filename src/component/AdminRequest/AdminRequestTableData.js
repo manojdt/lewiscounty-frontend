@@ -1,5 +1,4 @@
-import { Box, IconButton } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import StatusIndicator from "../../shared/StatusIndicator/StatusIndicator";
 
