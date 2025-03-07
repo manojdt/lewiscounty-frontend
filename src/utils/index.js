@@ -30,7 +30,11 @@ export function getMonth(date = dayjs()) {
   });
   return daysMatrix;
 }
-
+export const questionFlowRedirect = (userData)=>{
+  if(userData){
+    return "/mentee-questions";
+  }
+}
 export function getWeek(date = dayjs()) {
   let startOfWeek = date.startOf("week");
   const daysOfWeek = [

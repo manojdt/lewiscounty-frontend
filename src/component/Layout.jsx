@@ -14,6 +14,7 @@ import GoalIcon from "../assets/icons/GoalMenu.svg";
 import DiscussionIcon from "../assets/icons/discussionIcon.svg";
 import { user } from "../utils/constant";
 import { docuSign } from "../services/activities";
+import { questionFlowRedirect } from "../utils";
 
 export default function Layout({ subheader }) {
   const dispatch = useDispatch();
@@ -235,8 +236,8 @@ export default function Layout({ subheader }) {
     }
 
     if (role === "mentee" && !userInfo?.data?.is_registered) {
-      navigate("/mentee-questions");
-      
+     const res= questionFlowRedirect(userInfo?.data)
+     navigate(res);
     }
   }, [userInfo]);
 
