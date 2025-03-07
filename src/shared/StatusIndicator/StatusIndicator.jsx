@@ -1,7 +1,7 @@
-import React from 'react';
-import { Stack, Box, Typography } from '@mui/material';
-import VerifiedIcon from '@mui/icons-material/CheckCircle'; 
-import CancelIcon from '@mui/icons-material/Cancel'; 
+import React from "react";
+import { Stack, Box, Typography } from "@mui/material";
+import VerifiedIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 // Consolidated status colors and text mapping based on constants.js and ProfileView
 export const statusColors = {
@@ -16,7 +16,7 @@ export const statusColors = {
   accept: "#16B681",
   in_progress: "#FF7600",
   inreview: "#FF7600",
-  
+
   // Program statuses
   yettojoin: "#1D5BBF",
   yettostart: "#FFD500",
@@ -27,17 +27,17 @@ export const statusColors = {
   draft: "#6E6E6E",
   assign_program_accepted: "#16B681",
   new_program_request_rejected: "#E0382D",
-  
+
   // Task status colors
   waiting_for_approval: "#1D5BBF",
   reassigned: "#1D5BBF",
   newtask: "#1D5BBF",
   submitted: "#FFD500",
-  
+
   // Step statuses
   "In-Progress": "#FF7600",
-  "Waiting": "#FFD500",
-  
+  Waiting: "#FFD500",
+
   // Goal statuses
   active: "#FFD500",
   ongoing: "#FF7600",
@@ -45,22 +45,22 @@ export const statusColors = {
   inactive: "#FF7600",
   decline: "#E0382D",
   cancel: "#E0382D",
-  
+
   // Member statuses
-  "Active": "#1D5BBF",    // Same color as "new"
-  "Deactive": "#E0382D",  // Same color as "cancelled"
-  
+  Active: "#1D5BBF", // Same color as "new"
+  Deactive: "#E0382D", // Same color as "cancelled"
+
   // Other statuses
   Wating_for_response: "#1D5BBF",
   launched: "#16B681",
   deactivated: "#6E6E6E",
   review: "#1D5BBF",
   deleted: "#E0382D",
-  
+
   // ProfileView specific statuses
-  "Approved": "#16B681",
-  "Rejected": "#E0382D",
-  
+  Approved: "#16B681",
+  Rejected: "#E0382D",
+
   // For not submitted status
   "Not Submitted": "#6E6E6E",
 };
@@ -74,14 +74,14 @@ export const statusText = {
   completed: "Completed",
   cancelled: "Cancelled",
   rejected: "Rejected",
-  approved: "Approved",
-  accept: "Approved",// goal 
+  approved: "Accepted",
+  accept: "Approved", // goal
   in_progress: "In Progress",
   inreview: "In Review",
-  
+
   // Program status texts
   yettojoin: "Yet to Launch",
-  yettostart: "Yet to Start", 
+  yettostart: "Yet to Start",
   yettoapprove: "Waiting for Approval",
   inprogress: "Ongoing",
   started: "Ongoing",
@@ -89,17 +89,17 @@ export const statusText = {
   draft: "Draft",
   assign_program_accepted: "Approved",
   new_program_request_rejected: "Rejected",
-  
+
   // Task status texts
   waiting_for_approval: "Waiting for Approval",
   reassigned: "Re-assigned",
   newtask: "New",
   submitted: "Submitted",
-  
+
   // Step statuses
   "In-Progress": "In Progress",
-  "Waiting": "Waiting",
-  
+  Waiting: "Waiting",
+
   // Goal statuses
   active: "Active",
   ongoing: "Ongoing",
@@ -107,37 +107,37 @@ export const statusText = {
   inactive: "Inactive",
   decline: "Declined",
   cancel: "Cancelled",
-  
+
   // Member statuses
-  "Active": "Active",
-  "Deactive": "Deactive",
-  
+  Active: "Active",
+  Deactive: "Deactive",
+
   // Other statuses
   Wating_for_response: "Waiting for Response",
   launched: "Launched",
   deactivated: "Deactivated",
   review: "Review",
   deleted: "Deleted",
-  
+
   // ProfileView specific statuses
-  "Approved": "Approved",
-  "Rejected": "Rejected",
-  
+  Approved: "Approved",
+  Rejected: "Rejected",
+
   // For not submitted status
   "Not Submitted": "Not Submitted",
 };
 
 // Map of statuses that should show icons instead of dots
 export const statusWithIcons = {
-  "Approved": VerifiedIcon,
-  "Rejected": CancelIcon,
-  "approved": VerifiedIcon,
-  "rejected": CancelIcon
+  Approved: VerifiedIcon,
+  Rejected: CancelIcon,
+  approved: VerifiedIcon,
+  rejected: CancelIcon,
 };
 
 /**
  * StatusIndicator component for displaying status with colored dot or icon
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.status - Status value (e.g. 'new', 'pending', etc.)
  * @param {boolean} props.useIcon - Whether to use icons instead of dots for certain statuses
@@ -150,13 +150,8 @@ const StatusIndicator = ({ status, useIcon = false, sx = {} }) => {
   const showDot = status !== "Not Submitted"; // Don't show dot for "Not Submitted"
   const IconComponent = useIcon && statusWithIcons[status];
 
-  return (
-    <Stack 
-      direction="row" 
-      alignItems="center" 
-      spacing={1}
-      sx={sx}
-    >
+  return status ? (
+    <Stack direction="row" alignItems="center" spacing={1} sx={sx}>
       {showDot && !IconComponent && (
         <Box
           className="h-[10px] w-[10px] rounded-full"
@@ -165,18 +160,18 @@ const StatusIndicator = ({ status, useIcon = false, sx = {} }) => {
           }}
         />
       )}
-      
+
       {showDot && IconComponent && (
-        <IconComponent 
-          sx={{ 
+        <IconComponent
+          sx={{
             color: statusColor,
-            fontSize: "1.2rem"
-          }} 
+            fontSize: "1.2rem",
+          }}
         />
       )}
-      
+
       <Typography
-        className={`!text-[14px] ${useIcon ? 'font-medium' : 'font-medium'}`}
+        className={`!text-[14px] ${useIcon ? "font-medium" : "font-medium"}`}
         sx={{
           color: statusColor,
         }}
@@ -184,12 +179,14 @@ const StatusIndicator = ({ status, useIcon = false, sx = {} }) => {
         {displayText}
       </Typography>
     </Stack>
+  ) : (
+    "-"
   );
 };
 
 /**
  * StatusIndicatorWithAction component extends StatusIndicator to include optional action elements
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.status - Status value (e.g. 'new', 'pending', etc.)
  * @param {boolean} props.useIcon - Whether to use icons instead of dots
@@ -197,7 +194,12 @@ const StatusIndicator = ({ status, useIcon = false, sx = {} }) => {
  * @param {Object} props.sx - Optional MUI sx props for additional styling
  * @returns {JSX.Element} Status indicator with action
  */
-export const StatusIndicatorWithAction = ({ status, useIcon = false, action, sx = {} }) => {
+export const StatusIndicatorWithAction = ({
+  status,
+  useIcon = false,
+  action,
+  sx = {},
+}) => {
   return (
     <Stack
       direction="row"

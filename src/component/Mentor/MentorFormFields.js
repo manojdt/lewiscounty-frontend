@@ -16,7 +16,7 @@ export const MentorFormData = {
   marital_status: "",
 
   // Background Questions
-  about_program: "",
+  known_about_program: "",
   motivation_description: "",
   offer_mentees: "",
   mentorship_achievement: "",
@@ -192,7 +192,7 @@ export const MentorFormSection = [
         placeholder: "Type here...",
         isRequired: false,
         col: 12,
-        key: "about_program",
+        key: "known_about_program",
       },
       {
         type: "textarea",
@@ -272,7 +272,7 @@ export const MentorFormSection = [
     fields: [],
   },
   {
-    title: "Signature",
+    title: "E-sign",
     expanded: true,
     isSignature: true,
     fields: [],

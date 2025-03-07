@@ -36,7 +36,7 @@ export function MentorApplicationForm() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo);
   const userData = userInfo?.data || {};
-
+  const containerRef = useRef();
   const [updateUserInfoPost] = useUpdateUserInfoPostMutation();
   const { data: languagesData, isLoading: isLanguagesLoading } =
     useGetLanguageListQuery();
@@ -604,12 +604,12 @@ export function MentorApplicationForm() {
                     </div>
                   ) : section.isSignature ? (
                     // Signature section
-                    <div>
+                    <div ref={containerRef}>
                       <SignatureCanvas
                         ref={signatureRef}
                         penColor="black"
                         canvasProps={{
-                          width: 1200,
+                          width: containerRef.current?.offsetWidth,
                           height: 200,
                           className: "signature-canvas",
                           style: {

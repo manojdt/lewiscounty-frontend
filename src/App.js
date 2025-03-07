@@ -100,6 +100,7 @@ import MentorApplicationForm from "./component/Mentor/MentorApplicationForm";
 import { MenteeSubmitForm } from "./component/MenteeQuestions/MenteeSubmitForm";
 import MenteeAssessment from "./component/MenteeQuestions/MenteeAssisment";
 import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAssismentForm";
+import AdminRequest from "./component/AdminRequest/AdminRequest";
 
 
 function App() {
@@ -209,6 +210,7 @@ function App() {
             <Route path='/create-programs' element={<CreatePrograms />} />
             <Route path='/update-program/:id' element={<CreatePrograms />} />
             <Route path='/all-request' element={<AllRequest />} />
+            <Route path='/admin-requests' element={<AdminRequest />} />
             <Route path='/program' element={<ProgramData />} />
 
             <Route path='/calendar' element={<Scheduler />} />
