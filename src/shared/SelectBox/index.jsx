@@ -1,5 +1,4 @@
 import { MenuItem, TextField } from "@mui/material";
-import { MenuItem, TextField } from "@mui/material";
 import React, { useRef } from "react";
 import ArrowDown from "../../assets/icons/menuDownIcon.svg";
 
@@ -7,7 +6,6 @@ export const SelectBox = ({
   value = "",
   handleChange = () => false,
   menuList = [],
-  width = "100px",
   width = "100px",
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -21,16 +19,12 @@ export const SelectBox = ({
         selectRef.current.focus();
       } else {
         selectRef.current.blur();
-        selectRef.current.blur();
       }
     }
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <TextField
-        select
-        fullWidth
       <TextField
         select
         fullWidth
@@ -92,7 +86,6 @@ export const SelectBox = ({
             {e?.label}
           </MenuItem>
         ))}
-      </TextField>
       </TextField>
     </div>
   );

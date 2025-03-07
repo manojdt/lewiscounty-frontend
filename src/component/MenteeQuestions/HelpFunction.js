@@ -21,14 +21,14 @@ export const formFieldData = [
       {
         type: "custom_date",
         label: "Date of Birth",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_dob",
       },
       {
         type: "radio",
         label: "Gender",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_gender",
         options: [
@@ -40,7 +40,7 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Street Address",
-        isRequired: true,
+        isRequired: false,
         col: 12,
         key: "youth_street_address",
       },
@@ -48,7 +48,7 @@ export const formFieldData = [
         type: "textbox",
         label: "State",
         addressDropdown: true,
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_state",
       },
@@ -56,7 +56,7 @@ export const formFieldData = [
         type: "textbox",
         label: "City",
         addressDropdown: true,
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_city",
       },
@@ -64,14 +64,14 @@ export const formFieldData = [
         type: "textbox",
         addressDropdown: true,
         label: "Zip Code",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_zip_code",
       },
       {
         type: "textbox",
         label: "Phone number",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_phone_number",
         is_pattern: true,
@@ -94,7 +94,7 @@ export const formFieldData = [
       {
         type: "checkbox",
         label: "Preferred language",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "youth_preferred_language",
         isMultiple: true,
@@ -142,7 +142,7 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Phone Number",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "referrer_phone",
         is_pattern: true,
@@ -151,14 +151,14 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Email Address",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "referrer_email",
       },
       {
         type: "selectBox",
         label: "Relationship of person making the referral",
-        isRequired: true,
+        isRequired: false,
         col: 12,
         key: "referrer_relationship",
         options: [
@@ -186,7 +186,7 @@ export const formFieldData = [
       {
         type: "selectBox",
         label: "Youth is living with",
-        isRequired: true,
+        isRequired: false,
         col: 12,
         fieldHeading:
           "Please be sure that the youth knows about the Mentorship progrma that you have made a referral",
@@ -222,14 +222,14 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Street Address",
-        isRequired: true,
+        isRequired: false,
         col: 12,
         key: "parent_street_address",
       },
       {
         type: "textbox",
         label: "State",
-        isRequired: true,
+        isRequired: false,
         col: 4,
         addressDropdown: true,
         key: "parent_state",
@@ -237,7 +237,7 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "City",
-        isRequired: true,
+        isRequired: false,
         addressDropdown: true,
         col: 4,
         key: "parent_city",
@@ -245,7 +245,7 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Zip code",
-        isRequired: true,
+        isRequired: false,
         addressDropdown: true,
         col: 4,
         key: "parent_zip_code",
@@ -253,7 +253,7 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "Phone number",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "parent_phone",
         is_pattern: true,

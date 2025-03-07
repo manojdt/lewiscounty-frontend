@@ -12,20 +12,6 @@ const processJwtResponse = (response) => {
   }
   return response;
 };
-import { jwtDecode } from "jwt-decode";
-import { rtkQueryApiServices, rtkQueryServiceTags } from "../../services/api";
-
-const { USER } = rtkQueryServiceTags;
-// Helper function to handle JWT tokens
-const processJwtResponse = (response) => {
-  if (response?.access) {
-    const decoded = jwtDecode(response.access);
-    localStorage.setItem("access_token", response.access);
-    localStorage.setItem("refresh_token", response.refresh);
-    return decoded;
-  }
-  return response;
-};
 
 export const questionsApi = rtkQueryApiServices.injectEndpoints({
   endpoints: (builder) => ({

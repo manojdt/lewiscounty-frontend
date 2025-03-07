@@ -63,27 +63,27 @@ export const MenteeSubmitForm = () => {
     error: {
       youth_first_name: "",
       youth_last_name: "",
-      youth_dob: "",
-      youth_gender: "",
-      youth_street_address: "",
-      youth_phone_number: "",
-      youth_zip_code:'',
-      youth_city:'',
-      youth_state:'',
-      youth_preferred_language: "",
-      referrer_first_name: "",
-      referrer_last_name: "",
-      referrer_phone: "",
-      referrer_email: "",
-      youth_living_with: "",
-      referrer_relationship: "",
-      parent_first_name: "",
-      parent_last_name: "",
-      parent_street_address: "",
-      parent_state: "",
-      parent_city: "",
-      parent_zip_code: "",
-      parent_phone: "",
+      // youth_dob: "",
+      // youth_gender: "",
+      // youth_street_address: "",
+      // youth_phone_number: "",
+      // youth_zip_code:'',
+      // youth_city:'',
+      // youth_state:'',
+      // youth_preferred_language: "",
+      // referrer_first_name: "",
+      // referrer_last_name: "",
+      // referrer_phone: "",
+      // referrer_email: "",
+      // youth_living_with: "",
+      // referrer_relationship: "",
+      // parent_first_name: "",
+      // parent_last_name: "",
+      // parent_street_address: "",
+      // parent_state: "",
+      // parent_city: "",
+      // parent_zip_code: "",
+      // parent_phone: "",
     },
   });
   const constructResponse = () => {
@@ -102,7 +102,7 @@ export const MenteeSubmitForm = () => {
       last_name: formData?.youth_last_name,
       // email: formData?.youth_,
       phone_number: formData?.youth_phone_number,
-      dob: moment(formData.youth_dob).format("YYYY-MM-DD"),
+      dob:formData.youth_dob? moment(formData.youth_dob).format("YYYY-MM-DD"):null,
       gender: formData.youth_gender,
       // current_education: formData.youth_grade,
       school: formData?.youth_school,
@@ -155,81 +155,6 @@ export const MenteeSubmitForm = () => {
       delete error.youth_last_name;
     }
 
-    if (!formData?.youth_dob) {
-      isValid = false;
-      error.youth_dob = "Date of Birth is Required";
-    }
-    //  else {
-    //   // Optional: Add date validation
-    //   const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
-    //   if (!dobRegex.test(formData.youth_dob)) {
-    //     isValid = false;
-    //     error.youth_dob = "Invalid Date Format (YYYY-MM-DD)";
-    //   }
-    // }
-
-    if (!formData?.youth_gender?.trim()) {
-      isValid = false;
-      error.youth_gender = "Gender is Required";
-    } else {
-      delete error.youth_gender;
-    }
-
-    if (!formData?.youth_street_address?.trim()) {
-      isValid = false;
-      error.youth_street_address = "Street Address is Required";
-    } else {
-      delete error.youth_street_address;
-    }
-
-    if (!formData?.youth_phone_number?.trim()) {
-      isValid = false;
-      error.youth_phone_number = "Phone Number is Required";
-    }
-    // else {
-    //   // Phone number validation (assuming US format)
-    //   const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-    //   if (!phoneRegex.test(formData.youth_phone_number)) {
-    //     isValid = false;
-    //     error.youth_phone_number = "Invalid Phone Number Format (e.g., (123) 456-7890)";
-    //   }
-    // }
-    if (!formData?.youth_state?.trim()) {
-      isValid = false;
-      error.youth_state = "State is Required";
-    } else {
-      delete error.youth_state;
-    }
-
-    if (!formData?.youth_city?.trim()) {
-      isValid = false;
-      error.youth_city = "City is Required";
-    } else {
-      delete error.youth_city;
-    }
-
-    if (!formData?.youth_zip_code?.trim()) {
-      isValid = false;
-      error.youth_zip_code = "Zip Code is Required";
-    }
-    if (
-      !formData?.youth_preferred_language ||
-      (Array.isArray(formData?.youth_preferred_language) &&
-        formData?.youth_preferred_language.length === 0)
-    ) {
-      isValid = false;
-      error.youth_preferred_language = "Preferred Language is Required";
-    } else {
-      delete error.youth_preferred_language;
-    }
-
-    if (!formData?.youth_living_with?.trim()) {
-      isValid = false;
-      error.youth_living_with = "Living Arrangement is Required";
-    } else {
-      delete error.youth_living_with;
-    }
-
     // Referrer Information Validation
     if (!formData?.referrer_first_name?.trim()) {
       isValid = false;
@@ -244,24 +169,7 @@ export const MenteeSubmitForm = () => {
     } else {
       delete error.referrer_last_name;
     }
-
-    if (!formData?.referrer_phone?.trim()) {
-      isValid = false;
-      error.referrer_phone = "Referrer Phone Number is Required";
-    }
-    // else {
-    //   // Phone number validation
-    //   const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-    //   if (!phoneRegex.test(formData.referrer_phone)) {
-    //     isValid = false;
-    //     error.referrer_phone = "Invalid Phone Number Format (e.g., (123) 456-7890)";
-    //   }
-    // }
-
-    if (!formData?.referrer_email?.trim()) {
-      isValid = false;
-      error.referrer_email = "Referrer Email is Required";
-    } else {
+    if (formData?.referrer_email?.trim()) {
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.referrer_email)) {
@@ -269,14 +177,6 @@ export const MenteeSubmitForm = () => {
         error.referrer_email = "Invalid Email Format";
       }
     }
-
-    if (!formData?.referrer_relationship?.trim()) {
-      isValid = false;
-      error.referrer_relationship = "Referrer Relationship is Required";
-    } else {
-      delete error.referrer_relationship;
-    }
-
     // Parent Information Validation
     if (!formData?.parent_first_name?.trim()) {
       isValid = false;
@@ -291,53 +191,6 @@ export const MenteeSubmitForm = () => {
     } else {
       delete error.parent_last_name;
     }
-
-    if (!formData?.parent_street_address?.trim()) {
-      isValid = false;
-      error.parent_street_address = "Parent Street Address is Required";
-    } else {
-      delete error.parent_street_address;
-    }
-
-    if (!formData?.parent_state?.trim()) {
-      isValid = false;
-      error.parent_state = "State is Required";
-    } else {
-      delete error.parent_state;
-    }
-
-    if (!formData?.parent_city?.trim()) {
-      isValid = false;
-      error.parent_city = "City is Required";
-    } else {
-      delete error.parent_city;
-    }
-
-    if (!formData?.parent_zip_code?.trim()) {
-      isValid = false;
-      error.parent_zip_code = "Zip Code is Required";
-    }
-    // else {
-    //   // Zip code validation (US format)
-    //   const zipRegex = /^\d{5}(-\d{4})?$/;
-    //   if (!zipRegex.test(formData.parent_zip_code)) {
-    //     isValid = false;
-    //     error.parent_zip_code = "Invalid Zip Code Format (e.g., 12345 or 12345-6789)";
-    //   }
-    // }
-
-    if (!formData?.parent_phone?.trim()) {
-      isValid = false;
-      error.parent_phone = "Parent Phone Number is Required";
-    }
-    // else {
-    //   // Phone number validation
-    //   const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-    //   if (!phoneRegex.test(formData.parent_phone)) {
-    //     isValid = false;
-    //     error.parent_phone = "Invalid Phone Number Format (e.g., (123) 456-7890)";
-    //   }
-    // }
 
     // Update form data with errors
     setFormData({
