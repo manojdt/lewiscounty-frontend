@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import SuccessTik from "../../assets/images/blue_tik1x.png";
+import SuccessTik from "../../assets/images/menteequestionsuccess.png";
 import { useUpdateMenteeQuestionsMutation } from "../../features/login/loginapi.services";
 import { useGetLanguageListQuery } from "../../features/questions/questionsapi.service";
 import { updateMenteeQuestionform } from "../../services/loginInfo";

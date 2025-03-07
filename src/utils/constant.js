@@ -1,6 +1,9 @@
 export const baseUrlLink = `${process.env.REACT_APP_BASE_URL}/api`;
 
-
+export const API_ENDPOINTS = {
+  MENTEE_DETAILS:'',
+  MENTEE_LIST:'',
+}
 export const StepsList = [
   {
     name: "Personal Information",

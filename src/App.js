@@ -101,6 +101,7 @@ import { MenteeSubmitForm } from "./component/MenteeQuestions/MenteeSubmitForm";
 import MenteeAssessment from "./component/MenteeQuestions/MenteeAssisment";
 import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAssismentForm";
 import AdminRequest from "./component/AdminRequest/AdminRequest";
+import { MenteeViewForm } from "./component/MenteeViewPage";
 
 
 function App() {
@@ -169,6 +170,7 @@ function App() {
           {/* <Route path='/questions' element={<Questions />} /> */}
           <Route path='/mentor-application-form' element={<MentorApplicationForm />} />
           <Route path='/mentee-questions' element={<MenteeSubmitForm />} />
+          <Route path='/mentee-questions-view' element={<MenteeViewForm />} />
           <Route path='/mentee-assisment' element={<MenteeAssessment />} />
           <Route path='/mentee-assisment-form' element={<MenteeApplicationAssismentForm />} />
           <Route element={<Layout />}>

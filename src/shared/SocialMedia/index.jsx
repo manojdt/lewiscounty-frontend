@@ -16,6 +16,7 @@ import { useUserAccountLoginMutation } from '../../features/login/loginapi.servi
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { questionFlowRedirect } from '../../utils';
 
 export default function SocialMediaLogin({ view = 'vertical', setVerificationPopup = () => false, location = "" }) {
 
@@ -111,7 +112,8 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                     user_data?.role === "mentee" &&
                     !user_data?.is_registered
                 ) {
-                    navigate("/mentee-questions");
+                   const res= questionFlowRedirect(user_data)
+                                navigate(res);
                 } else {
                     navigate("/mentor-application-form");
                 }
