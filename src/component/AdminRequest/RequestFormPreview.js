@@ -14,38 +14,71 @@ import { toast } from "react-toastify";
 import SignatureCanvas from "react-signature-canvas";
 import CustomAccordian from "../../shared/CustomAccordian/CustomAccordian";
 import { EquipmentFormFields } from "../formFields/formFields";
-import {
-  MentorFormData,
-  MentorFormSection,
-  ReferenceFields,
-} from "./MentorFormFields";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import email_notify_icon from "../../assets/icons/email_notify_icon.svg";
 import {
   useGetLanguageListQuery,
   useUpdateUserInfoPostMutation,
 } from "../../features/questions/questionsapi.service";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import moment from "moment";
 import { updateUserInfo } from "../../services/loginInfo";
+import { useGetProfileInfoQuery } from "../../features/user/userApi.services";
+import {
+  MentorFormData,
+  MentorFormSection,
+  ReferenceFields,
+  statusConfig,
+} from "../Mentor/MentorFormFields";
+import RequestFormHeader from "./RequestFormHeader";
 
-export function MentorApplicationForm() {
+// Function to add isDisable: true to all fields
+const addIsDisableProperty = (sections) => {
+  return sections.map((section) => {
+    // Create a copy of the section
+    const newSection = { ...section };
+
+    // If the section has fields, map through them and add isDisable: true
+    if (newSection.fields && newSection.fields.length > 0) {
+      newSection.fields = newSection.fields.map((field) => ({
+        ...field,
+        isDisable: true,
+      }));
+    }
+
+    return newSection;
+  });
+};
+
+export function RequestFormPreview() {
   const navigate = useNavigate();
+
+  const params = useParams();
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.userInfo);
-  const userData = userInfo?.data || {};
   const containerRef = useRef();
   const [updateUserInfoPost] = useUpdateUserInfoPostMutation();
   const { data: languagesData, isLoading: isLanguagesLoading } =
     useGetLanguageListQuery();
+  const { data: profileInfo, isLoading: isProfileInfoLoading } =
+    useGetProfileInfoQuery(params?.id);
+  const userData = profileInfo || {};
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isTCOpen, setIsTCOpen] = useState(false);
   const [searchedOption, setSearchedOption] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [addressFieldData, setAddressFieldData] = useState([]);
   const [checked, setChecked] = React.useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const config =
+    statusConfig[userData?.application_status] || statusConfig["new"];
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -53,25 +86,52 @@ export function MentorApplicationForm() {
   const [loading, setLoading] = useState(false);
   const signatureRef = useRef(null);
   const searchBar = useRef(null);
+  // Apply the function to add isDisable property to all fields
+  const updatedMentorFormSection = addIsDisableProperty(MentorFormSection);
 
+  // Apply the same for ReferenceFields
+  const updatedReferenceFields = ReferenceFields.map((field) => ({
+    ...field,
+    isDisable: true,
+  }));
   // State for main form data
   const [formData, setFormData] = useState(MentorFormData);
-  console.log("formData", formData);
   // Form field definitions
-  const [formSections, setFormSections] = useState(MentorFormSection);
+  const [formSections, setFormSections] = useState(updatedMentorFormSection);
 
   useEffect(() => {
-    if (userInfo && userInfo.data && Object.keys(userInfo.data).length) {
+    if (userData && Object.keys(userData).length) {
+      const preferredLanguages = userData.languages_known || [];
+      const standardLanguages = ["english", "spanish"];
+
+      // Separate languages into standard and other
+      const standardSelected = [];
+      const otherLanguages = [];
+
+      preferredLanguages.forEach((lang) => {
+        const normalizedLang = lang.toLowerCase();
+        if (standardLanguages.includes(normalizedLang)) {
+          standardSelected.push(normalizedLang);
+        } else {
+          otherLanguages.push(lang);
+        }
+      });
+      // Add "other" to standard languages if there are other languages
+      if (otherLanguages.length > 0) {
+        standardSelected.push("other");
+      }
       setFormData((prevData) => ({
         ...prevData,
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
-        phone_number: userData?.userinfo?.phone_number,
-        gender: userData?.userinfo?.gender,
+        phone_number: userData?.phone_number,
+        gender: userData?.gender,
+        languages_known: standardSelected,
+        other_language: otherLanguages,
       }));
     }
-  }, [userInfo]);
+  }, [userData]);
 
   useEffect(() => {
     if (languagesData && languagesData.length > 0) {
@@ -351,27 +411,28 @@ export function MentorApplicationForm() {
           }
         });
 
-        // Filter out empty values from each reference object
-        const filteredReferences = data.references
-          .map((reference) => {
-            const filteredReference = {};
-            Object.keys(reference).forEach((key) => {
-              if (
-                reference[key] !== undefined &&
-                reference[key] !== null &&
-                reference[key] !== ""
-              ) {
-                filteredReference[key] = reference[key];
-              }
-            });
-            return filteredReference;
-          })
-          .filter((reference) => Object.keys(reference).length > 0); // Remove empty objects
+        // Append references as JSON, but only those with values
+        data.references.forEach((reference, index) => {
+          // Filter out empty values from each reference object
+          const filteredReference = {};
+          Object.keys(reference).forEach((key) => {
+            if (
+              reference[key] !== undefined &&
+              reference[key] !== null &&
+              reference[key] !== ""
+            ) {
+              filteredReference[key] = reference[key];
+            }
+          });
 
-        // Stringify the entire array and append it to the payload
-        if (filteredReferences.length > 0) {
-          payload.append("references", JSON.stringify(filteredReferences));
-        }
+          // Only append reference if it has at least one property
+          if (Object.keys(filteredReference).length > 0) {
+            payload.append(
+              `references[${index}]`,
+              JSON.stringify(filteredReference)
+            );
+          }
+        });
 
         // If there's a documents, convert it to blob and append
         if (signatureRef.current) {
@@ -530,24 +591,15 @@ export function MentorApplicationForm() {
     <>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading || isLanguagesLoading}
+        open={loading || isLanguagesLoading || isProfileInfoLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <div className="p-3 m-3">
-        <Typography
-          variant="h6"
-          sx={{ mb: 3, ml: 2.5, fontWeight: 600, color: "rgba(24, 40, 61, 1)" }}
-        >
-          Fill the Question and Answer
-        </Typography>
+      <div className="p-3 m-3 bg-white drop-shadow-xl rounded-xl">
+        <RequestFormHeader userData={userData} />
 
-        <Grid2
-          container
-          spacing={3}
-          className={"bg-white drop-shadow-xl rounded-xl !m-4"}
-        >
+        <Grid2 container spacing={3} className={" !m-4"}>
           {formSections.map((section, sectionIndex) => (
             <Grid2 item xs={12} key={`section-${sectionIndex}`}>
               <CustomAccordian
@@ -576,7 +628,7 @@ export function MentorApplicationForm() {
                           )}
 
                           <EquipmentFormFields
-                            fields={ReferenceFields}
+                            fields={updatedReferenceFields}
                             formData={{
                               first_name: reference.first_name,
                               last_name: reference.last_name,
@@ -779,4 +831,4 @@ export function MentorApplicationForm() {
   );
 }
 
-export default MentorApplicationForm;
+export default RequestFormPreview;

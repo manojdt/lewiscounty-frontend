@@ -330,3 +330,24 @@ export const ReferenceFields = [
     ],
   },
 ];
+
+export const statusConfig = {
+  'in-review': {
+    label: 'In-Review',
+    bgColor: 'bg-orange-100',
+    textColor: 'text-orange-600',
+    borderColor: 'border-orange-300'
+  },
+  'not-started': {
+    label: 'Background verification not started',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-600',
+    borderColor: 'border-gray-300'
+  },
+  'verified': {
+    label: 'Verified',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-600',
+    borderColor: 'border-green-300'
+  }
+};
