@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MenteeAssessment = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  
+  const nav=useNavigate()
   const pages = [
     {
       title: "Mentee Assessment",
@@ -158,6 +159,7 @@ const MenteeAssessment = () => {
           {currentPageData.showFinish && (
             <button 
               className="flex items-center text-blue-500 hover:underline"
+              onClick={()=>nav("/mentee-assisment-form")}
             >
               Finish <span className="ml-1">→</span>
             </button>

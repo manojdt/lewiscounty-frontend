@@ -199,7 +199,7 @@ export const updateMenteeDocument = createAsyncThunk(
 export const updateMenteeQuestionform = createAsyncThunk(
   "updateMenteeQuestionform",
   async (data) => {
-    const updateDocument = await api.post("mentee_info_update/mentee_registration_form/", data);
+    const updateDocument = await api.post("/mentee_info_update/mentee/mentee_registration_form/", data);
     if (updateDocument.status === 201 || updateDocument.status === 200) {
       return updateDocument;
     }

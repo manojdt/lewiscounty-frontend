@@ -16,6 +16,13 @@ export const statusColors = {
   accept: "#16B681",
   in_progress: "#FF7600",
   inreview: "#FF7600",
+  
+in_review: "#FF7600",
+
+// Mentee Assessment status
+
+not_submitted:"#E0382D",
+submitted: "#1D5BBF",
 
   // Program statuses
   yettojoin: "#1D5BBF",
@@ -112,6 +119,8 @@ export const statusText = {
   accept: "Approved", // goal
   in_progress: "In Progress",
   inreview: "In Review",
+  
+in_review: "In-review",
 
   // Program status texts
   yettojoin: "Yet to Launch",
@@ -123,6 +132,8 @@ export const statusText = {
   draft: "Draft",
   assign_program_accepted: "Approved",
   new_program_request_rejected: "Rejected",
+  // Mentee Assessment status
+"not_submitted":"Not Submitted",
 
   // Task status texts
   waiting_for_approval: "Waiting for Approval",

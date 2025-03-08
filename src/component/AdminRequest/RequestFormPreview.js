@@ -19,12 +19,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import email_notify_icon from "../../assets/icons/email_notify_icon.svg";
 import {
   useGetLanguageListQuery,
-  useUpdateUserInfoPostMutation,
 } from "../../features/questions/questionsapi.service";
 import { useDispatch } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import moment from "moment";
-import { updateUserInfo } from "../../services/loginInfo";
 import { useGetProfileInfoQuery } from "../../features/user/userApi.services";
 import {
   MentorFormData,
@@ -54,15 +52,16 @@ const addIsDisableProperty = (sections) => {
 
 export function RequestFormPreview() {
   const navigate = useNavigate();
-
   const params = useParams();
   const dispatch = useDispatch();
   const containerRef = useRef();
-  const [updateUserInfoPost] = useUpdateUserInfoPostMutation();
+
   const { data: languagesData, isLoading: isLanguagesLoading } =
     useGetLanguageListQuery();
   const { data: profileInfo, isLoading: isProfileInfoLoading } =
     useGetProfileInfoQuery(params?.id);
+  
+  // Process the user data from API response
   const userData = profileInfo || {};
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -73,6 +72,7 @@ export function RequestFormPreview() {
   const [checked, setChecked] = React.useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
+  // Use the status from API to determine the config
   const config =
     statusConfig[userData?.application_status] || statusConfig["new"];
 
@@ -86,6 +86,7 @@ export function RequestFormPreview() {
   const [loading, setLoading] = useState(false);
   const signatureRef = useRef(null);
   const searchBar = useRef(null);
+  
   // Apply the function to add isDisable property to all fields
   const updatedMentorFormSection = addIsDisableProperty(MentorFormSection);
 
@@ -94,13 +95,16 @@ export function RequestFormPreview() {
     ...field,
     isDisable: true,
   }));
+  
   // State for main form data
   const [formData, setFormData] = useState(MentorFormData);
   // Form field definitions
   const [formSections, setFormSections] = useState(updatedMentorFormSection);
 
+  // Populate form data from API response
   useEffect(() => {
     if (userData && Object.keys(userData).length) {
+      // Extract and process languages from API data
       const preferredLanguages = userData.languages_known || [];
       const standardLanguages = ["english", "spanish"];
 
@@ -108,31 +112,73 @@ export function RequestFormPreview() {
       const standardSelected = [];
       const otherLanguages = [];
 
-      preferredLanguages.forEach((lang) => {
-        const normalizedLang = lang.toLowerCase();
-        if (standardLanguages.includes(normalizedLang)) {
-          standardSelected.push(normalizedLang);
-        } else {
-          otherLanguages.push(lang);
-        }
-      });
+      if (Array.isArray(preferredLanguages)) {
+        preferredLanguages.forEach((lang) => {
+          if (lang) { // Check if lang is defined
+            const normalizedLang = lang.toLowerCase();
+            if (standardLanguages.includes(normalizedLang)) {
+              standardSelected.push(normalizedLang);
+            } else {
+              otherLanguages.push(lang);
+            }
+          }
+        });
+      }
+      
       // Add "other" to standard languages if there are other languages
       if (otherLanguages.length > 0) {
         standardSelected.push("other");
       }
+
+      // Update form data with user information from API
       setFormData((prevData) => ({
         ...prevData,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        email: userData.email,
-        phone_number: userData?.phone_number,
-        gender: userData?.gender,
+        // Personal Information
+        first_name: userData.first_name || "",
+        middle_name: userData.middle_name || "",
+        last_name: userData.last_name || "",
+        email: userData.email || "",
+        phone_number: userData?.phone_number || "",
+        gender: userData?.gender || "",
+        dob: userData?.dob ? moment(userData.dob).toDate() : null,
         languages_known: standardSelected,
         other_language: otherLanguages,
+        marital_status: userData?.marital_status || "",
+        
+        // Education & Professional
+        highest_degree: userData?.highest_degree || "",
+        field_of_study: userData?.field_of_study || "",
+        institution_name: userData?.institution_name || "",
+        institution_location: userData?.institution_location || "",
+        job_title: userData?.job_title || "",
+        current_employer: userData?.current_employer || "",
+        industry_type: userData?.industry_type || "",
+        years_of_experience: userData?.years_of_experience || "",
+        linked_in: userData?.linked_in || "",
+        
+        // Mentoring experience
+        areas_of_expertise: userData?.areas_of_expertise || "",
+        confident_areas_of_expertise: userData?.confident_areas_of_expertise || "",
+        prev_mentorship: userData?.prev_mentorship || false,
+        mentor_exp_desc: userData?.mentor_exp_desc || "",
+        mentorship_achievement: userData?.mentorship_achievement || "",
+        mentor_expectations: userData?.mentor_expectations || "",
+        
+        // Address information
+        address: userData?.address || "",
+        location: userData?.location || "",
+        
+        // References - need to handle this specially if present
+        references: userData?.references || [{ first_name: "", last_name: "", email: "", phone_number: "", relationship: "" }],
+        
+        // Additional information
+        professional_bio: userData?.professional_bio || "",
+        additional_info: userData?.additional_info || "",
       }));
     }
   }, [userData]);
 
+  // Handle language data loading
   useEffect(() => {
     if (languagesData && languagesData.length > 0) {
       // Create a deep copy of the form sections
@@ -190,6 +236,7 @@ export function RequestFormPreview() {
               options: otherLanguageOptions,
               conditionalDisplay: "languages_known",
               conditionalValue: "other",
+              isDisable: true, // Make sure this is disabled for viewing
             };
 
             // Insert the new field after the checkbox field
@@ -222,8 +269,10 @@ export function RequestFormPreview() {
     }
   };
 
-  // Handle form field changes
+  // Handle form field changes - this is mostly disabled in preview mode
   const handleFieldChange = (key, value, event) => {
+    // Since this is preview mode, we generally don't need to update the form data
+    // But we'll keep this logic in case we need it for edge cases
     if (key === "languages_known") {
       // Handle language checkbox selection
       let updatedLanguages = Array.isArray(value) ? [...value] : [value];
@@ -282,11 +331,12 @@ export function RequestFormPreview() {
 
   // Handle reference field changes
   const handleReferenceChange = (key, value, index) => {
+    // Since this is preview mode, we generally don't need to update references
+    // But we'll keep this logic in case we need it
     setFormData((prevData) => {
       const updatedReferences = [...prevData.references];
 
       // Extract the base field name from the reference field key
-      // The key will be in format "ref_fieldname" like "ref_name" or "ref_email"
       const refKey = key;
 
       // Make sure the reference object at this index exists
@@ -311,52 +361,6 @@ export function RequestFormPreview() {
     });
   };
 
-  // Handle validation
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = {};
-
-    // Validate personal information
-    if (!formData.first_name) {
-      newErrors.first_name = "First name is required";
-      isValid = false;
-    }
-
-    if (!formData.last_name) {
-      newErrors.last_name = "Last name is required";
-      isValid = false;
-    }
-    if (!formData.dob) {
-      newErrors.dob = "Date of Birth is required";
-      isValid = false;
-    }
-    if (!formData.gender) {
-      newErrors.gender = "Gender is required";
-      isValid = false;
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-      isValid = false;
-    }
-
-    // Validate signature
-    if (!formData.documents) {
-      newErrors.documents = "Signature is required";
-      isValid = false;
-    }
-
-    setFormData((prevData) => ({
-      ...prevData,
-      error: newErrors,
-    }));
-
-    return isValid;
-  };
-
   useEffect(() => {
     if (searchedOption?.id) {
       setFormData({
@@ -369,178 +373,25 @@ export function RequestFormPreview() {
     }
   }, [searchedOption.id]);
 
-  // Handle form submission
+  // Handle form submission - mostly disabled in preview mode
   const handleSubmit = async () => {
-    const isValid = validateForm();
-    if (isValid) {
-      setLoading(true);
-      const { state, city, zip_code, ...data } = formData;
-      try {
-        // Format data for submission
-        const payload = new FormData();
-        // Append personal information
-        Object.keys(data).forEach((key) => {
-          // Skip special keys and empty values
-          if (
-            key !== "references" &&
-            key !== "error" &&
-            key !== "documents" &&
-            key !== "other_language" && // Skip other_language as we'll handle it with languages_known
-            data[key] !== undefined &&
-            data[key] !== null &&
-            data[key] !== ""
-          ) {
-            if (key === "dob") {
-              payload.append(key, moment(data[key]).format("YYYY-MM-DD"));
-            } else if (key === "languages_known") {
-              // Handle languages specially
-              const languagesList = data[key].filter(
-                (lang) => lang !== "other"
-              );
-
-              // If "other" is selected and a specific language is chosen, add it
-              if (data[key].includes("other") && data.other_language) {
-                languagesList.push(data.other_language);
-              }
-
-              payload.append(key, JSON.stringify(languagesList));
-            } else {
-              // Handle all other fields normally
-              payload.append(key, data[key]);
-            }
-          }
-        });
-
-        // Append references as JSON, but only those with values
-        data.references.forEach((reference, index) => {
-          // Filter out empty values from each reference object
-          const filteredReference = {};
-          Object.keys(reference).forEach((key) => {
-            if (
-              reference[key] !== undefined &&
-              reference[key] !== null &&
-              reference[key] !== ""
-            ) {
-              filteredReference[key] = reference[key];
-            }
-          });
-
-          // Only append reference if it has at least one property
-          if (Object.keys(filteredReference).length > 0) {
-            payload.append(
-              `references[${index}]`,
-              JSON.stringify(filteredReference)
-            );
-          }
-        });
-
-        // If there's a documents, convert it to blob and append
-        if (signatureRef.current) {
-          const signatureDataURL = signatureRef.current.toDataURL();
-          const signatureBlob = await fetch(signatureDataURL).then((r) =>
-            r.blob()
-          );
-          payload.append("documents", signatureBlob, "signature.png");
-        }
-
-        // Make the API call and wait for it to complete
-        const response = await updateUserInfoPost(payload).unwrap();
-
-        // Update the Redux store with the new data
-        await dispatch(updateUserInfo({ data: response }));
-
-        // Show success popup
-        setIsPopupOpen(true);
-        toast.success("Application submitted successfully!");
-
-        // Use setTimeout to allow Redux to complete its update
-        setTimeout(() => {
-          setLoading(false);
-          setIsPopupOpen(false); // Close popup
-
-          // Get the latest user data from userData selector
-          // This will have the updated values after the dispatch
-          const isCompleted = userData?.userinfo?.is_questions_completed;
-          const hasFileUpload = userData?.userinfo?.mentor_file_upload;
-
-          // Navigate if both conditions are met
-          if (isCompleted && hasFileUpload) {
-            navigate("/dashboard");
-          } else {
-            toast.info(
-              "Application submitted. Additional steps may be required."
-            );
-          }
-        }, 2000);
-      } catch (error) {
-        toast.error("Error submitting application. Please try again.");
-        setLoading(false);
-      }
-    } else {
-      toast.error("Please complete all required fields.");
-      // Auto-expand sections with errors
-      const newSections = [...formSections];
-      // Check personal information errors
-      const personalInfoFields = formSections[0].fields.map(
-        (field) => field.key
-      );
-      const hasPersonalInfoErrors = Object.keys(formData.error).some((key) =>
-        personalInfoFields.includes(key)
-      );
-      if (hasPersonalInfoErrors) {
-        newSections[0].expanded = true;
-      }
-      // Check reference errors
-      const hasReferenceErrors = Object.keys(formData.error).some((key) =>
-        key.startsWith("references_")
-      );
-      if (hasReferenceErrors) {
-        newSections[3].expanded = true;
-      }
-      // Check signature error
-      if (formData.error.signature) {
-        newSections[4].expanded = true;
-      }
-      setFormSections(newSections);
-    }
+    // In preview mode, we might want to navigate elsewhere or show a message
+    toast.info("This is a preview mode. Form submission is disabled.");
   };
 
   // Handle cancel
   const handleCancel = () => {
-    // Navigate back or reset form
-    if (
-      window.confirm(
-        "Are you sure you want to cancel? All your data will be lost."
-      )
-    ) {
-      // navigate("/");
-      window.location.reload();
-    }
+    // In preview mode, just navigate back
+    navigate(-1);
   };
 
-  // Handle documents save
+  // Don't need to handle signature in preview mode
   const handleSignatureEnd = () => {
-    if (signatureRef.current && !signatureRef.current.isEmpty()) {
-      setFormData((prevData) => ({
-        ...prevData,
-        documents: signatureRef.current.toDataURL(),
-        error: {
-          ...prevData.error,
-          documents: "",
-        },
-      }));
-    }
+    // No-op in preview mode
   };
 
-  // Handle documents clear
   const handleClearSignature = () => {
-    if (signatureRef.current) {
-      signatureRef.current.clear();
-      setFormData((prevData) => ({
-        ...prevData,
-        documents: null,
-      }));
-    }
+    // No-op in preview mode
   };
 
   // Toggle section expand/collapse
@@ -550,41 +401,14 @@ export function RequestFormPreview() {
     setFormSections(newSections);
   };
 
-  // Add another reference
+  // Add another reference - disabled in preview mode
   const handleAddReference = () => {
-    if (formData.references.length < 5) {
-      setFormData((prevData) => ({
-        ...prevData,
-        references: [
-          ...prevData.references,
-          {
-            first_name: "",
-            last_name: "",
-            email: "",
-            phone_number: "",
-            relationship: "",
-          },
-        ],
-      }));
-    } else {
-      toast.warning("Maximum 5 references allowed.");
-    }
+    toast.info("This is preview mode. Adding references is disabled.");
   };
 
-  // Remove a reference
+  // Remove a reference - disabled in preview mode
   const handleRemoveReference = (index) => {
-    if (formData.references.length > 1) {
-      setFormData((prevData) => {
-        const newReferences = [...prevData.references];
-        newReferences.splice(index, 1);
-        return {
-          ...prevData,
-          references: newReferences,
-        };
-      });
-    } else {
-      toast.warning("At least one reference is required.");
-    }
+    toast.info("This is preview mode. Removing references is disabled.");
   };
 
   return (
