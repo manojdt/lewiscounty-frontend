@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Box,
   Tab,
@@ -24,6 +24,7 @@ import { requestTableColumns } from "./AdminRequestTableData";
 import { useRequestActions } from "../../features/request/requestActions";
 
 const AdminRequest = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const request_type = searchParams.get("request_type") || "discharge";
   const role = searchParams.get("role") || "mentor";
@@ -43,6 +44,7 @@ const AdminRequest = () => {
   });
   // Track total number of rows for pagination
   const [rowCount, setRowCount] = useState(0);
+  const [gridCellParams, setGridCellParams] = useState();
 
   // Fetch data using RTK Query
   const { data, isLoading, isFetching, isError } = useGetJoinRequestDataQuery({
@@ -124,27 +126,7 @@ const AdminRequest = () => {
 
   // Generate menu items based on row status
   const getMenuItems = (row) => {
-    const items = [];
-
-    // Default actions available for all rows
-    items.push({
-      label: "View Details",
-      action: () =>
-        handleModalOpen(
-          "View Details",
-          <Box>
-            <Typography variant="body1">Name: {row.name}</Typography>
-            <Typography variant="body1">
-              Submitted Date: {row.created_at}
-            </Typography>
-            <Typography variant="body1">
-              Status: {row.application_status}
-            </Typography>
-            {/* Add more details as needed */}
-          </Box>,
-          () => console.log("Viewed details for", row.name)
-        ),
-    });
+    const items = [];    
 
     // Conditional actions based on status
     if (row.application_status === "waiting_for_verification") {
@@ -275,6 +257,7 @@ const AdminRequest = () => {
     if (params.field === "actions") {
       handleMenuOpen(event, params.row);
     }
+    setGridCellParams(params.row);
   };
   return (
     <Box
@@ -410,6 +393,13 @@ const AdminRequest = () => {
         open={Boolean(menuAnchorEl)}
         onClose={handleMenuClose}
       >
+        <MenuItem
+          onClick={() => {
+            navigate(`/request-form-preview/${gridCellParams?.id}`);
+          }}
+        >
+          {"View"}
+        </MenuItem>
         {selectedRow &&
           getMenuItems(selectedRow).map((item, index) => (
             <MenuItem

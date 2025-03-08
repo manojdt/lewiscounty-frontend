@@ -102,6 +102,7 @@ import MenteeAssessment from "./component/MenteeQuestions/MenteeAssisment";
 import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAssismentForm";
 import AdminRequest from "./component/AdminRequest/AdminRequest";
 import { MenteeViewForm } from "./component/MenteeViewPage";
+import RequestFormPreview from "./component/AdminRequest/RequestFormPreview";
 
 
 function App() {
@@ -213,6 +214,7 @@ function App() {
             <Route path='/update-program/:id' element={<CreatePrograms />} />
             <Route path='/all-request' element={<AllRequest />} />
             <Route path='/admin-requests' element={<AdminRequest />} />
+            <Route path='/request-form-preview/:id' element={<RequestFormPreview />} />
             <Route path='/program' element={<ProgramData />} />
 
             <Route path='/calendar' element={<Scheduler />} />
