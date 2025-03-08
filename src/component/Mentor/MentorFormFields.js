@@ -21,8 +21,8 @@ export const MentorFormData = {
   offer_mentees: "",
   mentorship_achievement: "",
   mentor_exp_desc: "",
-  program_commitment: false,
-  is_convicted: false,
+  program_commitment: undefined,
+  is_convicted: undefined,
   convicted_reason: "",
 
   // References
@@ -152,24 +152,12 @@ export const MentorFormSection = [
         options: [
           { label: "English", value: "english" },
           { label: "Spanish", value: "spanish" },
-          { label: "Tamil", value: "tamil" },
           { label: "Other", value: "other" },
         ],
         col: 4,
         key: "languages_known",
         isMultiSelect: true,
-      },
-      {
-        type: "selectBox",
-        label: "Select Language",
-        placeholder: "Select Language",
-        isRequired: false,
-        col: 2,
-        key: "other_language",
-        options: [],
-        conditionalDisplay: "languages_known",
-        conditionalValue: "other", // This will only display the field when "other" is selected
-      },
+      },     
       {
         type: "selectBox",
         label: "Marital Status",
@@ -233,7 +221,7 @@ export const MentorFormSection = [
         type: "checkbox",
         label:
           "The mentor program requires a minimum commitment of one year once you are matched with a youth. Are you able and willing to commit to this time frame?",
-        isRequired: true,
+        isRequired: false,
         options: [
           { label: "Yes", value: true },
           { label: "No", value: false },
@@ -244,7 +232,7 @@ export const MentorFormSection = [
       {
         type: "checkbox",
         label: "Have you ever been convicted of a crime?",
-        isRequired: true,
+        isRequired: false,
         options: [
           { label: "Yes", value: true },
           { label: "No", value: false },
@@ -274,6 +262,7 @@ export const MentorFormSection = [
   {
     title: "E-sign",
     expanded: true,
+    isRequired: true,
     isSignature: true,
     fields: [],
   },

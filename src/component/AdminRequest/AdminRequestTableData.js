@@ -1,6 +1,7 @@
 import { IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import StatusIndicator from "../../shared/StatusIndicator/StatusIndicator";
+import moment from "moment";
 
 export const requestTableColumns = [
   {
@@ -12,6 +13,7 @@ export const requestTableColumns = [
     field: "created_at",
     headerName: "Submitted Date",
     flex: 1,
+    renderCell: ({ row }) => moment(row?.created_at).format("MM-DD-YYYY"),
   },
   {
     field: "application_status",

@@ -76,14 +76,9 @@ export const EquipmentFormFields = ({
   return (
     <>
       <Grid container spacing={4}>
-        {fields?.map((fld, index) => {
-          const shouldDisplay = fld.conditionalDisplay
-          ? Array.isArray(formData[fld.conditionalDisplay])
-            ? formData[fld.conditionalDisplay].includes(fld.conditionalValue)
-            : formData[fld.conditionalDisplay] === fld.conditionalValue
-          : true;
+        {fields?.map((fld, index) => {        
           return (
-            !fld?.isHide && shouldDisplay && (
+            !fld?.isHide  && (
               <>
               {fld.fieldHeading && (
                 <Grid item xs={12}>

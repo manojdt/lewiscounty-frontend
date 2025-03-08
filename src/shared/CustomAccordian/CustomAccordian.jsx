@@ -6,7 +6,8 @@ const CustomAccordian = ({
   title,
   children,
   defaultValue,
-  titleColor = "#232323"
+  titleColor = "#232323",
+  isRequired,
 }) => {
   const [isOpen, setIsOpen] = React.useState(defaultValue);
   const [contentHeight, setContentHeight] = React.useState(0);
@@ -53,8 +54,9 @@ const CustomAccordian = ({
           }}
         >
           {title}
+          {isRequired && <span className="!text-[#FF0000]">&nbsp; *</span>}
         </Typography>
-        <Stack direction={"row"} alignItems={"center"} spacing={2}>      
+        <Stack direction={"row"} alignItems={"center"} spacing={2}>
           <Box
             component="span"
             sx={{
