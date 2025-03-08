@@ -12,9 +12,12 @@ import {
   Badge,
   Modal,
   Typography,
-  Button,
   Paper,
+  Backdrop,
+  Button,
+  Stack,
 } from "@mui/material";
+
 import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -22,6 +25,22 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useGetJoinRequestDataQuery } from "../../features/request/requestAPI.service";
 import { requestTableColumns } from "./AdminRequestTableData";
 import { useRequestActions } from "../../features/request/requestActions";
+import TickCircle from './../../assets/icons/tickCircle.svg'
+import ViewIcon from "./../../assets/images/view1x.png";
+import CloseCircle from "./../../assets/icons/closeCircle.svg";
+import ReviewIcon from './../../assets/icons/reviewIcon.svg';
+import CancelIcon from "./../../assets/images/cancel1x.png";
+import TickColorIcon from "./../../assets/icons/tickColorLatest.svg";
+import CancelColorIcon from "./../../assets/icons/cancelCircle.svg";
+import SuccessTik from "./../../assets/images/blue_tik1x.png";
+import InterviewPersonIcon from './../../assets/icons/interviewPersonIcon.svg';
+import VerifiedIcon from "@mui/icons-material/Verified";
+
+import { Close } from "@mui/icons-material";
+import { EquipmentFormFields } from "../formFields/formFields";
+import InterviewDetails from "./InterviewDetails";
+
+
 
 const AdminRequest = () => {
   const navigate = useNavigate();
@@ -42,6 +61,7 @@ const AdminRequest = () => {
     content: "",
     action: null,
   });
+  const [isInterviewModalOpen, setInterViewModalOpen] = useState(false);
   // Track total number of rows for pagination
   const [rowCount, setRowCount] = useState(0);
   const [gridCellParams, setGridCellParams] = useState();
@@ -71,6 +91,7 @@ const AdminRequest = () => {
       setRowCount(data.count);
     }
   }, [data]);
+
 
   // Update URL when role changes
   const updateUrlParams = (newRole) => {
@@ -126,12 +147,13 @@ const AdminRequest = () => {
 
   // Generate menu items based on row status
   const getMenuItems = (row) => {
-    const items = [];    
+    const items = [];
 
     // Conditional actions based on status
     if (row.application_status === "waiting_for_verification") {
       items.push({
         label: "Verify Application",
+        icon: TickCircle,
         action: () =>
           handleModalOpen(
             "Verify Application",
@@ -143,8 +165,40 @@ const AdminRequest = () => {
                 This will move the application to the next stage in the process.
               </Typography>
             </Box>,
-            () => console.log("Verified", row.name)
+            () => setInterViewModalOpen(true)
           ),
+      }
+        , {
+          label: "Review",
+          icon: ReviewIcon,
+          action: () =>
+            handleModalOpen(
+              "Review",
+              <Box>
+
+              </Box>,
+              () => console.log("Rejected", row.name)
+            ),
+
+
+        }, {
+        label: "Reject",
+        icon: CloseCircle,
+        action: () =>
+          handleModalOpen(
+            "Reject Application",
+            <Box>
+              <Typography variant="body1" color="error">
+                Reject {row.name} as a {role}?
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                This action cannot be undone. A rejection notification will be
+                sent to the applicant.
+              </Typography>
+            </Box>,
+            () => console.log("Rejected", row.name)
+          ),
+        color: "error",
       });
     }
 
@@ -212,6 +266,7 @@ const AdminRequest = () => {
 
       items.push({
         label: "Reject",
+        icon: CloseCircle,
         action: () =>
           handleModalOpen(
             "Reject Application",
@@ -231,24 +286,25 @@ const AdminRequest = () => {
     }
 
     // Add delete option for all rows
-    items.push({
-      label: "Delete",
-      action: () =>
-        handleModalOpen(
-          "Delete Application",
-          <Box>
-            <Typography variant="body1" color="error">
-              Are you sure you want to delete {row.name}'s application?
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              This action cannot be undone. All data related to this application
-              will be permanently deleted.
-            </Typography>
-          </Box>,
-          () => console.log("Deleted", row.name)
-        ),
-      color: "error",
-    });
+    // items.push({
+    //   label: "Delete",
+
+    //   action: () =>
+    //     handleModalOpen(
+    //       "Delete Application",
+    //       <Box>
+    //         <Typography variant="body1" color="error">
+    //           Are you sure you want to delete {row.name}'s application?
+    //         </Typography>
+    //         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+    //           This action cannot be undone. All data related to this application
+    //           will be permanently deleted.
+    //         </Typography>
+    //       </Box>,
+    //       () => console.log("Deleted", row.name)
+    //     ),
+    //   color: "error",
+    // });
 
     return items;
   };
@@ -361,29 +417,29 @@ const AdminRequest = () => {
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
           onCellClick={handleClick}
-          paginationMode="server"
+          // paginationMode="server"
           rowCount={rowCount}
           pageSizeOptions={[5, 10, 25, 50]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          keepNonExistentRowsSelected
-          // sx={{
-          //   "& .MuiDataGrid-columnHeaders": {
-          //     backgroundColor: "#F5F7FA",
-          //   },
-          //   "& .MuiDataGrid-cell": {
-          //     borderBottom: "1px solid #EEF0F7",
-          //   },
-          //   // "& .MuiDataGrid-row:hover": {
-          //   //   backgroundColor: "#F8FAFD",
-          //   // },
-          //   border: "none",
-          //   borderRadius: 2,
-          //   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)",
-          //   "& .MuiDataGrid-columnSeparator": {
-          //     display: "none",
-          //   },
-          // }}
+        //keepNonExistentRowsSelected
+        // sx={{
+        //   "& .MuiDataGrid-columnHeaders": {
+        //     backgroundColor: "#F5F7FA",
+        //   },
+        //   "& .MuiDataGrid-cell": {
+        //     borderBottom: "1px solid #EEF0F7",
+        //   },
+        //   // "& .MuiDataGrid-row:hover": {
+        //   //   backgroundColor: "#F8FAFD",
+        //   // },
+        //   border: "none",
+        //   borderRadius: 2,
+        //   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)",
+        //   "& .MuiDataGrid-columnSeparator": {
+        //     display: "none",
+        //   },
+        // }}
         />
       )}
 
@@ -397,9 +453,19 @@ const AdminRequest = () => {
           onClick={() => {
             navigate(`/request-form-preview/${gridCellParams?.id}`);
           }}
+          className="!text-[12px]"
         >
+          <img
+            src={ViewIcon}
+            alt="AcceptIcon"
+            className="pr-3 w-[27px]"
+          />
           {"View"}
         </MenuItem>
+
+
+
+
         {selectedRow &&
           getMenuItems(selectedRow).map((item, index) => (
             <MenuItem
@@ -407,12 +473,90 @@ const AdminRequest = () => {
               onClick={() => {
                 item.action();
               }}
+              className="!text-[12px]"
               sx={{ color: item.color || "inherit" }}
             >
+              <img
+                src={item.icon}
+                alt="AcceptIcon"
+                className="pr-3 w-[27px]"
+              />
               {item.label}
             </MenuItem>
           ))}
       </Menu>
+
+      {/* <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => 1 }}
+          open={true}
+        >
+          <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+            <img
+              src={
+                confirmPopup.type === "approve"
+                  ? TickColorIcon
+                  : confirmPopup.type === "reject"
+                  ? CancelColorIcon
+                  : ""
+              }
+              alt="TickColorIcon"
+            />
+            <span
+              style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}
+            >
+              {confirmPopup.type === "approve"
+                ? "Approve"
+                : confirmPopup.type === "reject"
+                ? "Reject"
+                : ""}
+            </span>
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure want to {confirmPopup.type} {confirmPopup.title}?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnCls="w-[110px]"
+                  btnName={
+                    confirmPopup.type === "approve"
+                      ? "Cancel"
+                      : confirmPopup.type === "reject"
+                      ? "No"
+                      : ""
+                  }
+                  btnCategory="secondary"
+                  //onClick={handleCancelConfirmPopup}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px]"
+                  btnName={
+                    confirmPopup.type === "approve"
+                      ? "Approve"
+                      : confirmPopup.type === "reject"
+                      ? "Yes"
+                      : ""
+                  }
+                  style={{
+                    background:
+                      confirmPopup.type === "approve" ? "#16B681" : "#E0382D",
+                  }}
+                  btnCategory="primary"
+                  //onClick={handleConfirmPopup}
+                />
+              </div>
+            </div>
+          </div>
+        </Backdrop> */}
+
 
       {/* Modal */}
       <Modal
@@ -427,7 +571,7 @@ const AdminRequest = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: 500,
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
@@ -465,7 +609,7 @@ const AdminRequest = () => {
               onClick={handleActionConfirm}
               color={
                 modalContent.title.toLowerCase().includes("delete") ||
-                modalContent.title.toLowerCase().includes("reject")
+                  modalContent.title.toLowerCase().includes("reject")
                   ? "error"
                   : "primary"
               }
@@ -475,7 +619,49 @@ const AdminRequest = () => {
           </Box>
         </Paper>
       </Modal>
-    </Box>
+
+      <Backdrop
+        sx={{ zIndex: (theme) => 1 }}
+        open={true}
+      >
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[740px]">
+          <div className="flex mt-4 mx-6 py-2 border-b border-gray-200 text-[15px] font-normal">Select Interview Details</div>
+          <Stack
+            spacing={1}
+            className="bg-background-primary-secondary p-6 rounded-[6px]"
+          >
+            <div className="flex justify-between bg-[#F1F6FF] h-[100px] p-4" style={{ borderRadius: '5px' }}>
+              <div className="flex items-center">
+                <div className="bg-white rounded-[6px] flex items-center !justify-center w-[50px] h-[50px]" style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}>
+                  <img src={InterviewPersonIcon}>
+                  </img>
+                </div>
+
+                <div className="flex flex-col pl-2 gap-1">
+                  <span className="text-[18px] font-semibold">Olivia Smith</span>
+                  <div className="flex text-[12px] ">
+                    <span> Email ID:</span>
+                    <span className="text-[#2260D9] px-1">olivia@gmail.com</span>
+                  </div>
+
+                </div>
+
+              </div>
+              <div className="flex items-center flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
+                <VerifiedIcon />
+                Application verified</div>
+
+            </div>
+            <div className="text-[16px] font-semibold py-5">
+              Schedule Interview
+            </div>
+            <InterviewDetails />
+
+          </Stack>
+        </div>
+
+      </Backdrop >
+    </Box >
   );
 };
 

@@ -103,6 +103,7 @@ import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAs
 import AdminRequest from "./component/AdminRequest/AdminRequest";
 import { MenteeViewForm } from "./component/MenteeViewPage";
 import RequestFormPreview from "./component/AdminRequest/RequestFormPreview";
+import VideoPlayer from "./component/VideoPlayer/VideoPlayer";
 
 
 function App() {
@@ -300,6 +301,7 @@ function App() {
             <Route path='/viewTask/:id' element={<ViewTask />} />
             <Route path='/testimonialView/:id' element={<TestimonialView />} />
             <Route path='/historyNotes/:id' element={<HistoryNotes />} />
+            <Route path = '/videoPlayer' element ={<VideoPlayer/>} />
           </Route>
           <Route path="/individual" element={<IndividualPage />} />
           {/* <Route path="/group" element={<GroupPage />} /> */}
