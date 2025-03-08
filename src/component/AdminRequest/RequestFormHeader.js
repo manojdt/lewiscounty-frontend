@@ -2,25 +2,9 @@ import React, { useState } from "react";
 import { MoreVertical, CheckCircle, XCircle } from "lucide-react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-const AccordionItem = ({ title, isOpen, onToggle, children }) => {
-  return (
-    <div className="border-b border-gray-200">
-      <button
-        className="w-full flex justify-between items-center py-4 px-4 text-left"
-        onClick={onToggle}
-      >
-        <span className="text-lg font-medium text-gray-800">{title}</span>
-        {isOpen ? (
-          <ExpandLessIcon className="text-gray-500" size={20} />
-        ) : (
-          <ExpandMoreIcon className="text-gray-500" size={20} />
-        )}
-      </button>
-      {isOpen && <div className="px-4 pb-4">{children}</div>}
-    </div>
-  );
-};
+import { Chip } from "@mui/material";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import { statusText } from "../../shared/StatusIndicator/StatusIndicator";
 
 const StatusItem = ({
   title,
@@ -44,9 +28,27 @@ const StatusItem = ({
       icon: <CheckCircle size={20} className="text-blue-600" />,
       text: "Selected",
     },
+    accept: {
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+      icon: <CheckCircle size={20} className="text-green-600" />,
+      text: "Accepted",
+    },
+    none: {
+      color: "text-gray-600",
+      bgColor: "bg-gray-100",
+      icon: <XCircle size={20} className="text-gray-600" />,
+      text: "Not Started",
+    },
+    "in-review": {
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
+      icon: <FiberManualRecordIcon fontSize="small" className="text-orange-600" />,
+      text: "In Review",
+    },
   };
 
-  const config = statusConfig[status] || statusConfig.verified;
+  const config = statusConfig[status] || statusConfig.none;
 
   return (
     <div className="bg-blue-50 rounded-md mb-4">
@@ -54,7 +56,7 @@ const StatusItem = ({
         <div className="font-medium">{title}</div>
         <div className="flex items-center gap-4">
           <div className="text-sm text-gray-600">
-            Date & time: {date} | {time}
+            {date && time ? `Date & time: ${date} | ${time}` : "No date available"}
           </div>
           <div
             className={`flex items-center gap-1 ${config.color} rounded-md px-2 py-1 ${config.bgColor}`}
@@ -65,9 +67,9 @@ const StatusItem = ({
           {onToggle && (
             <button onClick={onToggle}>
               {isOpen ? (
-                <ExpandLessIcon className="text-blue-600" size={20} />
+                <ExpandLessIcon className="text-blue-600" fontSize="small" />
               ) : (
-                <ExpandMoreIcon className="text-blue-600" size={20} />
+                <ExpandMoreIcon className="text-blue-600" fontSize="small" />
               )}
             </button>
           )}
@@ -82,7 +84,7 @@ const InterviewDetail = ({ label, value }) => {
   return (
     <div className="py-2">
       <div className="text-gray-600 mb-1">{label} :</div>
-      <div className="text-gray-800">{value}</div>
+      <div className="text-gray-800">{value || "Not provided"}</div>
     </div>
   );
 };
@@ -123,29 +125,76 @@ const RequestFormHeader = ({ userData }) => {
       textColor: "text-green-600",
       borderColor: "border-green-300",
     },
+    none: {
+      label: "Not Started",
+      bgColor: "bg-gray-100",
+      textColor: "text-gray-600",
+      borderColor: "border-gray-300",
+    },
+    accept: {
+      label: "Accepted",
+      bgColor: "bg-green-100",
+      textColor: "text-green-600",
+      borderColor: "border-green-300",
+    },
   };
 
-  const config =
-    statusConfig[userData?.application_status] || statusConfig["in-review"];
+  // Get current application status from userData or default to "none"
+  const currentStatus = userData?.application_status || "none";
+  const interviewStatus = userData?.interview_status || "none";
+  const bgStatus = userData?.bg_status || "none";
+  
+  // Format dates from API response if available
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+  };
+  
+  const formatTime = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Format application date and time
+  const applicationDate = formatDate(userData?.application_approval_date);
+  const applicationTime = formatTime(userData?.application_approval_date);
+  
+  // Format interview date and time
+  const interviewDate = formatDate(userData?.interview_date);
+  const interviewTime = formatTime(userData?.interview_date);
+  
+  // Format background check date and time
+  const bgDate = formatDate(userData?.bg_approval_date);
+  const bgTime = formatTime(userData?.bg_approval_date);
+
+  const config = statusConfig[currentStatus] || statusConfig.none;
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
 
+  // Check if user has been approved
+  const isApproved = userData?.approve_status === "accept";
+  const approvalDate = formatDate(userData?.approve_date);
+  const approvalTime = formatTime(userData?.approve_date);
+
   return (
-    <div className="w-full border-b border-gray-300">
+    <div className="w-full">
       <div className="flex justify-between items-center p-4">
-        <div className="text-lg font-medium text-gray-800">
-          View ({userData?.mentor_name})
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div
-            className={`px-3 py-1 rounded-full ${config.bgColor} ${config.textColor} text-sm`}
-          >
-            {config.label}
+        <div className="flex gap-x-3">
+          <div className="text-lg font-medium text-gray-800">
+            View ({userData?.mentor_name || "User"})
           </div>
-
+          <Chip
+            variant="outlined"
+            sx={{ bgcolor: config.bgColor, color: config.textColor }}
+            icon={<FiberManualRecordIcon sx={{ color: config.textColor }} />}
+            label={userData?.application_status ? statusText[userData?.application_status] || config.label : config.label}
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <button
             onClick={togglePopup}
             className="p-2 rounded-full hover:bg-gray-100"
@@ -172,8 +221,8 @@ const RequestFormHeader = ({ userData }) => {
         </div>
       )}
 
-      {/* Caution content area */}
-      {userData?.application_status === "in-review" && (
+      {/* In-review content area */}
+      {userData?.application_status === "in-review" && userData?.in_review && (
         <div
           className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}
         >
@@ -181,74 +230,94 @@ const RequestFormHeader = ({ userData }) => {
             Marked as In review
           </div>
           <div className="text-sm text-gray-700">
-            Update by: John Doe | Update Date| Time : 02/02/2025 | 05:50 PM
+            Update by: {userData?.in_review?.updated_by || "Admin"} | Update Date| Time : {formatDate(userData?.in_review?.updated_at) || "N/A"} | {formatTime(userData?.in_review?.updated_at) || "N/A"}
           </div>
           <div className="mt-3 text-sm text-gray-700">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop.
+            {userData?.in_review?.description || "No review notes available."}
           </div>
         </div>
       )}
+
+      {/* Caution content area */}
+      {userData?.application_status === 'inreview' && (
+        <div className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}>
+          <div className="font-medium text-orange-700 mb-2">
+            Marked as In review
+          </div>
+          <div className="text-sm text-gray-700">
+            Update by: John Doe | Update Date| Time : 02/02/2025 | 05:50 PM
+          </div>
+          <div className="mt-3 text-sm text-gray-700">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop.
+          </div>
+        </div>
+      )}
+
       {/* Application Status */}
       <StatusItem
         title="Application status"
-        date="12/2/2024"
-        time="12:35 PM"
-        status="verified"
+        date={applicationDate || approvalDate}
+        time={applicationTime || approvalTime}
+        status={currentStatus}
+        isOpen={openSections.applicationStatus}
+        onToggle={() => toggleSection("applicationStatus")}
       />
 
       {/* Interview Result */}
-      <StatusItem
-        title="Interview result"
-        date="12/2/2024"
-        time="12:35 PM"
-        status="selected"
-        isOpen={openSections.interviewResult}
-        onToggle={() => toggleSection("interviewResult")}
-      >
-        <div className="bg-white p-4 rounded">
-          <div className="text-gray-600 mb-2">Remarks:</div>
-          <div className="text-gray-800">
-            John deo performed well with excellent communication skill.
+      {(interviewStatus !== "none" || isApproved) && (
+        <StatusItem
+          title="Interview result"
+          date={interviewDate || approvalDate}
+          time={interviewTime || approvalTime}
+          status={interviewStatus !== "none" ? interviewStatus : (isApproved ? "accept" : "none")}
+          isOpen={openSections.interviewResult}
+          onToggle={() => toggleSection("interviewResult")}
+        >
+          <div className="bg-white p-4 rounded">
+            <div className="text-gray-600 mb-2">Remarks:</div>
+            <div className="text-gray-800">
+              {userData?.interview_status_description || "No interview remarks available."}
+            </div>
           </div>
-        </div>
-      </StatusItem>
+        </StatusItem>
+      )}
 
       {/* Interview Details */}
-      <div className="bg-blue-50 rounded-md mb-4 p-4">
-        <div className="font-medium mb-4">Interview details</div>
-        <div className="bg-white p-4 rounded">
+      {(userData?.interview_date || userData?.interview_location || userData?.interview_description) && (
+        <StatusItem
+          title="Interview details"
+          date={interviewDate}
+          time={interviewTime}
+          status={interviewStatus !== "none" ? interviewStatus : (isApproved ? "accept" : "none")}
+          isOpen={openSections.interviewDetails}
+          onToggle={() => toggleSection("interviewDetails")}
+        >
           <InterviewDetail
             label="Interview Location"
-            value="132 My Street, Kingston, New York 12401."
+            value={userData?.interview_location}
           />
           <InterviewDetail
             label="Interview date | time"
-            value="12/2/2024 | 12:35 PM"
+            value={interviewDate && interviewTime ? `${interviewDate} | ${interviewTime}` : null}
           />
           <InterviewDetail
             label="Description"
-            value="Your interview is scheduled at [Location] on [Date]. Please arrive 10 minutes early and bring any required documents. Let us know if you have any questions"
+            value={userData?.interview_description}
           />
-        </div>
-      </div>
+        </StatusItem>
+      )}
 
-      {/* Personal Information */}
-      <AccordionItem
-        title="Personal Information"
-        isOpen={openSections.personalInfo}
-        onToggle={() => toggleSection("personalInfo")}
-      >
-        <div className="text-gray-700">
-          This section would contain personal information content.
-        </div>
-      </AccordionItem>
+      {/* Background Check Status */}
+      {bgStatus !== "none" && (
+        <StatusItem
+          title="Background verification"
+          date={bgDate}
+          time={bgTime}
+          status={bgStatus}
+          isOpen={openSections.bgVerification}
+          onToggle={() => toggleSection("bgVerification")}
+        />
+      )}
     </div>
   );
 };

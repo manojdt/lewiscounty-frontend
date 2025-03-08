@@ -74,78 +74,87 @@ export function MentorApplicationForm() {
   }, [userInfo]);
 
   useEffect(() => {
-    if (languagesData && languagesData.length > 0) {
-      // Create a deep copy of the form sections
-      const updatedFormSections = JSON.parse(JSON.stringify(MentorFormSection));
+    const updateLanguageFields = async () => {
+      // Check if "other" is one of the selected languages
+      const hasOtherLanguage = Array.isArray(formData.languages_known)
+        ? formData.languages_known.includes("other")
+        : formData.languages_known === "other";
 
-      // Find the Personal Information section
-      const personalInfoSection = updatedFormSections.find(
-        (section) => section.title === "Personal Information"
-      );
+      // Get the latest field data with dynamic language options
+      const currentFieldData = [...formSections];
 
-      if (personalInfoSection) {
-        // Find the language checkbox field
-        const languageFieldIndex = personalInfoSection.fields.findIndex(
-          (field) => field.key === "languages_known"
-        );
-
-        if (languageFieldIndex !== -1) {
-          // Set common languages for the checkbox (keeping just a few common ones)
-          // Typically you'd select a few common languages for the checkbox options
-          const commonLanguages = [
-            { label: "English", value: "english" },
-            { label: "Spanish", value: "spanish" },
-            { label: "Tamil", value: "tamil" },
-            { label: "Other", value: "other" },
-          ];
-
-          // Update the checkbox options
-          personalInfoSection.fields[languageFieldIndex].options =
-            commonLanguages;
-
-          // Create or update the dropdown field for "other" languages
-          const otherLanguageOptions = languagesData.map((lang) => ({
-            label: lang.name || lang.label, // Adjust based on your API response structure
-            value: lang.code || lang.value, // Adjust based on your API response structure
+      if (hasOtherLanguage) {
+        try {
+          // Create other language options - you can use the same language list or a different one
+          const otherLanguagesList = languagesData.map((lang) => ({
+            label: lang.name,
+            value: lang.name,
           }));
 
-          // Find if the "other_language" field already exists
-          const otherLangFieldIndex = personalInfoSection.fields.findIndex(
-            (field) => field.key === "other_language"
-          );
+          // Create the updated field data
+          const updatedFieldData = currentFieldData.map((section) => {
+            if (section.title === "Personal Information") {
+              const languageFieldIndex = section.fields.findIndex(
+                (field) => field.key === "languages_known"
+              );
 
-          if (otherLangFieldIndex !== -1) {
-            // Update existing field
-            personalInfoSection.fields[otherLangFieldIndex].options =
-              otherLanguageOptions;
-          } else {
-            // Add new field after the languages_known field
-            const newOtherLangField = {
-              type: "selectBox",
-              label: "Select Other Language",
-              placeholder: "Select Language",
-              isRequired: false,
-              col: 12,
-              key: "other_language",
-              options: otherLanguageOptions,
-              conditionalDisplay: "languages_known",
-              conditionalValue: "other",
-            };
+              // Only add the other language field if it doesn't already exist
+              if (
+                !section.fields.some((field) => field.key === "other_language")
+              ) {
+                const newFields = [
+                  ...section.fields.slice(0, languageFieldIndex + 1),
+                  {
+                    type: "multiSelect",
+                    label: "Specify Other Language",
+                    isRequired: true,
+                    col: 2,
+                    isMultiSelect: true,
+                    key: "other_language",
+                    options: otherLanguagesList,
+                  },
+                  ...section.fields.slice(languageFieldIndex + 1),
+                ];
 
-            // Insert the new field after the checkbox field
-            personalInfoSection.fields.splice(
-              languageFieldIndex + 1,
-              0,
-              newOtherLangField
-            );
-          }
+                return {
+                  ...section,
+                  fields: newFields,
+                };
+              }
+            }
+            return section;
+          });
+
+          setFormSections(updatedFieldData);
+        } catch (error) {
+          console.error("Failed to update other language options", error);
         }
-      }
+      } else {
+        // If "other" is not selected, remove the other language field
+        const revertedFieldData = currentFieldData.map((section) => {
+          if (section.title === "Personal Information") {
+            // Filter out the other language field if it exists
+            const newFields = section.fields.filter(
+              (field) => field.key !== "other_language"
+            );
 
-      // Update form sections with the modified data
-      setFormSections(updatedFormSections);
-    }
-  }, [languagesData]);
+            return { ...section, fields: newFields };
+          }
+          return section;
+        });
+
+        setFormSections(revertedFieldData);
+
+        // Clear other language value when not selected
+        setFormData((prev) => ({
+          ...prev,
+          languages_known: "",
+        }));
+      }
+    };
+
+    updateLanguageFields();
+  }, [formData.languages_known, languagesData]);
 
   const handleAddressfieldApi = (value, fieldName) => {
     if (!!value) {
@@ -317,6 +326,7 @@ export function MentorApplicationForm() {
       const { state, city, zip_code, ...data } = formData;
       try {
         // Format data for submission
+        // Format data for submission
         const payload = new FormData();
         // Append personal information
         Object.keys(data).forEach((key) => {
@@ -328,22 +338,26 @@ export function MentorApplicationForm() {
             key !== "other_language" && // Skip other_language as we'll handle it with languages_known
             data[key] !== undefined &&
             data[key] !== null &&
-            data[key] !== ""
+            data[key] !== "" &&
+            // Add check for empty arrays
+            !(Array.isArray(data[key]) && data[key].length === 0)
           ) {
             if (key === "dob") {
               payload.append(key, moment(data[key]).format("YYYY-MM-DD"));
             } else if (key === "languages_known") {
               // Handle languages specially
-              const languagesList = data[key].filter(
-                (lang) => lang !== "other"
-              );
-
-              // If "other" is selected and a specific language is chosen, add it
-              if (data[key].includes("other") && data.other_language) {
-                languagesList.push(data.other_language);
+              const preferred_languages = [
+                ...(Array.isArray(data.languages_known)
+                  ? data.languages_known
+                  : [data.languages_known]),
+                ...(Array.isArray(data.other_language)
+                  ? data.other_language
+                  : [data.other_language]),
+              ].filter((lang) => lang && lang !== "other");
+              // Only append if the filtered list has items
+              if (preferred_languages.length > 0) {
+                payload.append(key, JSON.stringify(preferred_languages));
               }
-
-              payload.append(key, JSON.stringify(languagesList));
             } else {
               // Handle all other fields normally
               payload.append(key, data[key]);
@@ -381,7 +395,9 @@ export function MentorApplicationForm() {
           );
           payload.append("documents", signatureBlob, "signature.png");
         }
-
+        // for (let [key, value] of payload.entries()) {
+        //   console.log(`formData: ${key}: ${value}`);
+        // }
         // Make the API call and wait for it to complete
         const response = await updateUserInfoPost(payload).unwrap();
 
@@ -419,25 +435,31 @@ export function MentorApplicationForm() {
       toast.error("Please complete all required fields.");
       // Auto-expand sections with errors
       const newSections = [...formSections];
+
       // Check personal information errors
-      const personalInfoFields = formSections[0].fields.map(
-        (field) => field.key
-      );
-      const hasPersonalInfoErrors = Object.keys(formData.error).some((key) =>
-        personalInfoFields.includes(key)
-      );
-      if (hasPersonalInfoErrors) {
-        newSections[0].expanded = true;
+      if (newSections[0]) {
+        const personalInfoFields =
+          formSections[0].fields?.map((field) => field.key) || [];
+        const hasPersonalInfoErrors = Object.keys(formData.error).some((key) =>
+          personalInfoFields.includes(key)
+        );
+        if (hasPersonalInfoErrors) {
+          newSections[0].expanded = true;
+        }
       }
+
       // Check reference errors
-      const hasReferenceErrors = Object.keys(formData.error).some((key) =>
-        key.startsWith("references_")
-      );
-      if (hasReferenceErrors) {
-        newSections[3].expanded = true;
+      if (newSections[3]) {
+        const hasReferenceErrors = Object.keys(formData.error).some((key) =>
+          key.startsWith("references_")
+        );
+        if (hasReferenceErrors) {
+          newSections[3].expanded = true;
+        }
       }
+
       // Check signature error
-      if (formData.error.signature) {
+      if (newSections[4] && formData.error.signature) {
         newSections[4].expanded = true;
       }
       setFormSections(newSections);
@@ -452,8 +474,7 @@ export function MentorApplicationForm() {
         "Are you sure you want to cancel? All your data will be lost."
       )
     ) {
-      // navigate("/");
-      window.location.reload();
+      navigate("/login-type");
     }
   };
 
@@ -540,7 +561,7 @@ export function MentorApplicationForm() {
           variant="h6"
           sx={{ mb: 3, ml: 2.5, fontWeight: 600, color: "rgba(24, 40, 61, 1)" }}
         >
-          Fill the Question and Answer
+          Mentor application
         </Typography>
 
         <Grid2
@@ -548,109 +569,112 @@ export function MentorApplicationForm() {
           spacing={3}
           className={"bg-white drop-shadow-xl rounded-xl !m-4"}
         >
-          {formSections.map((section, sectionIndex) => (
-            <Grid2 item xs={12} key={`section-${sectionIndex}`}>
-              <CustomAccordian
-                title={section.title}
-                defaultValue={section.expanded}
-                handleToggle={() => handleSectionToggle(sectionIndex)}
-                children={
-                  section.isReference ? (
-                    // References section
-                    <div>
-                      {formData.references.map((reference, refIndex) => (
-                        <Box
-                          key={`ref-${refIndex}`}
-                          sx={{ my: 5, position: "relative" }}
-                        >
-                          {formData.references.length > 1 && (
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              sx={{ position: "absolute", right: 0, top: 0 }}
-                              onClick={() => handleRemoveReference(refIndex)}
-                            >
-                              Remove
-                            </Button>
-                          )}
+          {formSections &&
+            formSections?.length &&
+            formSections?.map((section, sectionIndex) => (
+              <Grid2 item xs={12} key={`section-${sectionIndex}`}>
+                <CustomAccordian
+                isRequired={section?.isRequired}
+                  title={section.title}
+                  defaultValue={section.expanded}
+                  handleToggle={() => handleSectionToggle(sectionIndex)}
+                  children={
+                    section.isReference ? (
+                      // References section
+                      <div>
+                        {formData.references.map((reference, refIndex) => (
+                          <Box
+                            key={`ref-${refIndex}`}
+                            sx={{ my: 5, position: "relative" }}
+                          >
+                            {formData.references.length > 1 && (
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="small"
+                                sx={{ position: "absolute", right: 0, top: 0 }}
+                                onClick={() => handleRemoveReference(refIndex)}
+                              >
+                                Remove
+                              </Button>
+                            )}
 
-                          <EquipmentFormFields
-                            fields={ReferenceFields}
-                            formData={{
-                              first_name: reference.first_name,
-                              last_name: reference.last_name,
-                              email: reference.email,
-                              phone_number: reference.phone_number,
-                              relationship: reference.relationship,
-                            }}
-                            handleChange={(key, value) =>
-                              handleReferenceChange(key, value, refIndex)
-                            }
-                          />
-                        </Box>
-                      ))}
-                      <div className="flex justify-end">
-                        <Button
-                          variant="text"
-                          startIcon={<AddIcon />}
-                          onClick={handleAddReference}
-                          sx={{ mt: 2, ml: "auto" }}
-                        >
-                          Add
-                        </Button>
+                            <EquipmentFormFields
+                              fields={ReferenceFields}
+                              formData={{
+                                first_name: reference.first_name,
+                                last_name: reference.last_name,
+                                email: reference.email,
+                                phone_number: reference.phone_number,
+                                relationship: reference.relationship,
+                              }}
+                              handleChange={(key, value) =>
+                                handleReferenceChange(key, value, refIndex)
+                              }
+                            />
+                          </Box>
+                        ))}
+                        <div className="flex justify-end">
+                          <Button
+                            variant="text"
+                            startIcon={<AddIcon />}
+                            onClick={handleAddReference}
+                            sx={{ mt: 2, ml: "auto" }}
+                          >
+                            Add
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ) : section.isSignature ? (
-                    // Signature section
-                    <div ref={containerRef}>
-                      <SignatureCanvas
-                        ref={signatureRef}
-                        penColor="black"
-                        canvasProps={{
-                          width: containerRef.current?.offsetWidth,
-                          height: 200,
-                          className: "signature-canvas",
-                          style: {
-                            border: "1px dashed #eee",
-                            backgroundColor: "#1D5BBF0D",
-                          },
-                        }}
-                        onEnd={handleSignatureEnd}
+                    ) : section.isSignature ? (
+                      // Signature section
+                      <div ref={containerRef}>
+                        <SignatureCanvas
+                          ref={signatureRef}
+                          penColor="black"
+                          canvasProps={{
+                            width: containerRef.current?.offsetWidth,
+                            height: 200,
+                            className: "signature-canvas",
+                            style: {
+                              border: "1px dashed #eee",
+                              backgroundColor: "#1D5BBF0D",
+                            },
+                          }}
+                          onEnd={handleSignatureEnd}
+                        />
+
+                        {formData.error.documents && (
+                          <Typography color="error" variant="caption">
+                            {formData.error.documents}
+                          </Typography>
+                        )}
+
+                        <Box sx={{ mt: 1 }}>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={handleClearSignature}
+                          >
+                            Clear Signature
+                          </Button>
+                        </Box>
+                      </div>
+                    ) : (
+                      // Regular sections
+                      <EquipmentFormFields
+                        fields={section.fields}
+                        searchBar={searchBar}
+                        setSearchedOption={setSearchedOption}
+                        addressFieldData={addressFieldData}
+                        isLoading={isLoading}
+                        formData={{ ...formData, error: formData.error }}
+                        handleChange={handleFieldChange}
                       />
-
-                      {formData.error.documents && (
-                        <Typography color="error" variant="caption">
-                          {formData.error.documents}
-                        </Typography>
-                      )}
-
-                      <Box sx={{ mt: 1 }}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={handleClearSignature}
-                        >
-                          Clear Signature
-                        </Button>
-                      </Box>
-                    </div>
-                  ) : (
-                    // Regular sections
-                    <EquipmentFormFields
-                      fields={section.fields}
-                      searchBar={searchBar}
-                      setSearchedOption={setSearchedOption}
-                      addressFieldData={addressFieldData}
-                      isLoading={isLoading}
-                      formData={{ ...formData, error: formData.error }}
-                      handleChange={handleFieldChange}
-                    />
-                  )
-                }
-              />
-            </Grid2>
-          ))}
+                    )
+                  }
+                />
+              </Grid2>
+            ))}
           <Grid2 Grid2 item xs={12}>
             <div className="mb-6 flex items-center ml-5">
               <FormControlLabel

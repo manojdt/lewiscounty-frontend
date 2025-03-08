@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
-import DownloadIcon from "@mui/icons-material/Download";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetJoinRequestDataQuery } from "../../features/request/requestAPI.service";
 import { requestTableColumns } from "./AdminRequestTableData";
@@ -126,7 +125,7 @@ const AdminRequest = () => {
 
   // Generate menu items based on row status
   const getMenuItems = (row) => {
-    const items = [];    
+    const items = [];
 
     // Conditional actions based on status
     if (row.application_status === "waiting_for_verification") {
@@ -276,21 +275,33 @@ const AdminRequest = () => {
               indicatorColor="primary"
             >
               <Tab
+                icon={
+                  <Badge
+                    badgeContent="58"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  ></Badge>
+                }
+                iconPosition="top"
                 label={
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Badge badgeContent="58" color="primary" sx={{ mr: 1 }}>
-                      <span>Mentor</span>
-                    </Badge>
+                  <Box sx={{ display: "flex", alignItems: "center", mt:1 }}>
+                    <span>Mentor</span>
                   </Box>
                 }
                 value="mentor"
               />
               <Tab
+                icon={
+                  <Badge
+                    badgeContent="58"
+                    color="primary"
+                    sx={{ mr: 1 }}
+                  ></Badge>
+                }
+                iconPosition="top"
                 label={
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Badge badgeContent="58" color="primary" sx={{ mr: 1 }}>
-                      <span>Mentee</span>
-                    </Badge>
+                  <Box sx={{ display: "flex", alignItems: "center", mt:1 }}>
+                    <span>Mentee</span>
                   </Box>
                 }
                 value="mentee"
@@ -329,9 +340,6 @@ const AdminRequest = () => {
               ),
             }}
           />
-          <IconButton>
-            <DownloadIcon />
-          </IconButton>
         </Box>
       </div>
 
@@ -358,7 +366,6 @@ const AdminRequest = () => {
           rows={data?.results || []}
           columns={requestTableColumns}
           pageSize={10}
-          rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
           onCellClick={handleClick}
           paginationMode="server"
