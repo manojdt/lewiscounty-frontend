@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
 import { Avatar } from "@mui/material";
 import modal_tick_icon from "../../assets/icons/modal_tick_icon.svg";
-import { questionFlowRedirect } from "../../utils";
+import { menteequestionFlowRedirect, questionFlowRedirect } from "../../utils";
 
 const Login = () => {
   // Internal State
@@ -191,7 +191,13 @@ const Login = () => {
             user_data.role === "admin" ||
             user_data.role === "mentee"
           ) {
-            navigate(redirectPath);
+            if(user_data.role==="mentee"){
+              const res =menteequestionFlowRedirect(user_data)
+             navigate(res) 
+          }else{
+
+              navigate(redirectPath);
+          };
           } else {
             navigate("/mentor-application-form");
           }

@@ -16,7 +16,7 @@ import { useUserAccountLoginMutation } from '../../features/login/loginapi.servi
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { questionFlowRedirect } from '../../utils';
+import { menteequestionFlowRedirect, questionFlowRedirect } from '../../utils';
 
 export default function SocialMediaLogin({ view = 'vertical', setVerificationPopup = () => false, location = "" }) {
 
@@ -87,7 +87,6 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
             handleLoginAction(l)
         }
     }
-
     const redirectPath =
     new URLSearchParams(location.search).get("redirect") || "/dashboard";
 
@@ -104,7 +103,13 @@ export default function SocialMediaLogin({ view = 'vertical', setVerificationPop
                     navigate("/login-type");
                 } else if (user_data?.is_registered) {
                     if(user_data?.userinfo?.is_questions_completed||user_data.role==="admin"||user_data.role==="mentee"){
-                        navigate(redirectPath);
+                        if(user_data.role==="mentee"){
+                            const res =menteequestionFlowRedirect(user_data)
+                           navigate(res) 
+                        }else{
+
+                            navigate(redirectPath);
+                        }
                       }else{
                         navigate("/mentor-application-form");
                       }

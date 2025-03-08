@@ -28,9 +28,12 @@ import CancelIcon from "../../assets/images/cancel1x.png";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import CancelColorIcon from "../../assets/icons/cancelCircle.svg";
 import { Button } from "../../shared";
+import { useMenteeRequestActions } from "../../features/request/requestActions";
+import { toast } from "react-toastify";
 
 export const MenteeViewForm = () => {
   const [searchParams] = useSearchParams();
+    const [requestType, setRequestType] = useState("");
   const params = useParams();
   const [anchorEl, setAnchorEl] = useState(null);
   // Get mentee ID from URL parameters (priority: URL path, then query param, then fallback)
@@ -80,13 +83,22 @@ export const MenteeViewForm = () => {
   // Use RTK Query hook to fetch mentee details
   const {
     data: menteeData,
+    refetch,
     isLoading,
     isError,
     error,
   } = useGetMenteeDetailsQuery(menteeId, {
     skip: !menteeId, // Skip the query if we don't have a mentee ID
   });
-
+  const {
+    handleApproveMentee,
+    handleRejectMentee,
+    handleReviewMentee,
+    handleMenteeFinalReject,
+    handleMenteeFinalApprove,
+    handleMenteeNotSubmit,
+    handleMenteeSubmit,
+  } = useMenteeRequestActions();
   // Map API response to form data structure when data is received
   useEffect(() => {
     if (menteeData) {
@@ -291,10 +303,14 @@ export const MenteeViewForm = () => {
     setVerifyDialogOpen(false);
   };
 
-  const handleVerifyConfirm = () => {
+  const handleVerifyConfirm = async () => {
     // Add your API call here to update the status to Verified
-    console.log("Application verified");
-    setVerifyDialogOpen(false);
+    const result = await handleApproveMentee(menteeData?.id);
+    if (result.success) {
+      console.log("Application verified");
+      refetch()
+      setVerifyDialogOpen(false);
+    }
   };
 
   const handleReviewOpen = () => {
@@ -305,13 +321,47 @@ export const MenteeViewForm = () => {
     setReviewDialogOpen(false);
   };
 
-  const handleReviewSubmit = () => {
+  const handleReviewSubmit = async () => {
     // Add your API call here to update the status to Review with the note
-    console.log("Application set to review with note:", reviewNote);
-    setReviewNote("");
-    setReviewDialogOpen(false);
+    if (reviewNote.trim()) {
+      const result = await handleReviewMentee(menteeData?.id, {
+        in_review_reason: reviewNote,
+      });
+      if (result.success) {
+        console.log("Application set to review with note:", reviewNote);
+        refetch()
+        setReviewNote("");
+        setReviewDialogOpen(false);
+      }
+    } else {
+      toast.error("Reason Required");
+    }
   };
-
+  const onMenteeSubmitRejectClick = async (id) => {
+    if (rejectReason.trim()) {
+      const result = await handleMenteeFinalReject(menteeData?.id, {
+        rejected_reason: rejectReason,
+      });
+      if (result.success) {
+        refetch()
+        setRejectReason("");
+        setRejectDialogOpen(false);
+      } else {
+        // Show error notification
+      }
+    } else {
+      toast.error("Reason Required");
+    }
+  };
+  const onMenteeAubmitApproveClick = async () => {
+    const result = await handleMenteeFinalApprove(menteeData?.id);
+    if (result.success) {
+      refetch()
+      setVerifyDialogOpen(false);
+    } else {
+      // Show error notification
+    }
+  };
   const handleRejectOpen = () => {
     setRejectDialogOpen(true);
   };
@@ -320,11 +370,22 @@ export const MenteeViewForm = () => {
     setRejectDialogOpen(false);
   };
 
-  const handleRejectSubmit = () => {
+  const handleRejectSubmit = async () => {
     // Add your API call here to update the status to Rejected with the reason
-    console.log("Application rejected with reason:", rejectReason);
-    setRejectReason("");
-    setRejectDialogOpen(false);
+    if (rejectReason.trim()) {
+      const result = await handleRejectMentee(menteeData?.id, {
+        rejected_reason: rejectReason,
+      });
+      if (result.success) {
+        refetch()
+        setRejectReason("");
+        setRejectDialogOpen(false);
+      } else {
+        // Show error notification
+      }
+    } else {
+      toast.error("Reason Required");
+    }
   };
 
   return (
@@ -340,13 +401,13 @@ export const MenteeViewForm = () => {
         <div className="flex justify-between">
           <div className="mt-6 pl-6 flex items-center gap-3">
             <p className="font-bold">Mentee Details</p>
-            {menteeData?.approve_status && (
+            {/* {menteeData?.approve_status && (
               <p className="text-sm text-gray-600">
                 <span className="font-medium capitalize">
                   {menteeData.approve_status}
                 </span>
               </p>
-            )}
+            )} */}
           </div>
           <div>
             <div
@@ -364,71 +425,139 @@ export const MenteeViewForm = () => {
                 "aria-labelledby": "basic-button",
               }}
             >
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  handleVerifyOpen();
-                }}
-                className="!text-[12px]"
-              >
-                <img
-                  src={TickCircle}
-                  alt="TickCircle"
-                  className=" w-[20px] h-[15px] mr-2 "
-                />
-                <p>Verify</p>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  handleReviewOpen();
-                }}
-                className="!text-[12px]"
-              >
-                <img
-                  src={ReviewIcon}
-                  alt="ReviewIcon"
-                  className=" w-[20px] h-[15px] mr-2 "
-                />
-                <p>Review</p>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  handleRejectOpen();
-                }}
-                className="!text-[12px]"
-              >
-                <img
-                  src={RejectCloseIcon}
-                  alt="RejectCloseIcon"
-                  className=" w-[20px] h-[15px] mr-2 "
-                />
-                <p>Reject</p>
-              </MenuItem>
+              {menteeData && (menteeData?.application_status === "waiting_for_verification" || 
+    menteeData?.application_status === "in_review") && (
+    <MenuItem
+      onClick={() => {
+        handleClose();
+        handleVerifyOpen();
+      }}
+      className="!text-[12px]"
+    >
+      <img
+        src={TickCircle}
+        alt="TickCircle"
+        className="w-[20px] h-[15px] mr-2"
+      />
+      <p>Verify</p>
+    </MenuItem>
+  )}
+  
+  {/* Review option - only show for waiting_for_verification status */}
+  {menteeData && menteeData?.application_status === "waiting_for_verification" && (
+    <MenuItem
+      onClick={() => {
+        handleClose();
+        handleReviewOpen();
+      }}
+      className="!text-[12px]"
+    >
+      <img
+        src={ReviewIcon}
+        alt="ReviewIcon"
+        className="w-[20px] h-[15px] mr-2"
+      />
+      <p>Review</p>
+    </MenuItem>
+  )}
+  
+  {/* Approve option - only show for verified status with submitted assessment */}
+  {menteeData && menteeData?.application_status === "verified" && 
+   menteeData?.assessment_status === "submitted" && 
+   (menteeData?.approve_status === "pending" || menteeData?.approve_status === "new") && (
+    <MenuItem
+      onClick={() => {
+        handleClose();
+        setRequestType("final_approve");
+        handleVerifyOpen();
+      }}
+      className="!text-[12px]"
+    >
+      <img
+        src={TickCircle}
+        alt="TickCircle"
+        className="w-[20px] h-[15px] mr-2"
+      />
+      <p>Approve</p>
+    </MenuItem>
+  )}
+  
+  {/* Reject option - don't show if already rejected */}
+  {menteeData && menteeData?.application_status !== "rejected" && 
+   menteeData?.approve_status !== "rejected" && (
+    <MenuItem
+      onClick={() => {
+        handleClose();
+        if (menteeData?.application_status === "verified" && menteeData?.assessment_status === "submitted") {
+          setRequestType("final_reject");
+        }
+        handleRejectOpen();
+      }}
+      className="!text-[12px]"
+    >
+      <img
+        src={RejectCloseIcon}
+        alt="RejectCloseIcon"
+        className="w-[20px] h-[15px] mr-2"
+      />
+      <p>Reject</p>
+    </MenuItem>
+  )}
             </Menu>
           </div>
         </div>
         <div className="pt-2">
-          <div className="action-set action_rescheduled">
-            <div className="reason-title flex gap-4">
-              Marked as in review
-              <div className="flex gap-2 text-[12px] text-black pt-1">
-                <div className="font-bold">Updated by:</div>
-                <div className="text-[11px] text-blue-600 underline">{""}</div>
+          {menteeData?.application_status === "in_review" &&
+            menteeData?.in_review_reason && (
+              <div className="action-set action_rescheduled">
+                <div className="reason-title flex gap-4">
+                  Marked as in review
+                  <div className="flex gap-2 text-[12px] text-black pt-1">
+                    <div className="font-bold">Updated by:</div>
+                    <div className="text-[11px] text-blue-600 underline">
+                      {menteeData?.approved_by}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 text-[12px] text-black pt-1">
+                    <div className="font-bold">Updated Date | Time:</div>
+                    <div className="text-[11px] text-blue-600 underline">
+                      {moment(menteeData?.updated_at).format('DD/MM/YYYY | hh:mm a')}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="reason-content">
+                  {menteeData?.in_review_reason}
+                </div>
               </div>
-              <div className="flex gap-2 text-[12px] text-black pt-1">
-                <div className="font-bold">Updated Date | Time:</div>
-                <div className="text-[11px] text-blue-600 underline">{""}</div>
+            )}
+          {(menteeData?.application_status === "rejected" ||
+            menteeData?.approve_status === "rejected") &&
+            menteeData?.rejected_reason && (
+              <div className="action-set action_cancelled mb-4">
+                <div className="reason-title">{"Request Reason"}</div>
+                <div className="reason-content">
+                  {menteeData?.rejected_reason}
+                </div>
+              </div>
+            )}
+          {menteeData?.application_status === "verified" &&
+            menteeData?.application_status === "rejected" &&
+            menteeData.approve_status !== "rejected" && (
+          <div className="bg-gray-200">
+            <div className="p-4 flex justify-between items-center ">
+              <div className="text-black">{"Application"}</div>
+              <div className="text-[#16B681] font-bold flex items-center">
+                <img
+                  src={TickColorIcon}
+                  alt="TickColorIcon"
+                  className="w-[45px] h-[35px]"
+                />{" "}
+                {"Application Verified"}
               </div>
             </div>
-
-            <div className="reason-content">{""}</div>
           </div>
-          <div className="action-set action_cancelled mb-4">
-            <div className="reason-title">{"Request Reason"}</div>
-            <div className="reason-content">{""}</div>
-          </div>{" "}
+           )} 
         </div>
         <Stack spacing={2}>
           {fieldData?.map((data, i) => {
@@ -452,39 +581,77 @@ export const MenteeViewForm = () => {
         </Stack>
 
         <Box className="flex justify-center gap-3">
-          <Button
-            btnName="Reject"
-            btnCls="w-[130px]"
-            btnStyle={{
-              border: "1px solid #ff0004", // Danger red border
-              color: "#ff0004", // Danger red text
-            }}
-            btnCategory="secondary"
-            onClick={handleRejectOpen}
-          />
-          <Button
-            btnName="Review"
-            btnCls="w-[130px]"
-            btnStyle={{
-              border: "1px solid #e56031",
-              color: "white",
-              backgroundColor: "#e56031",
-            }}
-            btnCategory="secondary"
-            onClick={handleReviewOpen}
-          />
-          <Button
-            btnName="Verify"
-            btnCls="w-[130px]"
-            btnStyle={{
-              border: "1px solid #16b681",
-              color: "white",
-              backgroundColor: "#16b681",
-            }}
-            btnCategory="secondary"
-            onClick={handleVerifyOpen}
-          />
-        </Box>
+  {/* Only show Reject button if not already rejected */}
+  {menteeData?.application_status !== "rejected" && menteeData?.approve_status !== "rejected" && (
+    <Button
+      btnName="Reject"
+      btnCls="w-[130px]"
+      btnStyle={{
+        border: "1px solid #ff0004",
+        color: "#ff0004",
+      }}
+      btnCategory="secondary"
+      onClick={() => {
+        if (menteeData?.application_status === "verified" && menteeData?.assessment_status === "submitted") {
+          setRequestType("final_reject");
+          handleRejectOpen();
+        } else {
+          handleRejectOpen();
+        }
+      }}
+    />
+  )}
+  
+  {/* Only show Review button for waiting_for_verification status */}
+  {menteeData?.application_status === "waiting_for_verification" && (
+    <Button
+      btnName="Review"
+      btnCls="w-[130px]"
+      btnStyle={{
+        border: "1px solid #e56031",
+        color: "white",
+        backgroundColor: "#e56031",
+      }}
+      btnCategory="secondary"
+      onClick={handleReviewOpen}
+    />
+  )}
+  
+  {/* Only show Verify button for waiting_for_verification or in_review status */}
+  {(menteeData?.application_status === "waiting_for_verification" || menteeData?.application_status === "in_review") && (
+    <Button
+      btnName="Verify"
+      btnCls="w-[130px]"
+      btnStyle={{
+        border: "1px solid #16b681",
+        color: "white",
+        backgroundColor: "#16b681",
+      }}
+      btnCategory="secondary"
+      onClick={handleVerifyOpen}
+    />
+  )}
+  
+  {/* Show Approve button only for verified status with submitted assessment and pending/new approve status */}
+  {menteeData?.application_status === "verified" && 
+   menteeData?.assessment_status === "submitted" && 
+   (menteeData?.approve_status === "pending" || menteeData?.approve_status === "new") && (
+    <Button
+      btnName="Approve"
+      btnCls="w-[130px]"
+      btnStyle={{
+        border: "1px solid #16b681",
+        color: "white",
+        backgroundColor: "#16b681",
+      }}
+      btnCategory="secondary"
+      onClick={() => {
+        setRequestType("final_approve");
+        handleVerifyOpen();
+      }}
+    />
+  )}
+</Box>
       </Box>
 
       {/* Verification Dialog with Backdrop */}
@@ -495,7 +662,7 @@ export const MenteeViewForm = () => {
         <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
           <img src={TickColorIcon} alt="TickColorIcon" />
           <span style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}>
-            Verify
+          {requestType==="final_approve"?"Please review the details before final approval":"Verify"} 
           </span>
           <div className="py-5">
             <p
@@ -505,7 +672,7 @@ export const MenteeViewForm = () => {
                 fontSize: "18px",
               }}
             >
-              Are you sure you want to Verify this application?
+              {requestType==="final_approve"?"":"Are you sure you want to Verify this application?"}  
             </p>
           </div>
           <div className="flex justify-center">
@@ -524,7 +691,14 @@ export const MenteeViewForm = () => {
                   background: "#16B681",
                 }}
                 btnCategory="primary"
-                onClick={handleVerifyConfirm}
+                onClick={()=>{
+                  if(requestType==="final_approve"){
+                    onMenteeAubmitApproveClick()
+                  }else{
+                    handleVerifyConfirm()
+                  }
+                }}
+                // onClick={handleVerifyConfirm}
               />
             </div>
           </div>
@@ -688,7 +862,13 @@ export const MenteeViewForm = () => {
                   btnName="Submit"
                   btnCls="text-white w-[20%]"
                   btnCategory="secondary"
-                  onClick={handleRejectSubmit}
+                  onClick={()=>{
+                    if(requestType==="final_reject"){
+                      onMenteeSubmitRejectClick()
+                    }else{
+                      handleRejectSubmit()
+                    }
+                  }}
                   btnStyle={{
                     background: "#eb405d",
                     border: "1px solid #eb405d",

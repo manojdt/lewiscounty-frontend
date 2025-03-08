@@ -40,7 +40,7 @@ export const LoginType = () => {
     }
 
     if (role === "mentee") {
-      navigate("/mentee-questions");
+      navigate("/mentee-question");
     }
   }, [userInfo]);
 

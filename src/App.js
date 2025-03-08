@@ -103,6 +103,8 @@ import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAs
 import AdminRequest from "./component/AdminRequest/AdminRequest";
 import { MenteeViewForm } from "./component/MenteeViewPage";
 import RequestFormPreview from "./component/AdminRequest/RequestFormPreview";
+import { MenteeReviewPage } from "./component/MenteeReviewPage";
+
 
 function App() {
   const PrivateRoute = () => {
@@ -168,12 +170,13 @@ function App() {
                 path="/mentor-application-form"
                 element={<MentorApplicationForm />}
               />
+                <Route path='/mentee-question' element={<MenteeSubmitForm />} />
+          <Route path='/mentee-question-view' element={<MenteeViewForm />} />
+          <Route path='/mentee-review' element={<MenteeReviewPage />} />
             </Route>
 
             <Route path="/login-type" element={<LoginType />} />
             {/* <Route path='/questions' element={<Questions />} /> */}
-            <Route path="/mentee-questions" element={<MenteeSubmitForm />} />
-            <Route path="/mentee-questions-view" element={<MenteeViewForm />} />
             <Route path="/mentee-assisment" element={<MenteeAssessment />} />
             <Route
               path="/mentee-assisment-form"
