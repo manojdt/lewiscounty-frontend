@@ -351,28 +351,27 @@ export function MentorApplicationForm() {
           }
         });
 
-        // Append references as JSON, but only those with values
-        data.references.forEach((reference, index) => {
-          // Filter out empty values from each reference object
-          const filteredReference = {};
-          Object.keys(reference).forEach((key) => {
-            if (
-              reference[key] !== undefined &&
-              reference[key] !== null &&
-              reference[key] !== ""
-            ) {
-              filteredReference[key] = reference[key];
-            }
-          });
+        // Filter out empty values from each reference object
+        const filteredReferences = data.references
+          .map((reference) => {
+            const filteredReference = {};
+            Object.keys(reference).forEach((key) => {
+              if (
+                reference[key] !== undefined &&
+                reference[key] !== null &&
+                reference[key] !== ""
+              ) {
+                filteredReference[key] = reference[key];
+              }
+            });
+            return filteredReference;
+          })
+          .filter((reference) => Object.keys(reference).length > 0); // Remove empty objects
 
-          // Only append reference if it has at least one property
-          if (Object.keys(filteredReference).length > 0) {
-            payload.append(
-              `references[${index}]`,
-              JSON.stringify(filteredReference)
-            );
-          }
-        });
+        // Stringify the entire array and append it to the payload
+        if (filteredReferences.length > 0) {
+          payload.append("references", JSON.stringify(filteredReferences));
+        }
 
         // If there's a documents, convert it to blob and append
         if (signatureRef.current) {
