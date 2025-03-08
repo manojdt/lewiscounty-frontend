@@ -49,7 +49,7 @@ export const formFieldData = [
         label: "State",
         addressDropdown: true,
         isRequired: false,
-        col: 6,
+        col: 4,
         key: "youth_state",
       },
       {
@@ -57,7 +57,7 @@ export const formFieldData = [
         label: "City",
         addressDropdown: true,
         isRequired: false,
-        col: 6,
+        col: 4,
         key: "youth_city",
       },
       {
@@ -65,7 +65,7 @@ export const formFieldData = [
         addressDropdown: true,
         label: "Zip Code",
         isRequired: false,
-        col: 6,
+        col: 4,
         key: "youth_zip_code",
       },
       {
@@ -128,14 +128,14 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "First name of person making the referral",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "referrer_first_name",
       },
       {
         type: "textbox",
         label: "Last name of person making the referral",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "referrer_last_name",
       },
@@ -180,6 +180,7 @@ export const formFieldData = [
         label:
           "Why do you think the Youth Mentorship Program would benefit this youth?",
         isRequired: false,
+        placeholder:'Let us know',
         col: 12,
         key: "referrer_benefit_reason",
       },
@@ -208,14 +209,14 @@ export const formFieldData = [
       {
         type: "textbox",
         label: "First name",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "parent_first_name",
       },
       {
         type: "textbox",
         label: "Last name",
-        isRequired: true,
+        isRequired: false,
         col: 6,
         key: "parent_last_name",
       },

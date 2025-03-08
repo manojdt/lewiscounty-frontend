@@ -31,8 +31,17 @@ export function getMonth(date = dayjs()) {
   return daysMatrix;
 }
 export const questionFlowRedirect = (userData)=>{
-  if(userData){
-    return "/mentee-questions";
+   return "/mentee-question";
+}
+export const menteequestionFlowRedirect = (userData)=>{
+  console.log(userData,"userData")
+  const res= userData?.userInfo
+  if(res?.approve_status==="accept"){
+    return "/dashboard";
+  }else if(res?.application_status==="verified"&&res?.assessment_status==="not_submitted"){
+    return "/mentee-review";
+  }else {
+    return "/mentee-review";
   }
 }
 export function getWeek(date = dayjs()) {

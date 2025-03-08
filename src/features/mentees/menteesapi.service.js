@@ -5,7 +5,7 @@ export const menteeApi = rtkQueryApiServices.injectEndpoints({
     // Get mentee details by ID
     getMenteeDetails: builder.query({
       query: (menteeId) => ({
-        url: `mentee_info_update/mentee_registration_form/${menteeId}/`,
+        url: `/mentee_info_update/mentee/mentee_registration_form/${menteeId}/`,
         method: 'GET',
       }),
       providesTags: (result, error, menteeId) => [{ type: 'MenteeDetails', id: menteeId }],

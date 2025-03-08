@@ -29,8 +29,8 @@ export const MenteeSubmitForm = () => {
   const [otherLanguageOptions, setOtherLanguageOptions] = useState([]);
 
   // const [updateMenteeQuestions] = useUpdateMenteeQuestionsMutation();
-  // const { data: languagesData, isLoading: isLanguagesLoading } =
-  //   useGetLanguageListQuery();
+  const { data: languagesData, isLoading: isLanguagesLoading } =
+    useGetLanguageListQuery();
   const [formData, setFormData] = React.useState({
     youth_first_name: "",
     youth_last_name: "",
@@ -156,19 +156,19 @@ export const MenteeSubmitForm = () => {
     }
 
     // Referrer Information Validation
-    if (!formData?.referrer_first_name?.trim()) {
-      isValid = false;
-      error.referrer_first_name = "Referrer First Name is Required";
-    } else {
-      delete error.referrer_first_name;
-    }
+    // if (!formData?.referrer_first_name?.trim()) {
+    //   isValid = false;
+    //   error.referrer_first_name = "Referrer First Name is Required";
+    // } else {
+    //   delete error.referrer_first_name;
+    // }
 
-    if (!formData?.referrer_last_name?.trim()) {
-      isValid = false;
-      error.referrer_last_name = "Referrer Last Name is Required";
-    } else {
-      delete error.referrer_last_name;
-    }
+    // if (!formData?.referrer_last_name?.trim()) {
+    //   isValid = false;
+    //   error.referrer_last_name = "Referrer Last Name is Required";
+    // } else {
+    //   delete error.referrer_last_name;
+    // }
     if (formData?.referrer_email?.trim()) {
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -178,19 +178,19 @@ export const MenteeSubmitForm = () => {
       }
     }
     // Parent Information Validation
-    if (!formData?.parent_first_name?.trim()) {
-      isValid = false;
-      error.parent_first_name = "Parent First Name is Required";
-    } else {
-      delete error.parent_first_name;
-    }
+    // if (!formData?.parent_first_name?.trim()) {
+    //   isValid = false;
+    //   error.parent_first_name = "Parent First Name is Required";
+    // } else {
+    //   delete error.parent_first_name;
+    // }
 
-    if (!formData?.parent_last_name?.trim()) {
-      isValid = false;
-      error.parent_last_name = "Parent Last Name is Required";
-    } else {
-      delete error.parent_last_name;
-    }
+    // if (!formData?.parent_last_name?.trim()) {
+    //   isValid = false;
+    //   error.parent_last_name = "Parent Last Name is Required";
+    // } else {
+    //   delete error.parent_last_name;
+    // }
 
     // Update form data with errors
     setFormData({
@@ -394,15 +394,15 @@ export const MenteeSubmitForm = () => {
         try {
           // Create other language options - you can use the same language list or a different one
           const otherLanguagesList =
-          //  languagesData ? 
-          //   languagesData.filter(lang => {
-          //     // Filter out languages that might be better as "other" options
-          //     // This is optional and depends on your requirements
-          //     return true;
-          //   }).map(lang => ({
-          //     label: lang.name || lang.label,
-          //     value: lang.code || lang.value,
-          //   })) : 
+           languagesData ? 
+            languagesData.filter(lang => {
+              // Filter out languages that might be better as "other" options
+              // This is optional and depends on your requirements
+              return true;
+            }).map(lang => ({
+              label: lang.name,
+              value: lang.name
+            })) : 
             [
               { label: "French", value: "french" },
               { label: "Mandarin", value: "mandarin" },
@@ -432,7 +432,7 @@ export const MenteeSubmitForm = () => {
                   {
                     type: "multiSelect",
                     label: "Specify Other Language",
-                    isRequired: true,
+                    isRequired: false,
                     col: 6,
                     isMultiSelect: true,
                     key: "youth_other_language",
@@ -479,7 +479,7 @@ export const MenteeSubmitForm = () => {
     };
 
     updateLanguageFields();
-  }, [formData.youth_preferred_language]);
+  }, [formData.youth_preferred_language,languagesData]);
   useEffect(() => {
     if (userInfo && userInfo.data && Object.keys(userInfo.data).length) {
       setFormData((prevFormData) => ({
@@ -538,11 +538,14 @@ export const MenteeSubmitForm = () => {
           >
             <Button
               btnCategory={"secondary"}
-              btnName="Cancel"
-              // onClick={() => navigate(-1)}
+              btnName="Back"
+              onClick={() => handleLogout()}
             />
             <Button
               btnCategory={"primary"}
+              btnStyle={{
+                background:'#1d5bbf'
+              }}
               btnName="Submit"
               onClick={() => handleSubmit()}
             />
