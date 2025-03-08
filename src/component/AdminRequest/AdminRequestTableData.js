@@ -14,7 +14,7 @@ export const requestTableColumns = [
     field: "created_at",
     headerName: "Submitted Date",
     flex: 1,
-    renderCell: ({ row }) => moment(row?.created_at).format("MM-DD-YYYY"),
+    renderCell: ({ row }) => moment(row?.created_at).format("MM/DD/YYYY"),
   },
   {
     field: "application_status",

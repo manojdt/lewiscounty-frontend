@@ -1,4 +1,5 @@
 import { rtkQueryApiServices } from "../../services/api";
+import { acceptMember } from "../../services/category";
 
 // const { USER } = rtkQueryServiceTags;
 // Helper function to handle JWT tokens
@@ -123,6 +124,13 @@ export const adminRequestApi = rtkQueryApiServices.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: 'JoinRequest', id }],
     }),
+    acceptMemberRequest: builder.mutation({
+      query: (body) => ({
+        url: `user/accept_member`,
+        method: 'POST',
+        body
+      }),
+    }),
     finalRejectMenteeJoinRequest: builder.mutation({
       query: ({id,data}) => ({
         url: `/mentee_info_update/mentee/mentee_registration_form/${id}/final_rejected/`,
@@ -208,6 +216,7 @@ export const {
   useGetJoinRequestDataQuery,
   useGetMenteeJoinRequestDataQuery,
   useApproveJoinRequestMutation,
+  useAcceptMemberRequestMutation,
   useRejectMenteeJoinRequestMutation,
   useApproveMenteeJoinRequestMutation,
   useReviewMenteeJoinRequestMutation,
