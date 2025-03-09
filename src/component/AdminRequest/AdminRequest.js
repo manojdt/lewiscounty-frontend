@@ -598,7 +598,9 @@ const AdminRequest = () => {
           icon: ReviewIcon,
           action: () => {
             navigate("/bgVerify");
-            handleBackgroundCheck();
+            setTimeout(() => {
+              handleBackgroundCheck();
+            }, 500);
           },
         },
         {
