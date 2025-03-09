@@ -26,7 +26,7 @@ import CloseCircle from "./../../assets/icons/closeCircle.svg";
 import InterviewPersonIcon from "./../../assets/icons/interviewPersonIcon.svg";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import InterviewDetails from "./InterviewDetails";
-
+import SuccessTik from "./../../assets/images/blue_tik1x.png";
 import {
   useAcceptMemberRequestMutation,
   useAcceptVerifyApplicationMutation,
@@ -73,6 +73,11 @@ const AdminRequest = () => {
     content: "",
     action: null,
     close: false,
+  });
+  const [showToast, setShowToast] = useState({
+    show: false,
+    message: "",
+    title: "",
   });
   const [isInterviewModalOpen, setInterViewModalOpen] = useState(false);
   const [reviewNote, setReviewNote] = useState("");
@@ -148,9 +153,17 @@ const AdminRequest = () => {
     };
     const selectedMessage = await acceptMemberRequest(approvePayload);
     if (selectedMessage?.data?.message) {
-      mentorRefetch();
       handleMenuClose();
-      setModalOpen(false);
+      handleVerifyClose();
+      setShowToast({
+        show: true,
+        title: "",
+        message: "Mentor profile approved",
+      });
+      mentorRefetch();
+      setTimeout(() => {
+        setShowToast({ show: false, title: "", message: "" });
+      }, 3000);
     } else {
       // Show error notification
     }
@@ -199,9 +212,10 @@ const AdminRequest = () => {
         rejected_reason: rejectReason,
       });
       if (result.success) {
-        menteeRefetch();
         handleRejectClose();
         handleMenuClose();
+
+        menteeRefetch();
       } else {
         // Show error notification
       }
@@ -237,9 +251,13 @@ const AdminRequest = () => {
       };
       const selectedMessage = await acceptMemberRequest(selectionPayload);
       if (selectedMessage?.data?.message) {
-        mentorRefetch();
         handleMenuClose();
         handleReviewClose();
+        setShowToast({ show: true, title: "", message: "Mark as in review" });
+        mentorRefetch();
+        setTimeout(() => {
+          showToast({ show: false, title: "", message: "" });
+        }, 3000);
       } else {
         // Show error notification
       }
@@ -268,9 +286,17 @@ const AdminRequest = () => {
       };
       const selectedMessage = await acceptMemberRequest(selectionPayload);
       if (selectedMessage?.data?.message) {
-        mentorRefetch();
         handleMenuClose();
         handleSelectionClose();
+        setShowToast({
+          show: true,
+          title: "User marked as selected",
+          message: "Email has been sent to the user",
+        });
+        mentorRefetch();
+        setTimeout(() => {
+          setShowToast({ show: false, title: "", message: "" });
+        }, 3000);
       } else {
         // Show error notification
       }
@@ -344,9 +370,13 @@ const AdminRequest = () => {
 
       const selectedMessage = await acceptMemberRequest(cancelPayload);
       if (selectedMessage?.data?.message) {
-        mentorRefetch();
         handleMenuClose();
         handleRejectClose();
+        setShowToast({ show: true, title: "", message: "Rejected" });
+        mentorRefetch();
+        setTimeout(() => {
+          showToast({ show: false, title: "", message: "" });
+        }, 3000);
       } else {
         // Show error notification
       }
@@ -443,6 +473,8 @@ const AdminRequest = () => {
       stage: "application",
       action: "verified",
     };
+    handleVerifyClose();
+    handleMenuClose();
     setInterViewModalOpen((prev) => !prev);
     //   const verifyApplication = await acceptVerifyApplication(payload);
     //   if(verifyApplication?.success){
@@ -452,6 +484,22 @@ const AdminRequest = () => {
     //     //show error notification
     //   }
     // }
+  };
+
+  const handleApproveVerifyClick = () => {
+    if (role === "mentor") {
+      if (requestType === "final_approve") {
+        onMentorApproveClick();
+      } else {
+        handleVerifyApplication();
+      }
+    } else {
+      if (requestType === "final_approve") {
+        onMenteeAubmitApproveClick();
+      } else {
+        onMenteeApproveClick();
+      }
+    }
   };
 
   const handleInterviewEmail = async (formData, memberId) => {
@@ -464,8 +512,18 @@ const AdminRequest = () => {
       };
       const email = await acceptMemberRequest(emailData);
       if (email?.data?.message) {
-        mentorRefetch();
         setInterViewModalOpen((prev) => !prev);
+        setShowToast({
+          show: true,
+          title: "Email sent",
+          message:
+            "Email has been sent to the user with the selected interview location and date",
+        });
+
+        mentorRefetch();
+        setTimeout(() => {
+          setShowToast({ show: false, message: "", title: "" });
+        }, 3000);
       }
     }
   };
@@ -489,25 +547,25 @@ const AdminRequest = () => {
         {
           label: "Verify Application",
           icon: TickCircle,
-          action: () =>
-            handleModalOpen(
-              "Verify Application",
-              <Box>
-                <Typography variant="body1">
-                  Are you sure you want to verify the application for {row.name}
-                  ?
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  This will move the application to the next stage in the
-                  process.
-                </Typography>
-              </Box>,
-              () => handleVerifyApplication()
-            ),
+          action: () => handleVerifyOpen(),
+          // handleModalOpen(
+          //   "Verify Application",
+          //   <Box>
+          //     <Typography variant="body1">
+          //       Are you sure you want to verify the application for {row.name}
+          //       ?
+          //     </Typography>
+          //     <Typography
+          //       variant="body2"
+          //       color="text.secondary"
+          //       sx={{ mt: 2 }}
+          //     >
+          //       This will move the application to the next stage in the
+          //       process.
+          //     </Typography>
+          //   </Box>,
+          //   () => handleVerifyApplication()
+          //),
         },
         {
           label: "Reject",
@@ -640,20 +698,10 @@ const AdminRequest = () => {
       items.push({
         label: "Approve",
         icon: TickCircle,
-        action: () =>
-          handleModalOpen(
-            "Approve Application",
-            <Box>
-              <Typography variant="body1">
-                Approve {row.name} as a {role}?
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                This action will finalize their application and send them an
-                acceptance notification.
-              </Typography>
-            </Box>,
-            () => onMentorApproveClick(row.id)
-          ),
+        action: () => {
+          handleVerifyOpen();
+          setRequestType("final_approve");
+        },
       });
 
       items.push({
@@ -1101,13 +1149,14 @@ const AdminRequest = () => {
           </Box>
 
           <Box
-            sx={{ mt: 3, display: "flex", justifyContent: "flex-end", gap: 2 }}
+            sx={{ mt: 3, display: "flex", justifyContent: "center", gap: 2 }}
           >
             <Buttons variant="outlined" onClick={handleModalClose}>
               Cancel
             </Buttons>
-            <Buttons
+            <Button
               variant="contained"
+              className="!bg-[#16B681]"
               onClick={() => handleActionConfirm()}
               color={
                 modalContent.title.toLowerCase().includes("delete") ||
@@ -1117,7 +1166,7 @@ const AdminRequest = () => {
               }
             >
               Confirm
-            </Buttons>
+            </Button>
           </Box>
         </Paper>
       </Modal>
@@ -1177,7 +1226,7 @@ const AdminRequest = () => {
         maxWidth="sm"
         fullWidth
       >
-        <div className="flex justify-center flex-col gap-5 mt-1 mb-2">
+        <div className="flex justify-center flex-col gap-3 mt-1 mb-5">
           <div className="flex justify-center pt-3">
             <img
               src={TickColorIcon}
@@ -1227,11 +1276,7 @@ const AdminRequest = () => {
                 }}
                 btnCategory="primary"
                 onClick={() => {
-                  if (requestType === "final_approve") {
-                    onMenteeAubmitApproveClick();
-                  } else {
-                    onMenteeApproveClick();
-                  }
+                  handleApproveVerifyClick();
                 }}
               />
             </div>
@@ -1493,6 +1538,32 @@ const AdminRequest = () => {
           </div>
         </div>
       </Dialog>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={showToast?.show}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-center items-center px-5 py-1">
+          <div className="flex flex-col items-center justify-center gap-7 p-12 rounded-xl bg-white shadow-lg">
+            <img src={SuccessTik} alt="Success Icon" className="w-12 h-12" />
+
+            {showToast?.title && (
+              <h2 className="text-[20px] text-[#18283D] font-semibold">
+                {showToast?.title}
+              </h2>
+            )}
+            <p
+              className="text-[16px] font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#1D5BBF] to-[#00AEBD]"
+              style={{
+                fontWeight: 600,
+              }}
+            >
+              {showToast?.message}
+            </p>
+          </div>
+        </div>
+      </Backdrop>
     </Box>
   );
 };
