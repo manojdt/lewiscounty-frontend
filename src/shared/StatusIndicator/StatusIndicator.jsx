@@ -88,8 +88,8 @@ submitted: "#1D5BBF",
   separated: "#1D5BBF",
   
   // InterviewStatus choices from backend
-  mail_sent: "#1D5BBF",
-  selected: "#FFD500",
+  mail_sent: "#16B681",
+  selected: "#1D5BBF",
   not_selected: "#E0382D",
   
   // BackgroundCheckStatus choices from backend
