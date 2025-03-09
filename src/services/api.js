@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 
 let refresh = false;
 
-//  const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 
-const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
+// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
 //comments
 export const rtkQueryServiceTags = {
   PROGRAM: "Program",
@@ -16,7 +16,8 @@ export const rtkQueryServiceTags = {
   CALENDAR: "Calendar",
   USER: "User",
 };
-const { PROGRAM, GOALS, MATERIAL, CERTIFICATE, CALENDAR, USER } = rtkQueryServiceTags;
+const { PROGRAM, GOALS, MATERIAL, CERTIFICATE, CALENDAR, USER } =
+  rtkQueryServiceTags;
 
 export const rtkQueryApiServices = createApi({
   reducerPath: "rtkQueryApiServices",

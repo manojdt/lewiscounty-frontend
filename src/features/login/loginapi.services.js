@@ -1,19 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { jwtDecode } from "jwt-decode";
 
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
 
-// const baseUrl = `${process.env.REACT_APP_BASE_URL}/api/`;
-
-const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
+// const baseUrl = "https://bpz49qbw-8000.inc1.devtunnels.ms/api/"
 const loginApiSlice = createApi({
   reducerPath: "loginApiSlice",
   baseQuery: fetchBaseQuery({
     baseUrl, // Use your base URL here
     prepareHeaders: (headers) => {
-    //   const token = localStorage.getItem("access_token");
-    //   if (token) {
-    //     headers.set("Authorization", `Bearer ${token}`);
-    //   }
+      //   const token = localStorage.getItem("access_token");
+      //   if (token) {
+      //     headers.set("Authorization", `Bearer ${token}`);
+      //   }
       return headers;
     },
   }),
@@ -43,19 +42,19 @@ const loginApiSlice = createApi({
         method: "POST",
         body: data,
       }),
-        // transformResponse: (response) => {
-        //   if (response.status === 200) {
-        //     // localStorage.setItem('access_token', response.access);
-        //     // localStorage.setItem('refresh_token', response.refresh);
-        //     // return jwtDecode(response.access);
-            
-        //   }
-        // //   if (response.status === 401) {
-        // //     return response
-        // //   //   { error: 'Invalid Credentials' };
-        // //   }
-        //   return response;
-        // },
+      // transformResponse: (response) => {
+      //   if (response.status === 200) {
+      //     // localStorage.setItem('access_token', response.access);
+      //     // localStorage.setItem('refresh_token', response.refresh);
+      //     // return jwtDecode(response.access);
+
+      //   }
+      // //   if (response.status === 401) {
+      // //     return response
+      // //   //   { error: 'Invalid Credentials' };
+      // //   }
+      //   return response;
+      // },
     }),
 
     // Refresh User Token
