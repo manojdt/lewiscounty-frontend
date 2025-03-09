@@ -245,16 +245,16 @@ const RequestFormHeader = ({ userData }) => {
       )}
 
       {/* In-review content area */}
-      {userData?.application_status === "inreview" && (
+      {userData?.application_status === "rejected" && (
         <div
           className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}
         >
-          <div className="font-medium text-orange-700 mb-2">
+          <div className="font-medium text-red-700 mb-2">
             Marked as In review
           </div>
           <div className="text-sm text-gray-700">
-            Update by: {userData?.updated_by || "Admin"} | Update Date| Time :{" "}
-            {formatDate(userData?.updated_at) || "N/A"} |{" "}
+            Update by: {userData?.last_updated_by?.name || "Admin"} | Update
+            Date| Time : {formatDate(userData?.updated_at) || "N/A"} |{" "}
             {formatTime(userData?.updated_at) || "N/A"}
           </div>
           <div className="mt-3 text-sm text-gray-700">
@@ -272,7 +272,9 @@ const RequestFormHeader = ({ userData }) => {
             Marked as In review
           </div>
           <div className="text-sm text-gray-700">
-            Update by: John Doe | Update Date| Time : 02/02/2025 | 05:50 PM
+            Update by: {userData?.last_updated_by?.name || "Admin"} | Update
+            Date| Time : {formatDate(userData?.updated_at) || "N/A"} |{" "}
+            {formatTime(userData?.updated_at) || "N/A"}
           </div>
           <div className="mt-3 text-sm text-gray-700">
             Lorem Ipsum is simply dummy text of the printing and typesetting

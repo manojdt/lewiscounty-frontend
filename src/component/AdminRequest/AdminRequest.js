@@ -116,7 +116,6 @@ const AdminRequest = () => {
     { skip: role !== "mentee" }
   );
 
-  const [acceptVerifyApplication] = useAcceptVerifyApplicationMutation();
   const [acceptMemberRequest] = useAcceptMemberRequestMutation();
 
   

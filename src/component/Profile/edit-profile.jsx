@@ -357,8 +357,6 @@ const EditProfile = ({ setEditMode }) => {
       formData.append("gender", data.gender || "");
       formData.append("files_to_remove", removeFiles || []);
 
-      console.log("formData", formData);
-
       return dispatch(updateProfile(formData));
     } else if (userRole === user.admin) {
       const adminFields = [

@@ -29,10 +29,11 @@ import MaleIcon from "../../assets/images/male-profile1x.png";
 import FemaleIcon from "../../assets/images/female-profile1x.png";
 import { ProgramTableView } from "./ProgramTableView/ProgramTableView";
 import { TopProgramsCard } from "../TopPrograms/TopProgramsCard";
+import VideoPlayer from "../VideoPlayer/VideoPlayer";
 
 export const Mentor = () => {
   const dispatch = useDispatch();
-  const [searchParams,setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [topMentotList, setTopMentorList] = useState([]);
@@ -42,10 +43,11 @@ export const Mentor = () => {
   const { feeds } = useSelector((state) => state.feeds);
   const [programView, setProgramView] = useState("grid");
   const categoryId = searchParams.get("category_id");
-  const categoryIDParams=categoryId?`&category_id=${categoryId}`:""
-  const categoryIDParamsAll=categoryId?`?category_id=${categoryId}`:""
-  // const [topPrograms, setTopPrograms] = useState([]);
+  const categoryIDParams = categoryId ? `&category_id=${categoryId}` : "";
+  const categoryIDParamsAll = categoryId ? `?category_id=${categoryId}` : "";
+  const { profile } = useSelector((state) => state.profileInfo);
 
+  // const [topPrograms, setTopPrograms] = useState([]);
 
   useEffect(() => {
     const fetchAndUpdateTokens = async () => {
@@ -72,7 +74,7 @@ export const Mentor = () => {
     };
 
     fetchAndUpdateTokens();
-  }, []); 
+  }, []);
   const handlePerformanceFilter = (e) => {
     const res = e?.target?.value || "date";
     dispatch(chartProgramList(res));
@@ -85,11 +87,10 @@ export const Mentor = () => {
     const categoryFilter = searchParams.get("category_id");
     if (filterType && filterType !== "") {
       query = { type: "status", value: filterType };
-    }else{
+    } else {
       setSearchParams({ type: "yettojoin" });
       query = { type: "status", value: "yettojoin" };
     }
-
 
     if (isBookmark && isBookmark !== "") {
       query = { type: "is_bookmark", value: isBookmark };
@@ -103,38 +104,40 @@ export const Mentor = () => {
 
   const handleNavigateDetails = (programdetails) => {
     let baseUrl = pipeUrls.programdetails;
-  
+
     // Get the 'type' from search params
     const searchParams = new URLSearchParams(window.location.search);
     const type = searchParams.get("type");
-  
+
     if (Object.keys(programdetails).length) {
       let queryParams = [];
-  
+
       if (type) {
         queryParams.push(`statustype=${type}`);
       }
-  
+
       if (programdetails?.admin_program_request_id) {
-        queryParams.push(`request_id=${programdetails.admin_program_request_id}`);
+        queryParams.push(
+          `request_id=${programdetails.admin_program_request_id}`
+        );
         queryParams.push(`type=admin_assign_program`);
       } else if ("admin_assign_program" in programdetails) {
         queryParams.push(`program_create_type=admin_program`);
       }
-  
+
       // Add breadcrumbs parameter
-      queryParams.push(`breadcrumbsType=${requestPageBreadcrumbs.mentorDashboardProgram}`);
-  
+      queryParams.push(
+        `breadcrumbsType=${requestPageBreadcrumbs.mentorDashboardProgram}`
+      );
+
       // Construct the full URL
-      const fullUrl = `${baseUrl}/${programdetails?.id ?? programdetails.program}${
-        queryParams.length ? `?${queryParams.join("&")}` : ""
-      }`;
-  
+      const fullUrl = `${baseUrl}/${
+        programdetails?.id ?? programdetails.program
+      }${queryParams.length ? `?${queryParams.join("&")}` : ""}`;
+
       navigate(fullUrl);
     }
   };
-  
-
 
   const handleBookmark = async (program) => {
     const payload = {
@@ -173,9 +176,9 @@ export const Mentor = () => {
       setTopMentorList(topMentor.data.results);
     }
   };
-  React.useEffect(()=>{
+  React.useEffect(() => {
     getTopMentors();
-  },[])
+  }, []);
   const handleViewChange = () => {
     setProgramView(programView === "grid" ? "list" : "grid");
   };
@@ -192,18 +195,17 @@ export const Mentor = () => {
   //   }
   // };
   const ImageComponent = (
-      <img
+    <img
       src={programView === "grid" ? ListViewIcon : GridViewIcon}
-     className="cursor-pointer w-[17px] pt-[2px]"
+      className="cursor-pointer w-[17px] pt-[2px]"
       alt="viewicon"
       onClick={handleViewChange}
     />
-    )
- // Added dispatch to dependencies for better practice
+  );
+  // Added dispatch to dependencies for better practice
 
   useEffect(() => {
-    if(searchParams.get("type")){
-
+    if (searchParams.get("type")) {
       getPrograms();
     }
   }, [searchParams]);
@@ -214,7 +216,7 @@ export const Mentor = () => {
     let query = {};
     if (filterType && filterType !== "") {
       query = { type: "status", value: filterType };
-    }else{
+    } else {
       setSearchParams({ type: "yettojoin" });
       query = { type: "status", value: "yettojoin" };
     }
@@ -225,7 +227,10 @@ export const Mentor = () => {
   }, []);
 
   useEffect(() => {
-    if (userpragrams.status === programStatus.bookmarked&&searchParams.get("type")) {
+    if (
+      userpragrams.status === programStatus.bookmarked &&
+      searchParams.get("type")
+    ) {
       getPrograms();
     }
   }, [userpragrams.status]);
@@ -242,16 +247,21 @@ export const Mentor = () => {
   //   //   }
   // }, []);
   React.useEffect(() => {
-      //   if (feedsList?.length === 0) {
-      let feedData = {
-        page: 1,
-        // pageSize: 5,
-      };
-      dispatch(getProgramPost(feedData));
-      //   }
-    }, []);
+    //   if (feedsList?.length === 0) {
+    let feedData = {
+      page: 1,
+      // pageSize: 5,
+    };
+    dispatch(getProgramPost(feedData));
+    //   }
+  }, []);
 
-  
+  useEffect(() => {
+    if (!profile?.approve_status && profile?.video_status === "yet_to_watch") {
+      navigate("/videoPlayer");
+    }
+  }, [profile?.approve_status, profile?.video_status]);
+
   return (
     <>
       <div className="dashboard-content px-8 mt-10">
@@ -334,7 +344,6 @@ export const Mentor = () => {
                             borderBottom: "1px solid rgba(29, 91, 191, 1)",
                           }}
                         >
-                          {console.log(recentReq)}
                           <div className="w-12 h-12 flex items-center justify-center">
                             {" "}
                             <img
@@ -388,9 +397,13 @@ export const Mentor = () => {
             </div>
           )}
 
-          {!["new", "pending","inreview"].includes(
-            userInfo?.data?.userinfo?.approve_status
-          ) ? (
+          {!profile?.approve_status ? (
+            <div>Form Submitted</div>
+          ) : profile?.approve_status === "accept" ? (
+            <div>There's no program match for you at this time</div>
+          ) : !["new", "pending", "inreview"].includes(
+              profile?.approve_status
+            ) ? (
             <div className="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-4">
               {programView === "grid" && (
                 <>
@@ -476,44 +489,51 @@ export const Mentor = () => {
                       loadProgram={getPrograms}
                     />
                   )}
-                  </>
-                )}
+                </>
+              )}
               {programView === "list" && (
                 <div>
                   <ProgramTableView
-                    title={searchParams.get("type") === null &&
-                      searchParams.get("is_bookmark") === null?"All Programs":
-                      searchParams.get("type") === "yettostart"
+                    title={
+                      searchParams.get("type") === null &&
+                      searchParams.get("is_bookmark") === null
+                        ? "All Programs"
+                        : searchParams.get("type") === "yettostart"
                         ? "Recently Joined Programs"
-                        :searchParams.get("type") === "yettojoin" ||
-                    searchParams.get("type") === "planned"
+                        : searchParams.get("type") === "yettojoin" ||
+                          searchParams.get("type") === "planned"
                         ? "Active Programs"
                         : searchParams.get("type") === "inprogress"
                         ? "Ongoing  Programs"
                         : ""
                     }
-                    viewpage={searchParams.get("type") === null &&
-                      searchParams.get("is_bookmark") === null?"/programs":
-                      searchParams.get("type") === "yettostart"
+                    viewpage={
+                      searchParams.get("type") === null &&
+                      searchParams.get("is_bookmark") === null
+                        ? "/programs"
+                        : searchParams.get("type") === "yettostart"
                         ? "/programs?type=yettostart"
-                        :searchParams.get("type") === "yettojoin" ||
-                    searchParams.get("type") === "planned"
+                        : searchParams.get("type") === "yettojoin" ||
+                          searchParams.get("type") === "planned"
                         ? "/programs?type=yettojoin"
                         : searchParams.get("type") === "inprogress"
                         ? "/programs?type=inprogress"
                         : "/programs"
                     }
                     tableIcon={ImageComponent}
-                    programData={searchParams.get("type") === null &&
-                      searchParams.get("is_bookmark") === null?userpragrams.allprograms:
-                      searchParams.get("type") === "yettostart"
+                    programData={
+                      searchParams.get("type") === null &&
+                      searchParams.get("is_bookmark") === null
+                        ? userpragrams.allprograms
+                        : searchParams.get("type") === "yettostart"
                         ? userpragrams.yettostart
-                        :searchParams.get("type") === "yettojoin" ||
-                    searchParams.get("type") === "planned"
+                        : searchParams.get("type") === "yettojoin" ||
+                          searchParams.get("type") === "planned"
                         ? userpragrams.yettojoin
                         : searchParams.get("type") === "inprogress"
                         ? userpragrams.inprogress
-                        : []}
+                        : []
+                    }
                     programView={programView}
                     setProgramView={setProgramView}
                   />
@@ -536,18 +556,20 @@ export const Mentor = () => {
                 <p className="text-[24px] text-font-primary-main font-bold">
                   Welcome to Mentoring Management Application
                 </p>
-                {userInfo?.data?.userinfo?.approve_status!=="inreview"&&
-                <p className="text-[18px] text-font-primary-main font-bold">
-                  Waiting for Admin Approval
-                </p>}
-                {userInfo?.data?.userinfo?.approve_status==="inreview"&&userInfo?.data?.userinfo?.in_review&&
-        <div className="flex gap-2">
-<p  className="text-[16px] font-bold">Admin Comments:</p>
-                <p className="text-[15px] text-font-primary-main font-bold">
-               {userInfo?.data?.userinfo?.in_review}
-                </p>
-        </div>
-            }
+                {userInfo?.data?.userinfo?.approve_status !== "inreview" && (
+                  <p className="text-[18px] text-font-primary-main font-bold">
+                    Waiting for Admin Approval
+                  </p>
+                )}
+                {userInfo?.data?.userinfo?.approve_status === "inreview" &&
+                  userInfo?.data?.userinfo?.in_review && (
+                    <div className="flex gap-2">
+                      <p className="text-[16px] font-bold">Admin Comments:</p>
+                      <p className="text-[15px] text-font-primary-main font-bold">
+                        {userInfo?.data?.userinfo?.in_review}
+                      </p>
+                    </div>
+                  )}
                 <Invite />
               </div>
             </div>
