@@ -105,6 +105,7 @@ import { MenteeViewForm } from "./component/MenteeViewPage";
 import RequestFormPreview from "./component/AdminRequest/RequestFormPreview";
 import VideoPlayer from "./component/VideoPlayer/VideoPlayer";
 import { MenteeReviewPage } from "./component/MenteeReviewPage";
+import WaitingCard from "./component/Dashboard/Mentor/WaitingCard";
 
 
 function App() {
@@ -171,6 +172,7 @@ function App() {
                 path="/mentor-application-form"
                 element={<MentorApplicationForm />}
               />
+              <Route path = '/waitingMan' element = {<WaitingCard/>}/>
                 <Route path='/mentee-question' element={<MenteeSubmitForm />} />
           <Route path='/mentee-question-view' element={<MenteeViewForm />} />
           <Route path='/mentee-review' element={<MenteeReviewPage />} />
