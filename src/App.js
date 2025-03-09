@@ -103,6 +103,7 @@ import MenteeApplicationAssismentForm from "./component/MenteeQuestions/MenteeAs
 import AdminRequest from "./component/AdminRequest/AdminRequest";
 import { MenteeViewForm } from "./component/MenteeViewPage";
 import RequestFormPreview from "./component/AdminRequest/RequestFormPreview";
+import VideoPlayer from "./component/VideoPlayer/VideoPlayer";
 import { MenteeReviewPage } from "./component/MenteeReviewPage";
 
 
@@ -210,6 +211,7 @@ function App() {
                 path="/payment-checkout"
                 element={<PaymentPage programDetailsId={programDetailsId} />}
               />
+              <Route path = '/videoPlayer' element ={<VideoPlayer/>} />
               <Route path="/program-task/:id" element={<ProgramTask />} />
               <Route path="/assign-task/:id" element={<AssignTask />} />
               <Route path="/assign-mentees/:id" element={<AssignMentees />} />

@@ -69,9 +69,10 @@ export const requestTableColumns = [
     headerName: "Final Decision",
     flex: 1.2,
     renderCell: (params) => {
+      const status =params.row?.approve_status==='cancel'?'Rejected':params.row?.approve_status;
       return (
         <div>
-          <StatusIndicator status={params.row?.approve_status} />
+          <StatusIndicator status={status} />
         </div>
       );
     },

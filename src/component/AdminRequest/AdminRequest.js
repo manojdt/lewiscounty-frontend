@@ -16,11 +16,20 @@ import {
   Paper,
   Backdrop,
   Dialog,
+  Stack,
 } from "@mui/material";
+
 import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import CloseCircle from "./../../assets/icons/closeCircle.svg";
+import InterviewPersonIcon from "./../../assets/icons/interviewPersonIcon.svg";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import InterviewDetails from "./InterviewDetails";
+
 import {
+  useAcceptMemberRequestMutation,
+  useAcceptVerifyApplicationMutation,
   useGetJoinRequestDataQuery,
   useGetMenteeJoinRequestDataQuery,
 } from "../../features/request/requestAPI.service";
@@ -58,20 +67,29 @@ const AdminRequest = () => {
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [requestType, setRequestType] = useState("");
+  const [selectionDialogOpen, setSelectionDialogOpen] = useState(false);
   const [modalContent, setModalContent] = useState({
     title: "",
     content: "",
     action: null,
     close: false,
   });
+  const [isInterviewModalOpen, setInterViewModalOpen] = useState(false);
   const [reviewNote, setReviewNote] = useState("");
   const [rejectReason, setRejectReason] = useState("");
+  const [selectionNote, setSelectionNote] = useState("");
   // Track total number of rows for pagination
   const [rowCount, setRowCount] = useState(0);
   const [gridCellParams, setGridCellParams] = useState();
 
   // Fetch data using RTK Query
-  const { data, isLoading, isFetching, isError } = useGetJoinRequestDataQuery(
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isError,
+    refetch: mentorRefetch,
+  } = useGetJoinRequestDataQuery(
     {
       limit: paginationModel.pageSize,
       page: paginationModel.page + 1, // API usually uses 1-indexed pages
@@ -96,6 +114,9 @@ const AdminRequest = () => {
     { skip: role !== "mentee" }
   );
 
+  const [acceptVerifyApplication] = useAcceptVerifyApplicationMutation();
+  const [acceptMemberRequest] = useAcceptMemberRequestMutation();
+
   const { handleApprove, handleReject, handleDelete, isActionLoading } =
     useRequestActions();
   const {
@@ -108,14 +129,33 @@ const AdminRequest = () => {
     handleMenteeSubmit,
   } = useMenteeRequestActions();
 
-  const onApproveClick = async (id) => {
-    const result = await handleApprove(id);
-    if (result.success) {
-      // Show success notification
+  // Update row count when data changes
+  useEffect(() => {
+    if (data?.count !== undefined) {
+      setRowCount(data.count);
+    }
+    if (menteedata?.count !== undefined) {
+      setRowCount(menteedata.count);
+    }
+  }, [data, menteedata]);
+
+  //onMentorApproveClick
+  const onMentorApproveClick = async (id) => {
+    const approvePayload = {
+      member_id: selectedRow?.id,
+      stage: "approval",
+      action: "accept",
+    };
+    const selectedMessage = await acceptMemberRequest(approvePayload);
+    if (selectedMessage?.data?.message) {
+      mentorRefetch();
+      handleMenuClose();
+      setModalOpen(false);
     } else {
       // Show error notification
     }
   };
+
   // On approve mentee click
   const onMenteeApproveClick = async () => {
     const result = await handleApproveMentee(selectedRow?.id);
@@ -169,6 +209,7 @@ const AdminRequest = () => {
       toast.error("Reason Required");
     }
   };
+
   const onMenteeReviewClick = async (id) => {
     if (reviewNote.trim()) {
       const result = await handleReviewMentee(selectedRow?.id, {
@@ -185,13 +226,66 @@ const AdminRequest = () => {
       toast.error("Reason Required");
     }
   };
+
+  const onMentorReviewClick = async () => {
+    if (reviewNote.trim()) {
+      const selectionPayload = {
+        member_id: selectedRow?.id,
+        stage: "application",
+        action: "inreview",
+        cancelled_reason: reviewNote,
+      };
+      const selectedMessage = await acceptMemberRequest(selectionPayload);
+      if (selectedMessage?.data?.message) {
+        mentorRefetch();
+        handleMenuClose();
+        handleReviewClose();
+      } else {
+        // Show error notification
+      }
+    } else {
+      toast.error("Reason Required");
+    }
+  };
+
+  const handleReviewSubmit = () => {
+    if (role == "mentor") {
+      if (requestType === "application_review") {
+        onMentorReviewClick();
+      }
+    } else {
+      onMenteeReviewClick();
+    }
+  };
+
+  const onMentorSelectionClick = async () => {
+    if (selectionNote.trim()) {
+      const selectionPayload = {
+        member_id: selectedRow?.id,
+        stage: "interview",
+        action: "selected",
+        interview_selected_reason: selectionNote,
+      };
+      const selectedMessage = await acceptMemberRequest(selectionPayload);
+      if (selectedMessage?.data?.message) {
+        mentorRefetch();
+        handleMenuClose();
+        handleSelectionClose();
+      } else {
+        // Show error notification
+      }
+    } else {
+      toast.error("Reason Required");
+    }
+  };
+
   const handleVerifyOpen = () => {
     setVerifyDialogOpen(true);
   };
 
   const handleVerifyClose = () => {
     setVerifyDialogOpen(false);
-    setRequestType("")
+    setRequestType("");
   };
   const handleReviewOpen = () => {
     setReviewDialogOpen(true);
@@ -202,6 +296,14 @@ const AdminRequest = () => {
     setReviewNote("");
   };
 
+  const handleSelectionOpen = () => {
+    setSelectionDialogOpen(true);
+  };
+  const handleSelectionClose = () => {
+    setSelectionDialogOpen(false);
+    setSelectionNote("");
+  };
+
   const handleRejectOpen = () => {
     setRejectDialogOpen(true);
   };
@@ -209,17 +311,76 @@ const AdminRequest = () => {
   const handleRejectClose = () => {
     setRejectDialogOpen(false);
     setRejectReason("");
-    setRequestType("")
+    setRequestType("");
   };
-  // Update row count when data changes
-  useEffect(() => {
-    if (data?.count !== undefined) {
-      setRowCount(data.count);
+
+  const handleRejectionCancel = async () => {
+    if (rejectReason.trim()) {
+      let cancelPayload = {
+        member_id: selectedRow?.id,
+        stage: "interview",
+        action: "not_selected",
+        cancelled_reason: rejectReason,
+      };
+      if (requestType === "application_reject") {
+        cancelPayload = {
+          ...cancelPayload,
+          stage: "application",
+          action: "rejected",
+        };
+      } else if (requestType === "background_reject") {
+        cancelPayload = {
+          ...cancelPayload,
+          stage: "background",
+          action: "failed",
+        };
+      } else if (requestType === "final_reject") {
+        cancelPayload = {
+          ...cancelPayload,
+          stage: "approval",
+          action: "cancel",
+        };
+      }
+
+      const selectedMessage = await acceptMemberRequest(cancelPayload);
+      if (selectedMessage?.data?.message) {
+        mentorRefetch();
+        handleMenuClose();
+        handleRejectClose();
+      } else {
+        // Show error notification
+      }
+    } else {
+      toast.error("Reason Required");
     }
-    if (menteedata?.count !== undefined) {
-      setRowCount(menteedata.count);
+  };
+
+  const handleBackgroundCheck = async () => {
+    const backgroundPayload = {
+      member_id: selectedRow?.id,
+      stage: "background",
+      action: "passed",
+    };
+    const selectedMessage = await acceptMemberRequest(backgroundPayload);
+    if (selectedMessage?.data?.message) {
+      mentorRefetch();
+      handleMenuClose();
+    } else {
+      // Show error notification
     }
-  }, [data, menteedata]);
+  };
+
+  const handleRejectionSubmit = () => {
+    if (role === "mentor") {
+      handleRejectionCancel();
+    } else {
+      if (requestType === "final_reject") {
+        onMenteeSubmitRejectClick();
+      } else {
+        onMenteeRejectClick();
+      }
+    }
+  };
 
   // Update URL when role changes
   const updateUrlParams = (newRole) => {
@@ -248,7 +409,7 @@ const AdminRequest = () => {
 
   const handleMenuClose = () => {
     setMenuAnchorEl(null);
-    setSelectedRow(null);
+    // setSelectedRow(null);
   };
 
   const handleModalOpen = (title, content, action, close = false) => {
@@ -276,112 +437,58 @@ const AdminRequest = () => {
     }
   };
 
-  // Generate menu items based on row status
-  const getMenuItems = (row) => {
+  const handleVerifyApplication = async () => {
+    const payload = {
+      member_id: selectedRow?.id,
+      stage: "application",
+      action: "verified",
+    };
+    setInterViewModalOpen((prev) => !prev);
+    //   const verifyApplication = await acceptVerifyApplication(payload);
+    //   if(verifyApplication?.success){
+
+    //     setInterViewModalOpen(prev=>!prev);
+    //   }else{
+    //     //show error notification
+    //   }
+    // }
+  };
+
+  const handleInterviewEmail = async (formData, memberId) => {
+    if (formData && memberId) {
+      const emailData = {
+        stage: "application",
+        action: "verified",
+        member_id: memberId,
+        interview_details: { ...formData },
+      };
+      const email = await acceptMemberRequest(emailData);
+      if (email?.data?.message) {
+        mentorRefetch();
+        setInterViewModalOpen((prev) => !prev);
+      }
+    }
+  };
+
+  const getMentorMenuItems = (row) => {
     const items = [];
-
-    // Default actions available for all rows
-    if (role === "mentee") {
-      items.push({
-        label: <div className="flex gap-2 items-center">
-        <img
-  src={ViewIcon}
-  alt="TickCircle"
-  className="w-[15px] h-[7px] mr-2"
-/>
-<span>View</span>
-    </div>,
-        action: () => navigate(`/mentee-question-view?id=${selectedRow?.id}`),
-      });
-      if(row.application_status==="waiting_for_verification"||row.application_status==="in_review"){
+    if (
+      ["waiting_for_verification", "inreview"].includes(row.application_status)
+    ) {
+      if (row?.application_status === "waiting_for_verification") {
         items.push({
-          label:  <div className="flex gap-2 items-center">
-              <img
-        src={TickCircle}
-        alt="TickCircle"
-        className="w-[15px] h-[10px] mr-2"
-      />
-      <span>Verify</span>
-          </div>,
+          label: "Review",
+          icon: ReviewIcon,
           action: () => {
-            handleVerifyOpen();
+            handleReviewOpen();
+            setRequestType("application_review");
           },
         });
       }
-      if(row.application_status==="waiting_for_verification"){
-        items.push({
-          label: <div className="flex gap-2 items-center">
-             <img
-        src={ReviewIcon}
-        alt="ReviewIcon"
-        className="w-[15px] h-[10px] mr-2"
-      />
-      <span>Review</span>
-          </div>,
-          action: () => handleReviewOpen(),
-        });
-      }
-      if(row.application_status==="verified"&&row.assessment_status==="submitted"&&(row.approve_status==="pending"||row.approve_status==="new")){
-        items.push({
-          label:  <div className="flex gap-2 items-center">
-             <img
-        src={TickCircle}
-        alt="TickCircle"
-        className="w-[15px] h-[10px] mr-2"
-      />
-      <span>Approve</span>
-          </div>,
-          action: () => {
-            setRequestType("final_approve");
-            handleVerifyOpen();
-          },
-        });
-      }
-      if(row.application_status!=="rejected"&&row.approve_status!=="rejected"){
-        items.push({
-          label:  <div className="flex gap-2 items-center">
-            <img
-        src={RejectCloseIcon}
-        alt="RejectCloseIcon"
-        className="w-[15px] h-[10px] mr-2"
-      />
-      <span>Reject</span>
-          </div>,
-          action: () =>{
-            if(row.application_status==="verified"&&row.assessment_status==="submitted"){
-              setRequestType("final_reject");
-              handleRejectOpen()
-            }else{
-              handleRejectOpen()
-  
-            }
-          }
-        });
-      }
-    } else {
-      items.push({
-        label: "View Details",
-        action: () =>
-          handleModalOpen(
-            "View Details",
-            <Box>
-              <Typography variant="body1">Name: {row.name}</Typography>
-              <Typography variant="body1">
-                Submitted Date: {row.created_at}
-              </Typography>
-              <Typography variant="body1">
-                Status: {row.application_status}
-              </Typography>
-              {/* Add more details as needed */}
-            </Box>,
-            () => console.log("Viewed details for", row.name)
-          ),
-      });
-
-      // Conditional actions based on status
-      if (row.application_status === "waiting_for_verification") {
-        items.push({
+      items.push(
+        {
           label: "Verify Application",
+          icon: TickCircle,
           action: () =>
             handleModalOpen(
               "Verify Application",
@@ -399,128 +506,298 @@ const AdminRequest = () => {
                   process.
                 </Typography>
               </Box>,
-              () => console.log("Verified", row.name)
+              () => handleVerifyApplication()
             ),
-        });
-      }
-
-      if (
-        row.interview_status === "selected" &&
-        row.bg_status === "not_started"
-      ) {
-        items.push({
-          label: "Start Background Check",
-          action: () =>
-            handleModalOpen(
-              "Start Background Check",
-              <Box>
-                <Typography variant="body1">
-                  Initiate background verification for {row.name}?
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  This will send an email to the applicant with instructions to
-                  complete their background check.
-                </Typography>
-              </Box>,
-              () => console.log("Started check for", row.name)
-            ),
-        });
-      }
-
-      if (row.video_status === "yet_to_watch") {
-        items.push({
-          label: "Send Reminder",
-          action: () =>
-            handleModalOpen(
-              "Send Training Video Reminder",
-              <Box>
-                <Typography variant="body1">
-                  Send a reminder to {row.name} to watch the training video?
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  An email notification will be sent to remind the applicant to
-                  complete this step.
-                </Typography>
-              </Box>,
-              () => console.log("Sent reminder to", row.name)
-            ),
-        });
-      }
-
-      if (row.approve_status === "pending") {
-        items.push({
-          label: "Approve",
-          action: () =>
-            handleModalOpen(
-              "Approve Application",
-              <Box>
-                <Typography variant="body1">
-                  Approve {row.name} as a {role}?
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  This action will finalize their application and send them an
-                  acceptance notification.
-                </Typography>
-              </Box>,
-              () => onApproveClick(row.id)
-            ),
-        });
-
-        items.push({
+        },
+        {
           label: "Reject",
-          action: () =>
-            handleModalOpen(
-              "Reject Application",
-              <Box>
-                <Typography variant="body1" color="error">
-                  Reject {row.name} as a {role}?
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2 }}
-                >
-                  This action cannot be undone. A rejection notification will be
-                  sent to the applicant.
-                </Typography>
-              </Box>,
-              () => console.log("Rejected", row.name)
-            ),
-          color: "error",
-        });
-      }
+          icon: CloseCircle,
+          action: () => {
+            handleRejectOpen();
+            setRequestType("application_reject");
+          },
 
-      // Add delete option for all rows
+          color: "error",
+        }
+      );
+    }
+
+    if (
+      row?.application_status === "verified" &&
+      row?.interview_status === "mail_sent"
+    ) {
+      items.push(
+        {
+          label: "Mark as selected",
+          icon: TickCircle,
+          action: () => handleSelectionOpen(),
+        },
+        {
+          label: "Reject",
+          icon: CloseCircle,
+          action: () => {
+            handleRejectOpen();
+            setRequestType("selection_cancel");
+          },
+
+          color: "error",
+        }
+      );
+    }
+
+    // items.push({
+    //   label: "View Details",
+    //   action: () =>
+    //     handleModalOpen(
+    //       "View Details",
+    //       <Box>
+    //         <Typography variant="body1">Name: {row.name}</Typography>
+    //         <Typography variant="body1">
+    //           Submitted Date: {row.created_at}
+    //         </Typography>
+    //         <Typography variant="body1">
+    //           Status: {row.application_status}
+    //         </Typography>
+    //       </Box>,
+    //       () => console.log("Viewed details for", row.name)
+    //     ),
+    // });
+
+    // if (row.application_status === "waiting_for_verification") {
+    //   items.push({
+    //     label: "Verify Application",
+    //     action: () =>
+    //       handleModalOpen(
+    //         "Verify Application",
+    //         <Box>
+    //           <Typography variant="body1">
+    //             Are you sure you want to verify the application for {row.name}
+    //             ?
+    //           </Typography>
+    //           <Typography
+    //             variant="body2"
+    //             color="text.secondary"
+    //             sx={{ mt: 2 }}
+    //           >
+    //             This will move the application to the next stage in the
+    //             process.
+    //           </Typography>
+    //         </Box>,
+    //         () => console.log("Verified", row.name)
+    //       ),
+    //   });
+    // }
+
+    if (
+      row.interview_status === "selected" &&
+      row.bg_status === "not_started"
+    ) {
+      items.push(
+        {
+          label: "Start Background Check",
+          icon: ReviewIcon,
+          action: () => {
+            navigate("/bgVerify");
+            setTimeout(() => {
+              handleBackgroundCheck();
+            }, 500);
+          },
+        },
+        {
+          label: "Reject",
+          icon: CloseCircle,
+          action: () => {
+            handleRejectOpen();
+            setRequestType("background_reject");
+          },
+
+          color: "error",
+        }
+      );
+    }
+
+    // if (row.video_status === "yet_to_watch") {
+    //   items.push({
+    //     label: "Send Reminder",
+    //     action: () =>
+    //       handleModalOpen(
+    //         "Send Training Video Reminder",
+    //         <Box>
+    //           <Typography variant="body1">
+    //             Send a reminder to {row.name} to watch the training video?
+    //           </Typography>
+    //           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+    //             An email notification will be sent to remind the applicant to
+    //             complete this step.
+    //           </Typography>
+    //         </Box>,
+    //         () => console.log("Sent reminder to", row.name)
+    //       ),
+    //   });
+    // }
+
+    if (row.approve_status === "pending") {
       items.push({
-        label: "Delete",
+        label: "Approve",
+        icon: TickCircle,
         action: () =>
           handleModalOpen(
-            "Delete Application",
+            "Approve Application",
             <Box>
-              <Typography variant="body1" color="error">
-                Are you sure you want to delete {row.name}'s application?
+              <Typography variant="body1">
+                Approve {row.name} as a {role}?
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                This action cannot be undone. All data related to this
-                application will be permanently deleted.
+                This action will finalize their application and send them an
+                acceptance notification.
               </Typography>
             </Box>,
-            () => console.log("Deleted", row.name)
+            () => onMentorApproveClick(row.id)
           ),
+      });
+
+      items.push({
+        label: "Reject",
+        icon: RejectCloseIcon,
+        action: () => {
+          handleRejectOpen();
+          setRequestType("final_reject");
+        },
+
         color: "error",
       });
+    }
+
+    // Add delete option for all rows
+    // items.push({
+    //   label: "Delete",
+    //   action: () =>
+    //     handleModalOpen(
+    //       "Delete Application",
+    //       <Box>
+    //         <Typography variant="body1" color="error">
+    //           Are you sure you want to delete {row.name}'s application?
+    //         </Typography>
+    //         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+    //           This action cannot be undone. All data related to this
+    //           application will be permanently deleted.
+    //         </Typography>
+    //       </Box>,
+    //       () => console.log("Deleted", row.name)
+    //     ),
+    //   color: "error",
+    // });
+    return items;
+  };
+
+  // Generate menu items based on row status
+  const getMenuItems = (row) => {
+    const items = [];
+
+    // Default actions available for all rows
+    if (role === "mentee") {
+      items.push({
+        label: (
+          <div className="flex gap-2 items-center">
+            <img
+              src={ViewIcon}
+              alt="TickCircle"
+              className="w-[15px] h-[7px] mr-2"
+            />
+            <span>View</span>
+          </div>
+        ),
+        action: () => navigate(`/mentee-question-view?id=${selectedRow?.id}`),
+      });
+      if (
+        row.application_status === "waiting_for_verification" ||
+        row.application_status === "in_review"
+      ) {
+        items.push({
+          label: (
+            <div className="flex gap-2 items-center">
+              <img
+                src={TickCircle}
+                alt="TickCircle"
+                className="w-[15px] h-[10px] mr-2"
+              />
+              <span>Verify</span>
+            </div>
+          ),
+          action: () => {
+            handleVerifyOpen();
+          },
+        });
+      }
+      if (row.application_status === "waiting_for_verification") {
+        items.push({
+          label: (
+            <div className="flex gap-2 items-center">
+              <img
+                src={ReviewIcon}
+                alt="ReviewIcon"
+                className="w-[15px] h-[10px] mr-2"
+              />
+              <span>Review</span>
+            </div>
+          ),
+          action: () => handleReviewOpen(),
+        });
+      }
+      if (
+        row.application_status === "verified" &&
+        row.assessment_status === "submitted" &&
+        (row.approve_status === "pending" || row.approve_status === "new")
+      ) {
+        items.push({
+          label: (
+            <div className="flex gap-2 items-center">
+              <img
+                src={TickCircle}
+                alt="TickCircle"
+                className="w-[15px] h-[10px] mr-2"
+              />
+              <span>Approve</span>
+            </div>
+          ),
+          action: () => {
+            setRequestType("final_approve");
+            handleVerifyOpen();
+          },
+        });
+      }
+      if (
+        row.application_status !== "rejected" &&
+        row.approve_status !== "rejected"
+      ) {
+        items.push({
+          label: (
+            <div className="flex gap-2 items-center">
+              <img
+                src={RejectCloseIcon}
+                alt="RejectCloseIcon"
+                className="w-[15px] h-[10px] mr-2"
+              />
+              <span>Reject</span>
+            </div>
+          ),
+          action: () => {
+            if (
+              row.application_status === "verified" &&
+              row.assessment_status === "submitted"
+            ) {
+              setRequestType("final_reject");
+              handleRejectOpen();
+            } else {
+              handleRejectOpen();
+            }
+          },
+        });
+      }
+    } else {
+      const mentorMenuItems = getMentorMenuItems(row);
+
+      items.push(...mentorMenuItems);
     }
 
     return items;
@@ -558,7 +835,7 @@ const AdminRequest = () => {
                 }
                 iconPosition="top"
                 label={
-                  <Box sx={{ display: "flex", alignItems: "center", mt:1 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                     <span>Mentor</span>
                   </Box>
                 }
@@ -574,7 +851,7 @@ const AdminRequest = () => {
                 }
                 iconPosition="top"
                 label={
-                  <Box sx={{ display: "flex", alignItems: "center", mt:1 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                     <span>Mentee</span>
                   </Box>
                 }
@@ -650,6 +927,12 @@ const AdminRequest = () => {
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           keepNonExistentRowsSelected
+          sx={{
+            "& .MuiDataGrid-cell": {
+              display: "flex",
+              alignItems: "center",
+            },
+          }}
           // sx={{
           //   "& .MuiDataGrid-columnHeaders": {
           //     backgroundColor: "#F5F7FA",
@@ -680,22 +963,102 @@ const AdminRequest = () => {
           onClick={() => {
             navigate(`/request-form-preview/${gridCellParams?.id}`);
           }}
+          className="!text-[12px]"
         >
+          <img src={ViewIcon} alt="AcceptIcon" className="pr-3 w-[27px]" />
           {"View"}
         </MenuItem>
+
         {selectedRow &&
           getMenuItems(selectedRow).map((item, index) => (
             <MenuItem
               key={index}
               onClick={() => {
-                item.action();
+                item?.action();
               }}
-              sx={{ color: item.color || "inherit" }}
+              className="!text-[12px]"
+              sx={{ color: item?.color || "inherit" }}
             >
-              {item.label}
+              <img
+                src={item?.icon}
+                alt="AcceptIcon"
+                className="pr-3 w-[27px]"
+              />
+              {item?.label}
             </MenuItem>
           ))}
       </Menu>
+
+      {/* <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => 1 }}
+          open={true}
+        >
+          <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[330px] justify-center items-center">
+            <img
+              src={
+                confirmPopup.type === "approve"
+                  ? TickColorIcon
+                  : confirmPopup.type === "reject"
+                  ? CancelColorIcon
+                  : ""
+              }
+              alt="TickColorIcon"
+            />
+            <span
+              style={{ color: "#232323", fontWeight: 600, fontSize: "24px" }}
+            >
+              {confirmPopup.type === "approve"
+                ? "Approve"
+                : confirmPopup.type === "reject"
+                ? "Reject"
+                : ""}
+            </span>
+            <div className="py-5">
+              <p
+                style={{
+                  color: "rgba(24, 40, 61, 1)",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                }}
+              >
+                Are you sure want to {confirmPopup.type} {confirmPopup.title}?
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="flex gap-6 justify-center align-middle">
+                <Button
+                  btnCls="w-[110px]"
+                  btnName={
+                    confirmPopup.type === "approve"
+                      ? "Cancel"
+                      : confirmPopup.type === "reject"
+                      ? "No"
+                      : ""
+                  }
+                  btnCategory="secondary"
+                  //onClick={handleCancelConfirmPopup}
+                />
+                <Button
+                  btnType="button"
+                  btnCls="w-[110px]"
+                  btnName={
+                    confirmPopup.type === "approve"
+                      ? "Approve"
+                      : confirmPopup.type === "reject"
+                      ? "Yes"
+                      : ""
+                  }
+                  style={{
+                    background:
+                      confirmPopup.type === "approve" ? "#16B681" : "#E0382D",
+                  }}
+                  btnCategory="primary"
+                  //onClick={handleConfirmPopup}
+                />
+              </div>
+            </div>
+          </div>
+        </Backdrop> */}
 
       {/* Modal */}
       <Modal
@@ -710,7 +1073,7 @@ const AdminRequest = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: 500,
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
@@ -758,6 +1121,55 @@ const AdminRequest = () => {
           </Box>
         </Paper>
       </Modal>
+
+      <Backdrop sx={{ zIndex: (theme) => 1 }} open={isInterviewModalOpen}>
+        <div className="popup-content w-2/6 md:w-2/4 sm:w-2/4 bg-white flex flex-col gap-2 h-[740px]">
+          <div className="flex mt-4 mx-6 py-2 border-b border-gray-200 text-[15px] font-normal">
+            Select Interview Details
+          </div>
+          <Stack
+            spacing={1}
+            className="bg-background-primary-secondary p-6 rounded-[6px]"
+          >
+            <div
+              className="flex justify-between bg-[#F1F6FF] h-[100px] p-4"
+              style={{ borderRadius: "5px" }}
+            >
+              <div className="flex items-center">
+                <div
+                  className="bg-white rounded-[6px] flex items-center !justify-center w-[50px] h-[50px]"
+                  style={{ boxShadow: "4px 4px 25px 0px rgba(0, 0, 0, 0.05)" }}
+                >
+                  <img src={InterviewPersonIcon}></img>
+                </div>
+
+                <div className="flex flex-col pl-2 gap-1">
+                  <span className="text-[18px] font-semibold">
+                    {selectedRow?.name}
+                  </span>
+                  <div className="flex text-[12px] ">
+                    <span> Email ID:</span>
+                    <span className="text-[#2260D9] px-1">
+                      {selectedRow?.email}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center flex-row gap-1 text-[#16B681] text-[15px] font-semibold">
+                <VerifiedIcon />
+                Application verified
+              </div>
+            </div>
+            <div className="text-[16px] font-semibold py-5">
+              Schedule Interview
+            </div>
+            <InterviewDetails
+              handleInterviewEmail={handleInterviewEmail}
+              selectedRow={selectedRow}
+            />
+          </Stack>
+        </div>
+      </Backdrop>
       {/* Verification Dialog with Backdrop */}
       <Dialog
         open={verifyDialogOpen}
@@ -781,7 +1193,9 @@ const AdminRequest = () => {
               fontSize: "24px",
             }}
           >
-           {requestType==="final_approve"?"Please review the details before final approval":"Verify"} 
+            {requestType === "final_approve"
+              ? "Please review the details before final approval"
+              : "Verify"}
           </span>
           <div className="py-5 text-center">
             <p
@@ -791,7 +1205,9 @@ const AdminRequest = () => {
                 fontSize: "18px",
               }}
             >
-              {requestType==="final_approve"?"":"Are you sure you want to Verify this application?"}  
+              {requestType === "final_approve"
+                ? ""
+                : "Are you sure you want to Verify this application?"}
             </p>
           </div>
           <div className="flex justify-center">
@@ -810,11 +1226,11 @@ const AdminRequest = () => {
                   background: "#16B681",
                 }}
                 btnCategory="primary"
-                onClick={()=>{
-                  if(requestType==="final_approve"){
-                    onMenteeAubmitApproveClick()
-                  }else{
-                    onMenteeApproveClick()
+                onClick={() => {
+                  if (requestType === "final_approve") {
+                    onMenteeAubmitApproveClick();
+                  } else {
+                    onMenteeApproveClick();
                   }
                 }}
               />
@@ -893,7 +1309,91 @@ const AdminRequest = () => {
                   btnName="Submit"
                   btnCls="text-white w-[20%]"
                   btnCategory="secondary"
-                  onClick={onMenteeReviewClick}
+                  onClick={handleReviewSubmit}
+                  btnStyle={{
+                    background: "#e56031",
+                    border: "1px solid #e56031",
+                    color: "white",
+                    borderRadius: "3px",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Mark as selected */}
+      <Dialog
+        open={selectionDialogOpen}
+        onClose={handleSelectionClose}
+        maxWidth="sm"
+        fullWidth
+      >
+        <div className="py-1">
+          <div
+            className="flex justify-center flex-col gap-5 mt-1 mb-2"
+            style={{
+              // border: "1px solid rgba(29, 91, 191, 1)",
+              borderRadius: "10px",
+            }}
+          >
+            <div
+              className="flex justify-between px-3 py-2 items-center"
+              style={{ borderBottom: "1px solid rgba(229, 96, 49, 1)" }}
+            >
+              <p className="text-[18px]" style={{ color: "rgba(0, 0, 0, 1)" }}>
+                Reason for selection
+              </p>
+              <img
+                className="cursor-pointer"
+                onClick={handleSelectionClose}
+                src={CancelIcon}
+                alt="CancelIcon"
+              />
+            </div>
+
+            <div className="px-5">
+              <div className="relative pb-8">
+                <label className="block tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Description
+                </label>
+
+                <div className="relative">
+                  <textarea
+                    value={selectionNote}
+                    onChange={(e) => setSelectionNote(e.target.value)}
+                    id="message"
+                    rows="4"
+                    className={`block p-2.5 input-bg w-full text-sm text-gray-900 border
+                              focus-visible:outline-none focus-visible:border-none`}
+                    style={{
+                      border: "1px solid rgba(229, 96, 49, 1)",
+                      borderRadius: "5px",
+                    }}
+                    placeholder={""}
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="flex justify-center gap-5 items-center pt-5 pb-10">
+                <Button
+                  btnName="Cancel"
+                  btnCls="w-[20%]"
+                  btnCategory="secondary"
+                  btnStyle={{
+                    background: "white",
+                    color: "black",
+                    border: "1px solid black",
+                    borderRadius: "3px",
+                  }}
+                  onClick={handleSelectionClose}
+                />
+                <Button
+                  btnName="Submit"
+                  btnCls="text-white w-[20%]"
+                  btnCategory="secondary"
+                  onClick={onMentorSelectionClick}
                   btnStyle={{
                     background: "#e56031",
                     border: "1px solid #e56031",
@@ -980,13 +1480,7 @@ const AdminRequest = () => {
                   btnName="Submit"
                   btnCls="text-white w-[20%]"
                   btnCategory="secondary"
-                  onClick={()=>{
-                    if(requestType==="final_reject"){
-                      onMenteeSubmitRejectClick()
-                    }else{
-                      onMenteeRejectClick()
-                    }
-                  }}
+                  onClick={handleRejectionSubmit}
                   btnStyle={{
                     background: "#eb405d",
                     border: "1px solid #eb405d",

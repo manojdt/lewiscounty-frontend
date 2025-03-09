@@ -176,6 +176,21 @@ export const adminRequestApi = rtkQueryApiServices.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: 'JoinRequest', id }],
     }),
+
+    acceptMemberRequest: builder.mutation({
+      query: (body) => ({
+        url: `user/accept_member`,
+        method: 'POST',
+        body
+      }),
+    }),
+    acceptVerifyApplication: builder.mutation({
+      query: (body) => ({
+        url: `user/accept_member`,
+        method: 'POSt',
+        body
+      }),
+    }),
     
     // Verify application
     verifyApplication: builder.mutation({
@@ -188,6 +203,8 @@ export const adminRequestApi = rtkQueryApiServices.injectEndpoints({
   }),
 });
 export const {
+  useAcceptVerifyApplicationMutation,
+  useAcceptMemberRequestMutation,
   useGetJoinRequestDataQuery,
   useGetMenteeJoinRequestDataQuery,
   useApproveJoinRequestMutation,
