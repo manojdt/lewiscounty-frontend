@@ -11,6 +11,12 @@ let MuiTheme = createTheme({
     secondary: {
       main: "#1D5BBF",
     },
+    success:{
+      main:"#16B681"
+    },
+    warning:{
+      main:"#FF7600"
+    }
   },
   typography: {
     fontFamily: ["Plus Jakarta Sans", "sans-serif"].join(","),
@@ -31,6 +37,9 @@ let MuiTheme = createTheme({
         containedPrimary: {
           background: "linear-gradient(to right, #00AEBD, #1D5BBF)",
         },
+        contained:{
+          color:"#fff"
+        }
       },
       defaultProps: {
         size: "large",

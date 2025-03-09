@@ -4,7 +4,10 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Chip } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { statusText } from "../../shared/StatusIndicator/StatusIndicator";
+import {
+  statusColors,
+  statusText,
+} from "../../shared/StatusIndicator/StatusIndicator";
 
 const StatusItem = ({
   title,
@@ -40,10 +43,12 @@ const StatusItem = ({
       icon: <XCircle size={20} className="text-gray-600" />,
       text: "Not Started",
     },
-    "in-review": {
+    inreview: {
       color: "text-orange-600",
       bgColor: "bg-orange-100",
-      icon: <FiberManualRecordIcon fontSize="small" className="text-orange-600" />,
+      icon: (
+        <FiberManualRecordIcon fontSize="small" className="text-orange-600" />
+      ),
       text: "In Review",
     },
   };
@@ -56,7 +61,9 @@ const StatusItem = ({
         <div className="font-medium">{title}</div>
         <div className="flex items-center gap-4">
           <div className="text-sm text-gray-600">
-            {date && time ? `Date & time: ${date} | ${time}` : "No date available"}
+            {date && time
+              ? `Date & time: ${date} | ${time}`
+              : "No date available"}
           </div>
           <div
             className={`flex items-center gap-1 ${config.color} rounded-md px-2 py-1 ${config.bgColor}`}
@@ -107,13 +114,13 @@ const RequestFormHeader = ({ userData }) => {
 
   // Status mapping for visual elements
   const statusConfig = {
-    "in-review": {
+    inreview: {
       label: "In-Review",
       bgColor: "bg-orange-100",
       textColor: "text-orange-600",
       borderColor: "border-orange-300",
     },
-    "not-started": {
+    not_started: {
       label: "Background verification not started",
       bgColor: "bg-gray-100",
       textColor: "text-gray-600",
@@ -143,28 +150,35 @@ const RequestFormHeader = ({ userData }) => {
   const currentStatus = userData?.application_status || "none";
   const interviewStatus = userData?.interview_status || "none";
   const bgStatus = userData?.bg_status || "none";
-  
+
   // Format dates from API response if available
   const formatDate = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
   };
-  
+
   const formatTime = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   // Format application date and time
   const applicationDate = formatDate(userData?.application_approval_date);
   const applicationTime = formatTime(userData?.application_approval_date);
-  
+
   // Format interview date and time
   const interviewDate = formatDate(userData?.interview_date);
   const interviewTime = formatTime(userData?.interview_date);
-  
+
   // Format background check date and time
   const bgDate = formatDate(userData?.bg_approval_date);
   const bgTime = formatTime(userData?.bg_approval_date);
@@ -188,10 +202,19 @@ const RequestFormHeader = ({ userData }) => {
             View ({userData?.mentor_name || "User"})
           </div>
           <Chip
+            size="small"
             variant="outlined"
-            sx={{ bgcolor: config.bgColor, color: config.textColor }}
-            icon={<FiberManualRecordIcon sx={{ color: config.textColor }} />}
-            label={userData?.application_status ? statusText[userData?.application_status] || config.label : config.label}
+            sx={{ color: statusColors[userData?.application_status] }}
+            icon={
+              <FiberManualRecordIcon
+                sx={{ color: statusColors[userData?.application_status] }}
+              />
+            }
+            label={
+              userData?.application_status
+                ? statusText[userData?.application_status] || config.label
+                : config.label
+            }
           />
         </div>
         <div className="flex items-center gap-2">
@@ -222,7 +245,26 @@ const RequestFormHeader = ({ userData }) => {
       )}
 
       {/* In-review content area */}
-      {userData?.application_status === "in-review" && userData?.in_review && (
+      {userData?.application_status === "rejected" && (
+        <div
+          className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}
+        >
+          <div className="font-medium text-red-700 mb-2">
+            Marked as In review
+          </div>
+          <div className="text-sm text-gray-700">
+            Update by: {userData?.last_updated_by?.name || "Admin"} | Update
+            Date| Time : {formatDate(userData?.updated_at) || "N/A"} |{" "}
+            {formatTime(userData?.updated_at) || "N/A"}
+          </div>
+          <div className="mt-3 text-sm text-gray-700">
+            {userData?.in_review || "No review notes available."}
+          </div>
+        </div>
+      )}
+
+      {/* Caution content area */}
+      {userData?.application_status === "inreview" && (
         <div
           className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}
         >
@@ -230,75 +272,86 @@ const RequestFormHeader = ({ userData }) => {
             Marked as In review
           </div>
           <div className="text-sm text-gray-700">
-            Update by: {userData?.in_review?.updated_by || "Admin"} | Update Date| Time : {formatDate(userData?.in_review?.updated_at) || "N/A"} | {formatTime(userData?.in_review?.updated_at) || "N/A"}
+            Update by: {userData?.last_updated_by?.name || "Admin"} | Update
+            Date| Time : {formatDate(userData?.updated_at) || "N/A"} |{" "}
+            {formatTime(userData?.updated_at) || "N/A"}
           </div>
           <div className="mt-3 text-sm text-gray-700">
-            {userData?.in_review?.description || "No review notes available."}
-          </div>
-        </div>
-      )}
-
-      {/* Caution content area */}
-      {userData?.application_status === 'inreview' && (
-        <div className={`mx-4 mb-4 p-4 rounded-md ${config.bgColor} border ${config.borderColor}`}>
-          <div className="font-medium text-orange-700 mb-2">
-            Marked as In review
-          </div>
-          <div className="text-sm text-gray-700">
-            Update by: John Doe | Update Date| Time : 02/02/2025 | 05:50 PM
-          </div>
-          <div className="mt-3 text-sm text-gray-700">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop.
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop.
           </div>
         </div>
       )}
 
       {/* Application Status */}
-      <StatusItem
-        title="Application status"
-        date={applicationDate || approvalDate}
-        time={applicationTime || approvalTime}
-        status={currentStatus}
-        isOpen={openSections.applicationStatus}
-        onToggle={() => toggleSection("applicationStatus")}
-      />
+      {currentStatus === "verified" && (
+        <StatusItem
+          title="Application status"
+          date={applicationDate || approvalDate}
+          time={applicationTime || approvalTime}
+          status={currentStatus}
+        />
+      )}
 
       {/* Interview Result */}
-      {(interviewStatus !== "none" || isApproved) && (
+      {userData?.bg_status === "not_started" && (
         <StatusItem
           title="Interview result"
           date={interviewDate || approvalDate}
           time={interviewTime || approvalTime}
-          status={interviewStatus !== "none" ? interviewStatus : (isApproved ? "accept" : "none")}
+          status={
+            interviewStatus !== "none"
+              ? interviewStatus
+              : isApproved
+              ? "accept"
+              : "none"
+          }
           isOpen={openSections.interviewResult}
           onToggle={() => toggleSection("interviewResult")}
         >
           <div className="bg-white p-4 rounded">
             <div className="text-gray-600 mb-2">Remarks:</div>
             <div className="text-gray-800">
-              {userData?.interview_status_description || "No interview remarks available."}
+              {userData?.interview_status_description ||
+                "No interview remarks available."}
             </div>
           </div>
         </StatusItem>
       )}
 
       {/* Interview Details */}
-      {(userData?.interview_date || userData?.interview_location || userData?.interview_description) && (
+      {userData?.interview_status === "mail_sent" && (
         <StatusItem
           title="Interview details"
           date={interviewDate}
           time={interviewTime}
-          status={interviewStatus !== "none" ? interviewStatus : (isApproved ? "accept" : "none")}
+          status={
+            interviewStatus !== "none"
+              ? interviewStatus
+              : isApproved
+              ? "accept"
+              : "none"
+          }
           isOpen={openSections.interviewDetails}
           onToggle={() => toggleSection("interviewDetails")}
         >
           <InterviewDetail
             label="Interview Location"
-            value={userData?.interview_location}
+            value={`${userData?.location_details?.city}, ${userData?.location_details?.state_code} - ${userData?.location_details?.zip_code}`}
           />
           <InterviewDetail
             label="Interview date | time"
-            value={interviewDate && interviewTime ? `${interviewDate} | ${interviewTime}` : null}
+            value={
+              interviewDate && interviewTime
+                ? `${interviewDate} | ${interviewTime}`
+                : null
+            }
           />
           <InterviewDetail
             label="Description"

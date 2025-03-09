@@ -32,6 +32,11 @@ export const userApi = rtkQueryApiServices.injectEndpoints({
       transformResponse: (response) => response.mentor || response,
       providesTags: ["Mentors"],
     }),
+    getJoinRequestCounts: builder.query({
+      query: () => ({
+        url: `user/join_request_count`,
+      }),
+    }),
 
     getMyReqMentors: builder.query({
       query: (query) => {
@@ -238,6 +243,7 @@ export const {
   useGetMyTopProgramsQuery,
   useGetMentorInfoQuery,
   useGetMentorProgramActivityQuery,
+  useGetJoinRequestCountsQuery,
 
   // Profile hooks
   useGetProfileInfoQuery,

@@ -17,9 +17,7 @@ import { EquipmentFormFields } from "../formFields/formFields";
 import { MuiCustomModal } from "../../shared/Modal/MuiCustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import email_notify_icon from "../../assets/icons/email_notify_icon.svg";
-import {
-  useGetLanguageListQuery,
-} from "../../features/questions/questionsapi.service";
+import { useGetLanguageListQuery } from "../../features/questions/questionsapi.service";
 import { useDispatch } from "react-redux";
 import { getProgramAddressDetails } from "../../services/programInfo";
 import moment from "moment";
@@ -28,7 +26,6 @@ import {
   MentorFormData,
   MentorFormSection,
   ReferenceFields,
-  statusConfig,
 } from "../Mentor/MentorFormFields";
 import RequestFormHeader from "./RequestFormHeader";
 
@@ -60,7 +57,7 @@ export function RequestFormPreview() {
     useGetLanguageListQuery();
   const { data: profileInfo, isLoading: isProfileInfoLoading } =
     useGetProfileInfoQuery(params?.id);
-  
+
   // Process the user data from API response
   const userData = profileInfo || {};
 
@@ -69,24 +66,14 @@ export function RequestFormPreview() {
   const [searchedOption, setSearchedOption] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [addressFieldData, setAddressFieldData] = useState([]);
-  const [checked, setChecked] = React.useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-
-  // Use the status from API to determine the config
-  const config =
-    statusConfig[userData?.application_status] || statusConfig["new"];
-
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  const [checked, setChecked] = React.useState(true);
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
-  const [loading, setLoading] = useState(false);
   const signatureRef = useRef(null);
   const searchBar = useRef(null);
-  
+  const [isCanvasReady, setIsCanvasReady] = useState(false);
   // Apply the function to add isDisable property to all fields
   const updatedMentorFormSection = addIsDisableProperty(MentorFormSection);
 
@@ -95,13 +82,13 @@ export function RequestFormPreview() {
     ...field,
     isDisable: true,
   }));
-  
+
   // State for main form data
   const [formData, setFormData] = useState(MentorFormData);
   // Form field definitions
   const [formSections, setFormSections] = useState(updatedMentorFormSection);
 
-  // Populate form data from API response
+  // Populate form data from API response - only using fields defined in MentorFormData
   useEffect(() => {
     if (userData && Object.keys(userData).length) {
       // Extract and process languages from API data
@@ -114,7 +101,8 @@ export function RequestFormPreview() {
 
       if (Array.isArray(preferredLanguages)) {
         preferredLanguages.forEach((lang) => {
-          if (lang) { // Check if lang is defined
+          if (lang) {
+            // Check if lang is defined
             const normalizedLang = lang.toLowerCase();
             if (standardLanguages.includes(normalizedLang)) {
               standardSelected.push(normalizedLang);
@@ -124,13 +112,14 @@ export function RequestFormPreview() {
           }
         });
       }
-      
+
       // Add "other" to standard languages if there are other languages
       if (otherLanguages.length > 0) {
         standardSelected.push("other");
       }
 
       // Update form data with user information from API
+      // Only using fields that are defined in MentorFormData
       setFormData((prevData) => ({
         ...prevData,
         // Personal Information
@@ -144,40 +133,78 @@ export function RequestFormPreview() {
         languages_known: standardSelected,
         other_language: otherLanguages,
         marital_status: userData?.marital_status || "",
-        
-        // Education & Professional
-        highest_degree: userData?.highest_degree || "",
-        field_of_study: userData?.field_of_study || "",
-        institution_name: userData?.institution_name || "",
-        institution_location: userData?.institution_location || "",
-        job_title: userData?.job_title || "",
-        current_employer: userData?.current_employer || "",
-        industry_type: userData?.industry_type || "",
-        years_of_experience: userData?.years_of_experience || "",
-        linked_in: userData?.linked_in || "",
-        
-        // Mentoring experience
-        areas_of_expertise: userData?.areas_of_expertise || "",
-        confident_areas_of_expertise: userData?.confident_areas_of_expertise || "",
-        prev_mentorship: userData?.prev_mentorship || false,
-        mentor_exp_desc: userData?.mentor_exp_desc || "",
-        mentorship_achievement: userData?.mentorship_achievement || "",
-        mentor_expectations: userData?.mentor_expectations || "",
-        
-        // Address information
+
+        // Address information - these might come from location_details
         address: userData?.address || "",
-        location: userData?.location || "",
-        
-        // References - need to handle this specially if present
-        references: userData?.references || [{ first_name: "", last_name: "", email: "", phone_number: "", relationship: "" }],
-        
-        // Additional information
-        professional_bio: userData?.professional_bio || "",
-        additional_info: userData?.additional_info || "",
+        city: userData?.location_details?.city || "",
+        state: userData?.location_details?.state_code || "",
+        zip_code: userData?.location_details?.zip_code || "",
+
+        // Background Questions
+        known_about_program: userData?.known_about_program || "",
+        motivation_description: userData?.motivation_description || "",
+        offer_mentees: userData?.offer_mentees || "",
+        mentorship_achievement: userData?.mentorship_achievement || "",
+        mentor_exp_desc: userData?.mentor_exp_desc || "",
+        program_commitment:
+          typeof userData?.program_commitment === "boolean"
+            ? userData?.program_commitment
+            : undefined,
+        is_convicted:
+          typeof userData?.is_convicted === "boolean"
+            ? userData?.is_convicted
+            : undefined,
+        convicted_reason: userData?.convicted_reason || "",
+
+        // References - handle array of references
+        references:
+          Array.isArray(userData?.references) && userData.references.length > 0
+            ? userData.references
+            : [
+                {
+                  first_name: "",
+                  last_name: "",
+                  email: "",
+                  phone_number: "",
+                  relationship: "",
+                },
+              ],
+
+        // Documents
+        // documents:
+        //   userData?.documents?.length > 0 ? userData.documents[0].file : null,
       }));
     }
   }, [userData]);
 
+  useEffect(() => {
+    if (userData?.documents?.length > 0 && isCanvasReady) {
+      const canvas = signatureRef.current.getCanvas();
+      const ctx = canvas.getContext("2d");
+
+      // Load the image from the URL
+      const img = new Image();
+      img.crossOrigin = "anonymous"; // Enable cross-origin if needed
+      img.src = userData.documents[0].file;
+
+      img.onload = () => {
+        // Clear the canvas and draw the image
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+
+      img.onerror = (error) => {
+        console.error("Failed to load image:", error);
+      };
+    }
+  }, [userData?.documents, isCanvasReady]);
+
+  // Ensure the canvas is ready before drawing
+  useEffect(() => {
+    if (signatureRef.current) {
+      setIsCanvasReady(true);
+    }
+  }, []);
   // Handle language data loading
   useEffect(() => {
     if (languagesData && languagesData.length > 0) {
@@ -415,7 +442,7 @@ export function RequestFormPreview() {
     <>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading || isLanguagesLoading || isProfileInfoLoading}
+        open={isLanguagesLoading || isProfileInfoLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -439,18 +466,6 @@ export function RequestFormPreview() {
                           key={`ref-${refIndex}`}
                           sx={{ my: 5, position: "relative" }}
                         >
-                          {formData.references.length > 1 && (
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              sx={{ position: "absolute", right: 0, top: 0 }}
-                              onClick={() => handleRemoveReference(refIndex)}
-                            >
-                              Remove
-                            </Button>
-                          )}
-
                           <EquipmentFormFields
                             fields={updatedReferenceFields}
                             formData={{
@@ -466,16 +481,6 @@ export function RequestFormPreview() {
                           />
                         </Box>
                       ))}
-                      <div className="flex justify-end">
-                        <Button
-                          variant="text"
-                          startIcon={<AddIcon />}
-                          onClick={handleAddReference}
-                          sx={{ mt: 2, ml: "auto" }}
-                        >
-                          Add
-                        </Button>
-                      </div>
                     </div>
                   ) : section.isSignature ? (
                     // Signature section
@@ -530,6 +535,7 @@ export function RequestFormPreview() {
           <Grid2 Grid2 item xs={12}>
             <div className="mb-6 flex items-center ml-5">
               <FormControlLabel
+                disabled
                 checked={checked}
                 onChange={handleChange}
                 control={<Checkbox />}
@@ -560,34 +566,31 @@ export function RequestFormPreview() {
                 gap: 2,
               }}
             >
-              <Button
-                variant="outlined"
-                sx={{
-                  color: "grey.700",
-                  borderColor: "grey.300",
-                  "&:hover": {
-                    borderColor: "grey.400",
-                    backgroundColor: "grey.50",
-                  },
-                }}
-                onClick={handleCancel}
-              >
-                Cancel
+              <Button variant="outlined" color="error" onClick={handleCancel}>
+                Reject
               </Button>
 
               <Button
+                color="success"
                 variant="contained"
                 disabled={!checked}
-                sx={{
-                  backgroundColor: "#2185d0",
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#1678c2",
-                  },
-                }}
                 onClick={handleSubmit}
               >
-                Submit Application
+                {userData?.interview_status === "mail_sent"
+                  ? "Mark as Selected"
+                  : userData?.bg_status === "not_started"
+                  ? "Start BG Verification"
+                  : userData?.approve_status === "pending"
+                  ? "Approve"
+                  : "Review"}
+              </Button>
+              <Button
+                color="success"
+                variant="contained"
+                disabled={!checked}
+                onClick={() => handleSubmit()}
+              >
+                Verify
               </Button>
             </Box>
           </Grid2>

@@ -49,6 +49,8 @@ import ViewIcon from "../../assets/images/view1x.png";
 import CancelIcon from "../../assets/images/cancel1x.png";
 import TickColorIcon from "../../assets/icons/tickColorLatest.svg";
 import { Button } from "../../shared";
+import { useGetJoinRequestCountsQuery } from "../../features/user/userApi.services";
+
 const AdminRequest = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,9 +116,10 @@ const AdminRequest = () => {
     { skip: role !== "mentee" }
   );
 
-  const [acceptVerifyApplication] = useAcceptVerifyApplicationMutation();
   const [acceptMemberRequest] = useAcceptMemberRequestMutation();
 
+  
+  const { data: counts } = useGetJoinRequestCountsQuery();
   const { handleApprove, handleReject, handleDelete, isActionLoading } =
     useRequestActions();
   const {
@@ -828,7 +831,7 @@ const AdminRequest = () => {
               <Tab
                 icon={
                   <Badge
-                    badgeContent="58"
+                    badgeContent={counts?.mentor_count || 0}
                     color="primary"
                     sx={{ mr: 1 }}
                   ></Badge>
@@ -844,7 +847,7 @@ const AdminRequest = () => {
               <Tab
                 icon={
                   <Badge
-                    badgeContent="58"
+                    badgeContent={counts?.mentee_count || 0}
                     color="primary"
                     sx={{ mr: 1 }}
                   ></Badge>
